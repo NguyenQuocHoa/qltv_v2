@@ -5,6 +5,7 @@ using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace QLTV_V2.BLL
@@ -50,6 +51,8 @@ namespace QLTV_V2.BLL
         {
             try
             {
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
                 _context.User.Add(user);
                 _context.SaveChanges();
             }

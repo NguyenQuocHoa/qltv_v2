@@ -7,10 +7,10 @@ namespace QLTV_V2.Models
     public class ReturnBookDetail
     {
         public int Id { get; set; }
-        public string ReturnBookCode { get; set; }
-        public Int64? Quantity { get; set; }
+        public string ReturnBookDetailCode { get; set; }
+        public int? Quantity { get; set; }
         public string Description { get; set; }
-        public Int64? Sach_Id { get; set; }
-        public Int64? ReturnBook_Id { get; set; }
+        public int? Book_Id { get; set; }
+        public int? ReturnBook_Id { get; set; }
     }
 }

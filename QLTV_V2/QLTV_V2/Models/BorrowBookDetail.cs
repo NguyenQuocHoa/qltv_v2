@@ -8,9 +8,9 @@ namespace QLTV_V2.Models
     {
         public int Id { get; set; }
         public string BorrowBookDetailCode { get; set; }
-        public Int64? Quantity { get; set; }
+        public int? Quantity { get; set; }
         public string Description { get; set; }
-        public Int64? Sach_Id { get; set; }
-        public Int64? BorrowBook_Id { get; set; }
+        public int? Book_Id { get; set; }
+        public int? BorrowBook_Id { get; set; }
     }
 }

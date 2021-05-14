@@ -32,6 +32,7 @@ import CarouselExample from './Carousel/';
 
 import MapsExample from './Maps/';
 
+
 // Layout
 
 import AppHeader from '../../Layout/AppHeader/';
@@ -74,6 +75,7 @@ const Components = ({match}) => (
                     {/* Maps */}
 
                     <Route path={`${match.url}/maps`} component={MapsExample}/>
+                    
 
                 </div>
                 <AppFooter/>

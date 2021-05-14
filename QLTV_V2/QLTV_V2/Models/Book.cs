@@ -6,7 +6,7 @@ namespace QLTV_V2.Models
 {
     public class Book
     {
-        public Int64 Id { get; set; }
+        public int Id { get; set; }
         public string BookCode { get; set; }
         public string BookName { get; set; }
         public string Inventory { get; set; }

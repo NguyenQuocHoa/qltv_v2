@@ -13,6 +13,6 @@ namespace QLTV_V2.Models
         public string Author { get; set; }
         public string MainContent { get; set; }
         public string Description { get; set; }
-        public Int64? BookCategory_Id { get; set; }
+        public int? BookCategory_Id { get; set; }
     }
 }

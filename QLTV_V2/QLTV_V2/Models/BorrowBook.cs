@@ -9,8 +9,8 @@ namespace QLTV_V2.Models
         public int Id { get; set; }
         public string BorrowBookCode { get; set; }
         public DateTime? BorrowDate { get; set; }
-        public Int64? NumberOfDayBorrow { get; set; }
+        public int? NumberOfDayBorrow { get; set; }
         public string Description { get; set; }
-        public Int64? Student_Id { get; set; }
+        public int? Student_Id { get; set; }
     }
 }

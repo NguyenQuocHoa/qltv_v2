@@ -6,7 +6,7 @@ namespace QLTV_V2.Models
 {
     public class BorrowBook
     {
-        public Int64 Id { get; set; }
+        public int Id { get; set; }
         public string BorrowBookCode { get; set; }
         public DateTime? BorrowDate { get; set; }
         public Int64? NumberOfDayBorrow { get; set; }

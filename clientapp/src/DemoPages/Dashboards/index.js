@@ -5,6 +5,10 @@ import {Route} from 'react-router-dom';
 
 import BasicDashboard from './Basic/';
 
+// USER 
+
+import UserExample from './user/';
+
 // Layout
 
 import AppHeader from '../../Layout/AppHeader/';
@@ -19,6 +23,7 @@ const Dashboards = ({match}) => (
             <div className="app-main__outer">
                 <div className="app-main__inner">
                     <Route path={`${match.url}/basic`} component={BasicDashboard}/>
+                    <Route path={`${match.url}/user`} component={UserExample}/>
                 </div>
                 <AppFooter/>
             </div>

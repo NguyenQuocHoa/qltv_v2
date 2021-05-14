@@ -6,7 +6,7 @@ namespace QLTV_V2.Models
 {
     public class ReturnBookDetail
     {
-        public Int64 Id { get; set; }
+        public int Id { get; set; }
         public string ReturnBookCode { get; set; }
         public Int64? Quantity { get; set; }
         public string Description { get; set; }

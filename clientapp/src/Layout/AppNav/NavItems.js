@@ -4,6 +4,11 @@ export const MainNav = [
         label: 'Dashboard Example',
         to: '#/dashboards/basic',
     },
+    {
+        icon: 'pe-7s-user',
+        label: 'User Example',
+        to: '#/dashboards/user',
+    },
 ];
 export const ComponentsNav = [
     {
@@ -76,6 +81,10 @@ export const ComponentsNav = [
             {
                 label: 'Maps',
                 to: '#/components/maps',
+            },
+            {
+                label: 'Users',
+                to: '#/components/user',
             },
         ],
     },

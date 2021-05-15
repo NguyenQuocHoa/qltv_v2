@@ -36,8 +36,7 @@ namespace QLTV_V2.BLL
         {
             try
             {
-                var student_data = _context.Student.Where(u => u.Id == id).FirstOrDefault();
-                return student_data;
+                return _studentDAL.GetById(id);
             }
             catch (Exception ex)
             {
@@ -73,7 +72,6 @@ namespace QLTV_V2.BLL
             }
         }
 
-
         public void DeleteStudent(int id)
         {
             try
@@ -81,8 +79,7 @@ namespace QLTV_V2.BLL
                 Student student = _context.Student.Find(id);
                 if (student != null)
                 {
-                    _context.Remove(student);
-                    _context.SaveChanges();
+                    _studentDAL.DeleteStudent(student);
                 }
             }
             catch (Exception ex)

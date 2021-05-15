@@ -32,7 +32,7 @@ namespace QLTV_V2.DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryDAL");
+                throw new Exception("Error from BookCategoryDAL: " + ex.Message.ToString());
             }
         }
 
@@ -50,7 +50,7 @@ namespace QLTV_V2.DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryDAL");
+                throw new Exception("Error from BookCategoryDAL: " + ex.Message.ToString());
             }
         }
 
@@ -63,7 +63,7 @@ namespace QLTV_V2.DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryDAL");
+                throw new Exception("Error from BookCategoryDAL: " + ex.Message.ToString());
             }
         }
 
@@ -78,7 +78,7 @@ namespace QLTV_V2.DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryDAL");
+                throw new Exception("Error from BookCategoryDAL: " + ex.Message.ToString());
             }
         }
 
@@ -91,7 +91,7 @@ namespace QLTV_V2.DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryDAL");
+                throw new Exception("Error from BookCategoryDAL: " + ex.Message.ToString());
             }
         }
     }

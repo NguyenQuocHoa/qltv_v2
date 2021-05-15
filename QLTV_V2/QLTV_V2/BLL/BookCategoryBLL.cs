@@ -28,7 +28,7 @@ namespace QLTV_V2.BLL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryBLL");
+                throw new Exception("Error from BookCategoryBLL: " + ex.Message.ToString());
             }
         }
 
@@ -40,7 +40,7 @@ namespace QLTV_V2.BLL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryBLL");
+                throw new Exception("Error from BookCategoryBLL: " + ex.Message.ToString());
             }
         }
 
@@ -52,7 +52,7 @@ namespace QLTV_V2.BLL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryBLL");
+                throw new Exception("Error from BookCategoryBLL: " + ex.Message.ToString());
             }
         }
 
@@ -65,7 +65,7 @@ namespace QLTV_V2.BLL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryBLL");
+                throw new Exception("Error from BookCategoryBLL: " + ex.Message.ToString());
             }
         }
 
@@ -81,7 +81,7 @@ namespace QLTV_V2.BLL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryBLL");
+                throw new Exception("Error from BookCategoryBLL: " + ex.Message.ToString());
             }
         }
     }

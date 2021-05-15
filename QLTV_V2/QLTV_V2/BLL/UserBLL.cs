@@ -18,7 +18,7 @@ namespace QLTV_V2.BLL
         public UserBLL(ApplicationDbContext context)
         {
             _context = context;
-            _userDAL = new UserDAL(_context);
+            _userDAL = new UserDAL(context);
         }    
 
         public IEnumerable<User> GetAll()
@@ -37,14 +37,12 @@ namespace QLTV_V2.BLL
         {
             try
             {
-                var user_data = _context.User.Where(u => u.Id == id).FirstOrDefault();
-                return user_data;
+                return _userDAL.GetById(id);
             }
             catch (Exception ex)
             {
                 throw new Exception("Error from UserBLL");
             }
-            return null;
         }
 
         public void AddUser(User user)
@@ -52,9 +50,7 @@ namespace QLTV_V2.BLL
             try
             {
                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-
-                _context.User.Add(user);
-                _context.SaveChanges();
+                _userDAL.AddUser(user);
             }
             catch (Exception ex)
             {
@@ -62,14 +58,13 @@ namespace QLTV_V2.BLL
             }
         }
 
-        public void EditUser(int id, User user)
+        public void EditUser(int id, User newUser)
         {
             try
             {
-                User u = _context.User.Where(us => us.Id == id).SingleOrDefault();
-                u.UserName = user.UserName;
-                u.Password = user.Password;
-                _context.SaveChanges();
+                User oldUser = _context.User.Where(us => us.Id == id).SingleOrDefault();
+                newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+                _userDAL.EditUser(oldUser, newUser);
             }
             catch (Exception ex)
             {
@@ -85,8 +80,7 @@ namespace QLTV_V2.BLL
                 User user = _context.User.Find(id);
                 if (user != null)
                 {
-                    _context.Remove(user);
-                    _context.SaveChanges();
+                    _userDAL.DeleteUser(user);
                 } 
             }
             catch (Exception ex)

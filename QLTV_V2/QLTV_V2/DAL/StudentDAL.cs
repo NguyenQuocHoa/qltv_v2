@@ -27,7 +27,7 @@ namespace QLTV_V2.DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from StudentDAL");
+                throw new Exception("Error from StudentDAL: " + ex.Message.ToString());
             }
         }
 
@@ -50,7 +50,7 @@ namespace QLTV_V2.DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from StudentDAL");
+                throw new Exception("Error from StudentDAL: " + ex.Message.ToString());
             }
         }
 
@@ -63,7 +63,7 @@ namespace QLTV_V2.DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from StudentDAL");
+                throw new Exception("Error from StudentDAL: " + ex.Message.ToString());
             }
         }
 
@@ -84,7 +84,7 @@ namespace QLTV_V2.DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from StudentDAL");
+                throw new Exception("Error from StudentDAL: " + ex.Message.ToString());
             }
         }
 
@@ -97,7 +97,7 @@ namespace QLTV_V2.DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from StudentDAL");
+                throw new Exception("Error from StudentDAL: " + ex.Message.ToString());
             }
         }
     }

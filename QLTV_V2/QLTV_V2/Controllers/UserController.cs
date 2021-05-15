@@ -7,22 +7,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace QLTV_V2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
-
         private readonly UserBLL _userBLL;
         public UserController(ApplicationDbContext context)
         {
             _userBLL = new UserBLL(context);
         }
 
-        // GET: api/<UserController>
         [HttpGet]
         public IEnumerable<User> Get()
         {
@@ -37,7 +33,6 @@ namespace QLTV_V2.Controllers
             return null;
         }
 
-        // GET api/<UserController>/5
         [HttpGet("{id}")]
         public ActionResult<User> Get(int id)
         {
@@ -51,7 +46,6 @@ namespace QLTV_V2.Controllers
             }
         }
 
-        // POST api/<UserController>
         [HttpPost]
         public IActionResult Post([FromBody] User user)
         {
@@ -66,7 +60,6 @@ namespace QLTV_V2.Controllers
             return Ok(user);
         }
 
-        // PUT api/<UserController>/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] User user)
         {
@@ -78,10 +71,9 @@ namespace QLTV_V2.Controllers
             {
                 return StatusCode(500, "Server Error");
             }
-            return Ok();
+            return Ok(id);
         }
 
-        // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

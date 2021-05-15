@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using QLTV_V2.DAL;
+using QLTV_V2.Data;
+using QLTV_V2.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,86 +11,84 @@ namespace QLTV_V2.BLL
 {
     public class StudentBLL
     {
-        //private readonly UserDAL _userDAL;
+        private readonly ApplicationDbContext _context;
+        private readonly StudentDAL _studentDAL;
 
-        //public UserBLL(ApplicationDbContext context)
-        //{
-        //    _context = context;
-        //    _userDAL = new UserDAL(_context);
-        //}
+        public StudentBLL(ApplicationDbContext context)
+        {
+            _context = context;
+            _studentDAL = new StudentDAL(_context);
+        }
 
-        //public IEnumerable<User> GetAll()
-        //{
-        //    try
-        //    {
-        //        return _userDAL.GetAll();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Error from UserBLL");
-        //    }
-        //}
+        public IEnumerable<Object> GetAll()
+        {
+            try
+            {
+                return _studentDAL.GetAll();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from StudentBLL");
+            }
+        }
 
-        //public ActionResult<User> GetById(int id)
-        //{
-        //    try
-        //    {
-        //        var user_data = _context.User.Where(u => u.Id == id).FirstOrDefault();
-        //        return user_data;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Error from UserBLL");
-        //    }
-        //    return null;
-        //}
+        public ActionResult<Object> GetById(int id)
+        {
+            try
+            {
+                var student_data = _context.Student.Where(u => u.Id == id).FirstOrDefault();
+                return student_data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from StudentBLL");
+            }
+            return null;
+        }
 
-        //public void AddUser(User user)
-        //{
-        //    try
-        //    {
-        //        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+        public void AddStudent(Student student)
+        {
+            try
+            {
+                student.Password = BCrypt.Net.BCrypt.HashPassword(student.Password);
+                _studentDAL.AddStudent(student);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from StudentBLL");
+            }
+        }
 
-        //        _context.User.Add(user);
-        //        _context.SaveChanges();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Error from UserBLL");
-        //    }
-        //}
-
-        //public void EditUser(int id, User user)
-        //{
-        //    try
-        //    {
-        //        User u = _context.User.Where(us => us.Id == id).SingleOrDefault();
-        //        u.UserName = user.UserName;
-        //        u.Password = user.Password;
-        //        _context.SaveChanges();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Error from UserBLL");
-        //    }
-        //}
+        public void EditStudent(int id, Student newStudent)
+        {
+            try
+            {
+                Student oldStudent = _context.Student.Where(us => us.Id == id).SingleOrDefault();
+                newStudent.Password = BCrypt.Net.BCrypt.HashPassword(newStudent.Password);
+                _studentDAL.EditStudent(oldStudent, newStudent);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from StudentBLL");
+            }
+        }
 
 
-        //public void DeleteUser(int id)
-        //{
-        //    try
-        //    {
-        //        User user = _context.User.Find(id);
-        //        if (user != null)
-        //        {
-        //            _context.Remove(user);
-        //            _context.SaveChanges();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Error from UserBLL");
-        //    }
-        //}
+        public void DeleteStudent(int id)
+        {
+            try
+            {
+                Student student = _context.Student.Find(id);
+                if (student != null)
+                {
+                    _context.Remove(student);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from StudentBLL");
+            }
+        }
     }
 }

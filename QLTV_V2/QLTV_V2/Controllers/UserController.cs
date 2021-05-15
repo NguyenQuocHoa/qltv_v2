@@ -40,9 +40,9 @@ namespace QLTV_V2.Controllers
             {
                 return _userBLL.GetById(id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, ex.Message.ToString());
             }
         }
 
@@ -53,9 +53,9 @@ namespace QLTV_V2.Controllers
             {
                 _userBLL.AddUser(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, ex.Message.ToString());
             }
             return Ok(user);
         }
@@ -69,7 +69,7 @@ namespace QLTV_V2.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, ex.Message.ToString());
             }
             return Ok(id);
         }
@@ -81,9 +81,9 @@ namespace QLTV_V2.Controllers
             {
                 _userBLL.DeleteUser(id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, ex.Message.ToString());
             }
             return Ok(id);
         }

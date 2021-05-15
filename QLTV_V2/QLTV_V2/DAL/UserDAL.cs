@@ -23,7 +23,7 @@ namespace QLTV_V2.DAL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from UserDAL");
+                throw new Exception("Error from UserDAL: " + ex.Message.ToString());
             }
         }
 
@@ -36,7 +36,7 @@ namespace QLTV_V2.DAL
             }
             catch(Exception ex)
             {
-                throw new Exception("Error from UserDAL");
+                throw new Exception("Error from UserDAL: " + ex.Message.ToString());
             }
         }
 
@@ -49,7 +49,7 @@ namespace QLTV_V2.DAL
             }
             catch(Exception ex)
             {
-                throw new Exception("Error from UserDAL");
+                throw new Exception("Error from UserDAL: " + ex.Message.ToString());
             }
         }
 
@@ -63,7 +63,7 @@ namespace QLTV_V2.DAL
             }
             catch(Exception ex)
             {
-                throw new Exception("Error from UserDAL");
+                throw new Exception("Error from UserDAL: " + ex.Message.ToString());
             }
         }
 
@@ -76,7 +76,7 @@ namespace QLTV_V2.DAL
             }
             catch(Exception ex)
             {
-                throw new Exception("Error from UserDAL");
+                throw new Exception("Error from UserDAL: " + ex.Message.ToString());
             }
         }
     }

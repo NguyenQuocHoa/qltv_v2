@@ -40,9 +40,9 @@ namespace QLTV_V2.Controllers
             {
                 return _studentBLL.GetById(id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, ex.Message.ToString());
             }
         }
 
@@ -54,9 +54,9 @@ namespace QLTV_V2.Controllers
             {
                 _studentBLL.AddStudent(student);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, ex.Message.ToString());
             }
             return Ok(student);
         }
@@ -70,7 +70,7 @@ namespace QLTV_V2.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, ex.Message.ToString());
             }
             return Ok(id);
         }
@@ -83,9 +83,9 @@ namespace QLTV_V2.Controllers
             {
                 _studentBLL.DeleteStudent(id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, ex.Message.ToString());
             }
             return Ok(id);
         }

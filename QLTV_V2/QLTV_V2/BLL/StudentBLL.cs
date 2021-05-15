@@ -42,7 +42,6 @@ namespace QLTV_V2.BLL
             {
                 throw new Exception("Error from StudentBLL");
             }
-            return null;
         }
 
         public void AddStudent(Student student)

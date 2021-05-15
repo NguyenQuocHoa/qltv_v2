@@ -35,7 +35,17 @@ namespace QLTV_V2.DAL
         {
             try
             {
-                var student_data = _context.Student.Where(student => student.Id == id).Select(student => new { student.Id, student.Password }).FirstOrDefault();
+                var student_data = _context.Student.Where(student => student.Id == id).Select(student => new {
+                    student.Id,
+                    student.StudentCode,
+                    student.StudentName,
+                    student.Class,
+                    student.DoB,
+                    student.NativeLand,
+                    student.Course,
+                    student.Faculty,
+                    student.Description
+                }).FirstOrDefault();
                 return student_data;
             }
             catch (Exception ex)

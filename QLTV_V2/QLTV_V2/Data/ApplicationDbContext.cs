@@ -22,7 +22,7 @@ namespace QLTV_V2.Data
         public DbSet<BookCategory> BookCategory { get; set; }
         public DbSet<BorrowBook> BorrowBook { get; set; }
         public DbSet<ReturnBook> ReturnBook { get; set; }
-        public DbSet<BorrowBookDetail> BorrowBookDetail { get; set; }
         public DbSet<ReturnBookDetail> ReturnBookDetail { get; set; }
+        public DbSet<BorrowBookDetail> BorrowBookDetail { get; set; }
     }
 }

@@ -10,5 +10,6 @@ namespace QLTV_V2.Models
         public string ReturnBookCode { get; set; }
         public DateTime? ReturnDate { get; set; }
         public int? BorrowBook_Id { get; set; }
+        //public List<ReturnBookDetail> ReturnBookDetails { get; set; }
     }
 }

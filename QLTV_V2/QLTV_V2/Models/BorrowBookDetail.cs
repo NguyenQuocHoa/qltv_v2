@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace QLTV_V2.Models
 {
@@ -10,7 +11,7 @@ namespace QLTV_V2.Models
         public string BorrowBookDetailCode { get; set; }
         public int? Quantity { get; set; }
         public string Description { get; set; }
+        public int? BK_Id { get; set; }
         public int? Book_Id { get; set; }
-        public int? BorrowBook_Id { get; set; }
     }
 }

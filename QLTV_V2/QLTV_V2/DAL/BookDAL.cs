@@ -94,6 +94,28 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public void UpdateInventory(int id, int quantity)
+        {
+            try
+            {
+                Book oldBook = _context.Book.Where(book => book.Id == id).SingleOrDefault();
+                if (oldBook != null)
+                {
+                    oldBook.Inventory += quantity;
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("Book doesn't exist");
+                } 
+                    
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BookDAL: " + ex.Message.ToString());
+            }
+        }
+
         public void DeleteBook(Book book)
         {
             try

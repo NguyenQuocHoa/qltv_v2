@@ -12,9 +12,11 @@ namespace QLTV_V2.DAL
     public class ReturnBookDAL
     {
         private readonly ApplicationDbContext _context;
+        private readonly BookDAL _bookDAL;
         public ReturnBookDAL(ApplicationDbContext context)
         {
             _context = context;
+            _bookDAL = new BookDAL(context);
         }
 
         public IEnumerable<Object> GetAll()
@@ -75,6 +77,12 @@ namespace QLTV_V2.DAL
                         detail.ReturnBook_Id = returnBookPlus.ReturnBook.Id;
                         _context.ReturnBookDetail.Add(detail);
                         _context.SaveChanges();
+                       
+                        if (detail.Book_Id != null)
+                        {
+                            // update Inventory of Book
+                            _bookDAL.UpdateInventory((int)detail.Book_Id, (int)detail.Quantity);
+                        }
                     }
                     transaction.Complete();
                 }
@@ -108,6 +116,13 @@ namespace QLTV_V2.DAL
                     {
                         ReturnBookDetail oldReturnBookDetail = _context.ReturnBookDetail.
                             Where(rbDetail => rbDetail.Id == newReturnBookDetail.Id).SingleOrDefault();
+                        
+                        if (newReturnBookDetail.Book_Id != null)
+                        {
+                            // update Inventory of Book
+                            int? quantityOfUpdate = newReturnBookDetail.Quantity - oldReturnBookDetail.Quantity;
+                            _bookDAL.UpdateInventory((int)newReturnBookDetail.Book_Id, (int)quantityOfUpdate);
+                        }
 
                         if (newReturnBookDetail != null && newReturnBookDetail.Id != 0 && oldReturnBookDetail  != null)
                         {
@@ -142,8 +157,18 @@ namespace QLTV_V2.DAL
                 {
                     ReturnBook returnBook = _context.ReturnBook.Where(rb => rb.Id == id).FirstOrDefault();
                     List<ReturnBookDetail> returnBookDetails = _context.ReturnBookDetail.Where(rbd => rbd.ReturnBook_Id == returnBook.Id).ToList();
-                    _context.RemoveRange(returnBookDetails);
-                    _context.SaveChanges();
+                    
+                    foreach(ReturnBookDetail returnBookDetail in returnBookDetails)
+                    {
+                        // update Inventory of Book
+                        if (returnBookDetail.Book_Id != null)
+                        {
+                            _bookDAL.UpdateInventory((int)returnBookDetail.Book_Id, (int)-returnBookDetail.Quantity);
+                        }
+                        _context.Remove(returnBookDetail);
+                        _context.SaveChanges();
+                    }    
+
                     _context.Remove(returnBook);
                     _context.SaveChanges();
                     transaction.Complete();

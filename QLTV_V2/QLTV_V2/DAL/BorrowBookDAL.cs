@@ -12,9 +12,11 @@ namespace QLTV_V2.DAL
     public class BorrowBookDAL
     {
         private readonly ApplicationDbContext _context;
+        private readonly BookDAL _bookDAL;
         public BorrowBookDAL(ApplicationDbContext context)
         {
             _context = context;
+            _bookDAL = new BookDAL(_context);
         }
 
         public IEnumerable<Object> GetAll()
@@ -77,6 +79,12 @@ namespace QLTV_V2.DAL
                         detail.BK_Id = borrowBookPlus.BorrowBook.Id;
                         _context.BorrowBookDetail.Add(detail);
                         _context.SaveChanges();
+
+                        // update Inventory of Book
+                        if (detail.Book_Id != null)
+                        {
+                            _bookDAL.UpdateInventory((int)detail.Book_Id, (int)-detail.Quantity);
+                        }    
                     }
                     transaction.Complete();
                 }
@@ -115,6 +123,13 @@ namespace QLTV_V2.DAL
 
                         if (newBorrowBookDetail != null && newBorrowBookDetail.Id != 0 && oldBorrowBookDetail != null)
                         {
+                            // update inventory of book
+                            if (newBorrowBookDetail.Book_Id != null)
+                            {
+                                int? quantityOfUpdate = newBorrowBookDetail.Quantity - oldBorrowBookDetail.Quantity;
+                                _bookDAL.UpdateInventory((int)newBorrowBookDetail.Book_Id, (int)-quantityOfUpdate);
+                            }
+
                             oldBorrowBookDetail.BorrowBookDetailCode = newBorrowBookDetail.BorrowBookDetailCode;
                             oldBorrowBookDetail.Quantity = newBorrowBookDetail.Quantity;
                             oldBorrowBookDetail.Description = newBorrowBookDetail.Description;
@@ -146,8 +161,16 @@ namespace QLTV_V2.DAL
                 {
                     BorrowBook borrowBook = _context.BorrowBook.Where(rb => rb.Id == id).FirstOrDefault();
                     List<BorrowBookDetail> borrowBookDetails = _context.BorrowBookDetail.Where(bbd => bbd.BK_Id == borrowBook.Id).ToList();
-                    _context.RemoveRange(borrowBookDetails);
-                    _context.SaveChanges();
+
+                    foreach(BorrowBookDetail borrowBookDetail in borrowBookDetails)
+                    {
+                        if (borrowBookDetail.Book_Id != null)
+                        {
+                            _bookDAL.UpdateInventory((int)borrowBookDetail.Book_Id, (int)borrowBookDetail.Quantity);
+                        }
+                        _context.Remove(borrowBookDetail);
+                        _context.SaveChanges();
+                    }    
                     _context.Remove(borrowBook);
                     _context.SaveChanges();
                     transaction.Complete();

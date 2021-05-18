@@ -21,7 +21,7 @@ namespace QLTV_V2.BLL
             _userDAL = new UserDAL(context);
         }    
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<Object> GetAll()
         {
             try
             {
@@ -33,7 +33,7 @@ namespace QLTV_V2.BLL
             }
         }
 
-        public ActionResult<User> GetById(int id)
+        public ActionResult<Object> GetById(int id)
         {
             try
             {
@@ -49,8 +49,15 @@ namespace QLTV_V2.BLL
         {
             try
             {
-                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                _userDAL.AddUser(user);
+                if (checkUserNameNotExist(user.UserName))
+                {
+                    user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                    _userDAL.AddUser(user);
+                }
+                else
+                {
+                    throw new Exception("User name can't duplicate");
+                } 
             }
             catch (Exception ex)
             {
@@ -63,7 +70,12 @@ namespace QLTV_V2.BLL
             try
             {
                 User oldUser = _context.User.Where(us => us.Id == id).SingleOrDefault();
-                newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+                if (newUser.Password != "")
+                {
+                    newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+                }
+                else
+                    newUser.Password = oldUser.Password;
                 _userDAL.EditUser(oldUser, newUser);
             }
             catch (Exception ex)
@@ -71,7 +83,6 @@ namespace QLTV_V2.BLL
                 throw new Exception("Error from UserBLL: " + ex.Message.ToString());
             }
         }
-
 
         public void DeleteUser(int id)
         {
@@ -84,6 +95,22 @@ namespace QLTV_V2.BLL
                 } 
             }
             catch (Exception ex)
+            {
+                throw new Exception("Error from UserBLL: " + ex.Message.ToString());
+            }
+        }
+
+        public bool checkUserNameNotExist(string userName)
+        {
+            try
+            {
+                User user = _context.User.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
+                if (user == null)
+                    return true;
+                else
+                    return false;     
+            }
+            catch(Exception ex)
             {
                 throw new Exception("Error from UserBLL: " + ex.Message.ToString());
             }

@@ -33,7 +33,9 @@ namespace QLTV_V2
                                   builder =>
                                   {
                                       builder.WithOrigins("http://localhost:3000",
-                                                          "http://www.contoso.com");
+                                                          "http://www.contoso.com")
+                                                            .AllowAnyHeader()
+                                                            .WithMethods("POST", "PUT", "DELETE", "GET");
                                   });
             });
 

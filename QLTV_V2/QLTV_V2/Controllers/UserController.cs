@@ -20,7 +20,7 @@ namespace QLTV_V2.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<User> Get()
+        public IEnumerable<Object> Get()
         {
             try
             {
@@ -34,7 +34,7 @@ namespace QLTV_V2.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<User> Get(int id)
+        public ActionResult<Object> Get(int id)
         {
             try
             {

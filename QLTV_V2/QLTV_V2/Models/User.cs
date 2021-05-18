@@ -9,5 +9,6 @@ namespace QLTV_V2.Models
         public int Id { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
+        public string Description { get; set; }
     }
 }

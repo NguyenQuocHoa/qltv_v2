@@ -18,12 +18,7 @@ library.add(
 );
 
 import {
-  ToastContainer,
   toast,
-  Bounce,
-  Slide,
-  Flip,
-  Zoom
 } from 'react-toastify';
 
 
@@ -54,22 +49,18 @@ function UserExample(props) {
           console.log(res);
         }
       })
+      .catch(() => {
+        showToastError('Get user list failure!');
+      })
   }, [userList.length]);
 
-  // config for show notification 
-  // const isDefaultProps = () => {
-  //   return (
-  //     this.state.position === 'top-right' &&
-  //     (this.state.autoClose === 5000 && !this.state.disableAutoClose) &&
-  //     !this.state.hideProgressBar &&
-  //     !this.state.newestOnTop &&
-  //     !this.state.rtl &&
-  //     this.state.pauseOnFocusLoss &&
-  //     this.state.pauseOnHover &&
-  //     this.state.closeOnClick &&
-  //     this.state.draggable
-  //   );
-  // }
+  const showToastSuccess = (message) => {
+    toast['success'](message);
+  }
+
+  const showToastError = (message) => {
+    toast['error'](message);
+  }
  
   const addUser = () => {
     toggle();
@@ -80,9 +71,10 @@ function UserExample(props) {
       .then(res => {
         console.log(res);
         if (res.status == 200) {
-          console.log("OK");
+          showToastSuccess('Add user success!');
         }
       })
+      .catch(() => showToastError('Add user failure!'))
       .finally(() => {
         setUserList([...userList, user ]);
       })
@@ -97,9 +89,10 @@ function UserExample(props) {
       .then(res => {
         console.log(res);
         if (res.status == 200) {
-          console.log("OK");
+          showToastSuccess('Update user success!');
         }
       })
+      .catch(() => showToastError('Update user failure!'))
       .finally(() => {
         setUserList([...userList, user ]);
       })
@@ -111,9 +104,10 @@ function UserExample(props) {
     axios.delete(`user/${user.id}`)
       .then(res => {
         if (res.status === 200) {
-          console.log("Delete success");
+          showToastSuccess('Delete user success!');
         }
       })
+      .catch(() => showToastError('Delete user failure!'))
       .finally(() => {
         setUserList([...userList, user ]);
       })
@@ -174,11 +168,11 @@ function UserExample(props) {
                   <td>{user.userName}</td>
                   <td>{user.description}</td>
                   <td>
-                    <Button outline className="mb-2 mr-2 btn-transition"
+                    <Button title="Edit user" outline className="mb-2 mr-2 btn-transition"
                                             color="warning" size="sm" onClick={() => btnEditOnclick(user.id)}>
                       <FontAwesomeIcon icon={faEdit} size="1x"/>
                     </Button>
-                    <Button outline className="mb-2 mr-2 btn-transition"
+                    <Button title="Delete user" outline className="mb-2 mr-2 btn-transition"
                                             color="danger" size="sm" onClick={() => btnDeleteOnClick(user.id)}>
                       <FontAwesomeIcon icon={faTrashAlt} size="1x"/>
                     </Button>

@@ -70,7 +70,7 @@ namespace QLTV_V2.BLL
             try
             {
                 User oldUser = _context.User.Where(us => us.Id == id).SingleOrDefault();
-                if (newUser.Password != "")
+                if (newUser.Password.Trim() != "")
                 {
                     newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
                 }

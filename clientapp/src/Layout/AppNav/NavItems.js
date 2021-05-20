@@ -6,8 +6,18 @@ export const MainNav = [
     },
     {
         icon: 'pe-7s-user',
-        label: 'User Example',
+        label: 'User',
         to: '#/dashboards/user',
+    },
+    {
+        icon: 'pe-7s-notebook',
+        label: 'Book',
+        to: '#/dashboards/book',
+    },
+    {
+        icon: 'pe-7s-portfolio',
+        label: 'Category',
+        to: '#/dashboards/category',
     },
 ];
 export const ComponentsNav = [

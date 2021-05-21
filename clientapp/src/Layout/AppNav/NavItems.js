@@ -19,6 +19,11 @@ export const MainNav = [
         label: 'Category',
         to: '#/dashboards/category',
     },
+    {
+        icon: 'pe-7s-study',
+        label: 'Student',
+        to: '#/dashboards/student',
+    },
 ];
 export const ComponentsNav = [
     {

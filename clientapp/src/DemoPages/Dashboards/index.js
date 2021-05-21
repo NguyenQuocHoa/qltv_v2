@@ -9,11 +9,17 @@ import BasicDashboard from './Basic/';
 
 import UserExample from './user/';
 
-// BOOK 
-import BookExample from './book/';
+// BOOK  
 
-// CATEGORY 
-import CategoryExample from './category/'
+import BookExample from './book/';
+ 
+// CATEGORY  
+
+import CategoryExample from './category/';
+
+// STUDENT
+
+import StudentExample from './student/';
 
 // Layout
 
@@ -32,6 +38,7 @@ const Dashboards = ({match}) => (
                     <Route path={`${match.url}/user`} component={UserExample}/>
                     <Route path={`${match.url}/book`} component={BookExample}/>
                     <Route path={`${match.url}/category`} component={CategoryExample}/>
+                    <Route path={`${match.url}/student`} component={StudentExample}/>
                 </div>
                 <AppFooter/>
             </div>

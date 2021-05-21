@@ -67,6 +67,19 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public void ResetPassword(Student oldStudent, string newPassword)
+        {
+            try
+            {
+                oldStudent.Password = newPassword;
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from StudentDAL: " + ex.Message.ToString());
+            }
+        }
+
         public void EditStudent(Student oldStudent, Student newStudent)
         {
             try

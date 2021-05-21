@@ -48,8 +48,34 @@ namespace QLTV_V2.BLL
         {
             try
             {
-                student.Password = BCrypt.Net.BCrypt.HashPassword(student.Password);
-                _studentDAL.AddStudent(student);
+                // check Student code is exist
+                var st = _context.Student.Where(item => item.StudentCode == student.StudentCode).Select(item => new { item.Id }).SingleOrDefault();
+                if (st == null)
+                {
+                    student.Password = BCrypt.Net.BCrypt.HashPassword(student.Password);
+                    _studentDAL.AddStudent(student);
+                }
+                else
+                    throw new Exception("Student code already exist"); 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from StudentBLL: " + ex.Message.ToString());
+            }
+        }
+
+        public void ResetPassword(int id)
+        {
+            try
+            {
+                Student oldStudent = _context.Student.Where(us => us.Id == id).SingleOrDefault();
+                if (oldStudent != null)
+                {
+                    string newPassword = BCrypt.Net.BCrypt.HashPassword("1");
+                    _studentDAL.ResetPassword(oldStudent, newPassword);
+                }
+                else
+                    throw new Exception("Student doesn't exist");
             }
             catch (Exception ex)
             {
@@ -62,7 +88,10 @@ namespace QLTV_V2.BLL
             try
             {
                 Student oldStudent = _context.Student.Where(us => us.Id == id).SingleOrDefault();
-                newStudent.Password = BCrypt.Net.BCrypt.HashPassword(newStudent.Password);
+                if (newStudent.Password == null || newStudent.Password.Trim() == "")
+                    newStudent.Password = oldStudent.Password;
+                else
+                    newStudent.Password = BCrypt.Net.BCrypt.HashPassword(newStudent.Password);
                 _studentDAL.EditStudent(oldStudent, newStudent);
             }
             catch (Exception ex)

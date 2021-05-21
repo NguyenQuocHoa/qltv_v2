@@ -46,6 +46,8 @@ namespace QLTV_V2.Controllers
             }
         }
 
+        
+
         [HttpPost]
         public IActionResult Post([FromBody] User user)
         {

@@ -11,12 +11,6 @@ import {
 
 } from '@fortawesome/free-solid-svg-icons';
 
-library.add(
-  fab,
-  faEdit,
-  faTrashAlt,
-);
-
 import {
   toast,
 } from 'react-toastify';
@@ -24,6 +18,12 @@ import {
 import ButtonAdd from '../ButtonAdd';
 import BookList from './BookList';
 import BookFrom from './BookForm';
+
+library.add(
+  fab,
+  faEdit,
+  faTrashAlt,
+);
 
 export default function BookExample(props) {
   const {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Row, Col, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText, FormFeedback } from 'reactstrap';
+import { Row, Col, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import axios from 'axios';
 import {library} from '@fortawesome/fontawesome-svg-core'
@@ -12,18 +12,18 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
-library.add(
-  fab,
-  faEdit,
-  faTrashAlt,
-);
-
 import {
   toast,
 } from 'react-toastify';
 
 
 import ButtonAdd from '../ButtonAdd';
+
+library.add(
+  fab,
+  faEdit,
+  faTrashAlt,
+);
 
 function StudentExample(props) {
   const {
@@ -145,25 +145,13 @@ function StudentExample(props) {
       })
   }
 
-  const inputStudentNameChange = (event) => {
-    setStudent({ ...student, studentName: event.target.value });
-  }
-
-  const inputPasswordChange = (event) => {
-    setStudent({ ...student, password: event.target.value });
-  }
-
-  const inputDescriptionChange = (event) => {
-    setStudent({ ...student, description: event.target.value });
-  }
-
   const btnAddOnclick = () => {
     resetStudentForm();
     setModal(true);
   }
 
   const btnEditOnclick = (id) => {
-    const student = studentList.find(u => u.id == id);
+    const student = studentList.find(u => u.id === id);
     setStudent(student);
     setModalEdit(!modalEdit);
   }
@@ -174,7 +162,7 @@ function StudentExample(props) {
   }
 
   const checkPasswordConfirm = (pass, passCon) => {
-    if (pass === '' && passCon === '' && student.id != undefined)
+    if (pass === '' && passCon === '' && student.id !== undefined)
       return true;
     if (pass === passCon && pass !== '') 
       return true;
@@ -267,8 +255,8 @@ function StudentExample(props) {
                   <Col>
                     <FormGroup>
                       <Label className="font-weight-bold" for="stduentcode">Student code</Label>
-                      <Input invalid={student.studentCode.length != 10} 
-                        valid={student.studentCode.length == 10} type="text" name="student code" id="stduentcode" 
+                      <Input invalid={student.studentCode.length !== 10} 
+                        valid={student.studentCode.length === 10} type="text" name="student code" id="stduentcode" 
                         value={student.studentCode} 
                         onChange={e => setStudent({...student, studentCode: e.target.value})} />
                       <FormFeedback>Lenght of Student code have to equal 10!</FormFeedback>
@@ -511,45 +499,3 @@ function StudentExample(props) {
 }
 
 export default StudentExample;
-
-// export default function StudentExample() {
-//   const [students, setStudents] = useState([]);
-//   useEffect(() => {
-//     setStudents([
-//       { id: 1, name: 'student 1', detail: 'Detail student' },
-//       { id: 2, name: 'student 2', detail: 'Detail student' },
-//       { id: 3, name: 'student 3', detail: 'Detail student' },
-//       { id: 4, name: 'student 4', detail: 'Detail student' },
-//       { id: 5, name: 'student 5', detail: 'Detail student' },
-//       { id: 1, name: 'student 1', detail: 'Detail student' },
-//       { id: 2, name: 'student 2', detail: 'Detail student' },
-//       { id: 3, name: 'student 3', detail: 'Detail student' },
-//       { id: 4, name: 'student 4', detail: 'Detail student' },
-//       { id: 5, name: 'student 5', detail: 'Detail student' }
-//     ])
-//   }, []);
-//   return (
-//     <div className="student-page">
-//       <h1>Student page</h1>
-//       <div className="student-list">
-//         <Row>
-//           { students.map(student => (
-//             <Col xl="3" lg="4" md="6" key={student.id}>
-//               <Card className="mb-3">
-//                 <CardImg top width="100%" src="https://loremflickr.com/640/360" alt="Card image cap" />
-//                 <CardBody>
-//                   <CardTitle tag="h5">{ student.name }</CardTitle>
-//                   <CardSubtitle tag="h6" className="mb-2 text-muted">{ student.detail }</CardSubtitle>
-//                   <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
-//                   <Button block outline className="mb-2 mr-2 btn-transition" color="info">
-//                     <i className="lnr-eye icon-gradient bg-happy-fisher"> </i>
-//                   </Button>
-//                 </CardBody>
-//               </Card>
-//             </Col>
-//           ))}
-//         </Row>
-//       </div>
-//     </div>
-//   )
-// }

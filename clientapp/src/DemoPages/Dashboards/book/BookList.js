@@ -1,86 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Button } from 'reactstrap';
-
-import {library} from '@fortawesome/fontawesome-svg-core'
-import {fab} from '@fortawesome/free-brands-svg-icons'
-import {
-  faEdit,
-  faTrashAlt,
-
-} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-
-library.add(
-  fab,
-  faEdit,
-  faTrashAlt,
-);
-
-import BookForm from './BookForm';
+import React from 'react';
+import {  Row, Col, Button,
+    Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from 'reactstrap';
 
 export default function BookList(props) {
-
-    const [isEdit, setIsEdit] = useState(false);
-
     const {
-        books, 
-        fetchBooks, 
-        isAdd, 
-        setIsAdd,
-        setToggle,
+        books,
+        btnEditOnclick,
+        btnDeleteOnclick,
     } = props;
 
-    useEffect(() => {
-        console.log('is add: ', isAdd); 
-        fetchBooks();
-    }, []);
     return (
         <div className="book-list">
-            <Table className="mb-0">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Book Code</th>
-                    <th>Book Name</th>
-                    <th>Inventory</th>
-                    <th>Author</th>
-                    <th>Main Content</th>
-                    <th>Description</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                { books.map(book => {
-                    return <tr key={book.id}>
-                        <th>{book.id}</th>
-                        <td>{book.bookCode}</td>
-                        <td>{book.bookName}</td>
-                        <td>{book.inventory}</td>
-                        <td>{book.author}</td>
-                        <td>{book.mainContent}</td>
-                        <td>{book.description}</td>
-                        <td>
-                            <Button title="Edit book" outline className="mb-2 mr-2 btn-transition"
-                                                    color="warning" size="sm" 
-                                                    onClick={() => setToggle(true)}>        
-                                <FontAwesomeIcon icon={faEdit} size="1x"/>
-                            </Button>
-                            <Button title="Delete book" outline className="mb-2 mr-2 btn-transition"
-                                                    color="danger" size="sm">
-                                <FontAwesomeIcon icon={faTrashAlt} size="1x"/>
-                            </Button>
-                        </td>
-                    </tr>                                                                                               
-                }) }
-                </tbody>
-            </Table> 
-
-            <BookForm />
-
-            {/* Add Book && Edit Book */}
-            {/* {
-                isAdd && <BookForm />
-            } */}
+            <Row>
+                { books.map(book => (
+                    <Col xl="3" lg="4" md="6" key={book.id}>
+                        <Card className="mb-3">
+                        <CardImg top width="100%" src="https://loremflickr.com/640/360" alt="Card image cap" />
+                        <CardBody>
+                            <CardTitle tag="h5">{ `${ book.bookCode} - ${ book.bookName}` }</CardTitle>
+                            <CardSubtitle tag="h6" className="mb-2 text-muted">{ book.author }</CardSubtitle>
+                            <CardText>{book.mainContent}</CardText>
+                            <Row>
+                            <Col>
+                                <Button title="Edit book" block outline className="mb-2 mr-2 btn-transition" color="info" onClick={() => btnEditOnclick(book.id)}>
+                                <i className="lnr-eye icon-gradient bg-happy-fisher"> </i>
+                                </Button>
+                            </Col>
+                            <Col>
+                                <Button title="Delete book" block outline className="mb-2 mr-2 btn-transition" color="danger" onClick={() => btnDeleteOnclick(book.id)}>
+                                <i className="lnr-trash icon-gradient bg-amy-crisp"> </i>
+                                </Button>
+                            </Col>
+                            </Row>
+                        </CardBody>
+                        </Card>
+                    </Col>
+                ))}
+            </Row>
         </div>
     )
 }

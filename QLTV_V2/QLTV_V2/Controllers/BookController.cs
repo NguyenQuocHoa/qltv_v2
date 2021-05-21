@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLTV_V2.BLL;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace QLTV_V2.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return Ok(new Error(500, ex.Message.ToString()));
             }
         }
 
@@ -56,7 +57,7 @@ namespace QLTV_V2.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return Ok(new Error(500, ex.Message.ToString()));
             }
             return Ok(book);
         }
@@ -70,7 +71,7 @@ namespace QLTV_V2.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return Ok(new Error(500, ex.Message.ToString()));
             }
             return Ok(id);
         }
@@ -85,7 +86,7 @@ namespace QLTV_V2.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return Ok(new Error(500, ex.Message.ToString()));
             }
             return Ok(id);
         }

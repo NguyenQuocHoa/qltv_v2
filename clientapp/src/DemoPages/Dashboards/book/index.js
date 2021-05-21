@@ -1,202 +1,181 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import axios from 'axios';
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {fab} from '@fortawesome/free-brands-svg-icons'
+import {
+  faEdit,
+  faTrashAlt,
+
+} from '@fortawesome/free-solid-svg-icons';
+
+library.add(
+  fab,
+  faEdit,
+  faTrashAlt,
+);
 
 import {
   toast,
 } from 'react-toastify';
 
-import BookList from '../bindings/book/BookList';
-
 import ButtonAdd from '../ButtonAdd';
+import BookList from './BookList';
+import BookFrom from './BookForm';
 
-function BookExample(props) {
+export default function BookExample(props) {
   const {
     buttonLabel,
-    className,
+    className
   } = props;
-  const [userList, setUserList] = useState([]);
+  
+  const [books, setBooks] = useState([]);
+  const [book, setBook] =  useState({ bookCode: '', bookName: '', inventory: 0, author: undefined, mainContent: undefined, description: undefined, bookCategory_Id: -1 });
+  const [bookCategories, setBookCategories] = useState([]);
   const [modal, setModal] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
-  // const [user, setUser] = useState({ userName: "user name", password: "password", description: null });
-  const [isAdd, setIsAdd] = useState(false);
 
   const toggle = () => setModal(!modal);
   const toggleEdit = () => setModalEdit(!modalEdit);
   const toggleDelete = () => setModalDelete(!modalDelete);
 
-//   useEffect(() => {
-//     fetchBooks();
-//   }, [userList.length]);
+  useEffect(() => {
+    getBookCategories();
+    getBooks();
+  }, []);
 
-//   const showToastSuccess = (message) => {
-//     toast['success'](message);
-//   }
-
-//   const showToastError = (message) => {
-//     toast['error'](message);
-//   }
- 
-//   const addUser = () => {
-//     toggle();
-    
-//     axios.post('user', {
-//       ...user
-//     })
-//       .then(res => {
-//         console.log(res);
-//         if (res.status == 200) {
-//           showToastSuccess('Add user success!');
-//         }
-//       })
-//       .catch(() => showToastError('Add user failure!'))
-//       .finally(() => {
-//         setUserList([...userList, user ]);
-//       })
-//   }
-
-//   const editUser = () => {
-//     toggleEdit();
-
-//     axios.put(`user/${user.id}`, {
-//       ...user
-//     })
-//       .then(res => {
-//         console.log(res);
-//         if (res.status == 200) {
-//           showToastSuccess('Update user success!');
-//         }
-//       })
-//       .catch(() => showToastError('Update user failure!'))
-//       .finally(() => {
-//         setUserList([...userList, user ]);
-//       })
-//   }
-
-//   const deleteUser = () => {
-//     toggleDelete();
-
-//     axios.delete(`user/${user.id}`)
-//       .then(res => {
-//         if (res.status === 200) {
-//           showToastSuccess('Delete user success!');
-//         }
-//       })
-//       .catch(() => showToastError('Delete user failure!'))
-//       .finally(() => {
-//         setUserList([...userList, user ]);
-//       })
-//   }
-
-//   const inputUserNameChange = (event) => {
-//     setUser({ ...user, userName: event.target.value });
-//   }
-
-//   const inputPasswordChange = (event) => {
-//     setUser({ ...user, password: event.target.value });
-//   }
-
-//   const inputDescriptionChange = (event) => {
-//     setUser({ ...user, description: event.target.value });
-//   }
-
-  const btnAddOnclick = () => {
-    setIsAdd(!isAdd);
+  const showToastSuccess = (message) => {
+    toast['success'](message);
   }
 
-//   const btnEditOnclick = (id) => {
-//     const user = userList.find(u => u.id == id);
-//     console.log(user);
-//     user.password = '';
-//     setUser(user);
-//     setModalEdit(!modalEdit);
-//   }
+  const showToastError = (message) => {
+    toast['error'](message);
+  }
 
-//   const btnDeleteOnClick = (id) => {
-//     setUser({ ...user, id: id });
-//     setModalDelete(!modalDelete);
-//   }
+  const getBookCategories = () => {
+    axios.get('/bookcategory')
+      .then(res => {
+        setBookCategories(res.data);
+      })
+  }
+
+  const getBooks= () => {
+    axios.get('/book')
+      .then(res => {
+        setBooks(res.data);
+      })
+  }
+
+  const addBook = () => {
+    axios.post('book', {
+      ...book,
+      inventory: book.inventory * 1,
+      bookCategory_Id: book.bookCategory_Id * 1
+    })
+      .then(res => {
+        if (res.data.status === 500) 
+        {
+          showToastError('Add book failure, ' + res.data.message);
+          return;
+        }
+        toggle();
+        showToastSuccess('Add book success!');
+      })
+      .finally(() => {
+        getBooks();
+      })
+  }
+
+  const editBook = () => {
+    toggleEdit();
+
+    axios.put(`book/${book.id}`, {
+      ...book,
+      inventory: book.inventory * 1,
+      bookCategory_Id: book.bookCategory_Id * 1
+    })
+      .then(res => {
+        if (res.data.status === 500)
+        {
+          showToastError('Update book failure, ' + res.data.message);
+          return;
+        }
+        showToastSuccess('Update book success!');
+      })
+      .finally(() => {
+        getBooks();
+      })
+  }
+
+  const deleteBook = () => {
+    toggleDelete();
+
+    axios.delete(`book/${book.id}`)
+      .then(res => {
+        showToastSuccess('Delete book success!');
+      })
+      .finally(() => getBooks());
+  }
+
+  const btnAddOnclick = () => {
+    resetForm();
+    setModal(true);
+  }
+
+  const btnEditOnclick = (id) => {
+    const book = books.find(u => u.id == id);
+    setBook(book);
+    setModalEdit(!modalEdit);
+  }
+
+  const btnDeleteOnclick = (id) => {
+    setBook({...book, id });
+    setModalDelete(!modalDelete);
+  }
+
+  const resetForm = () => setBook({ bookCode: '', bookName: '', inventory: 0, author: undefined, mainContent: undefined, description: undefined, bookCategory_Id: -1 });
 
   return (
-      <Fragment>
-        <ReactCSSTransitionGroup
-          component="div"
-          transitionName="TabsAnimation"
-          transitionAppear={true}
-          transitionAppearTimeout={0}
-          transitionEnter={false}
-          transitionLeave={false}>
-            <ButtonAdd setIsAdd={setIsAdd} text="Add Book" />
-          
-          <BookList isAdd={isAdd} setIsAdd={setIsAdd} />
+    <Fragment>
+      <ReactCSSTransitionGroup
+        component="div"
+        transitionName="TabsAnimation"
+        transitionAppear={true}
+        transitionAppearTimeout={0}
+        transitionEnter={false}
+        transitionLeave={false}>
+        <ButtonAdd btnAddChange={btnAddOnclick} text="Add Book" />
 
-          {/* Add User */}
-          {/* <Modal isOpen={modal} toggle={toggle} className={className} backdrop={true}>
-            <ModalHeader toggle={toggle}>Add User</ModalHeader>
-            <ModalBody>
-              <Form>
-                <FormGroup>
-                  <Label for="exampleEmail">User name</Label>
-                  <Input type="text" name="user name" id="username" placeholder="Input a user name" value={user.userName} onChange={inputUserNameChange} />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleEmail">Password</Label>
-                  <Input type="password" name="password" id="password" value={user.password} onChange={inputPasswordChange} />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleDescription">Description</Label>
-                  <Input type="text" name="description" id="description" value={user.description} onChange={inputDescriptionChange} />
-                </FormGroup>
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="success" onClick={addUser}>Accept</Button>{' '}
-              <Button color="secondary" onClick={toggle}>Cancel</Button>
-            </ModalFooter>
-          </Modal> */}
-          
+        {/* Book list */}
+        <BookList books={books} btnEditOnclick={btnEditOnclick} btnDeleteOnclick={btnDeleteOnclick} />
 
-          {/* Edit User */}
-          {/* <Modal isOpen={modalEdit} toggle={toggleEdit} className={className} backdrop={true}>
-            <ModalHeader toggle={toggleEdit}>Edit User</ModalHeader>
-            <ModalBody>
-              <Form>
-                <FormGroup disabled>
-                  <Label for="exampleEmail">User name</Label>
-                  <Input type="text" name="user name" id="username" placeholder="Input a user name" value={user.userName} />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleEmail">Password</Label>
-                  <Input type="password" name="password" id="password" value={user.password} onChange={inputPasswordChange} placeholder="Keep old password let input empty" />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleDescription">Description</Label>
-                  <Input type="text" name="description" id="description" value={user.description} onChange={inputDescriptionChange} />
-                </FormGroup>
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="success" onClick={editUser}>Accept</Button>{' '}
-              <Button color="secondary" onClick={toggleEdit}>Cancel</Button>
-            </ModalFooter>
-          </Modal> */}
 
-          {/* Delete User */}
-          {/* <Modal isOpen={modalDelete} toggle={toggleDelete} className={className} backdrop={true}>
-            <ModalHeader toggle={toggleDelete}>Delete User</ModalHeader>
-            <ModalBody>
-              <h4>Are you sure delete this user?</h4>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="danger" onClick={deleteUser}>Delete</Button>{' '}
-              <Button color="secondary" onClick={toggleDelete}>Cancel</Button>
-            </ModalFooter>
-          </Modal> */}
+        {/* Add book */}
+        <BookFrom book={book} bookCategories={bookCategories} 
+          modal={modal} toggle={toggle} setBook={setBook} addBook={addBook} className={className} />
 
-        </ReactCSSTransitionGroup>
+
+        {/* Book Detail && edit */}
+        <BookFrom book={book} bookCategories={bookCategories} 
+          modal={modalEdit} toggle={toggleEdit} setBook={setBook} addBook={editBook} className={className} isEdit={true} />
+
+
+        {/* Delete Book */}
+        <Modal isOpen={modalDelete} toggle={toggleDelete} className={className} backdrop={true}>
+          <ModalHeader toggle={toggleDelete}>Delete Book</ModalHeader>
+          <ModalBody>
+            <h4>Are you sure delete this book?</h4>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" onClick={deleteBook}>Delete</Button>{' '}
+            <Button color="secondary" onClick={toggleDelete}>Cancel</Button>
+          </ModalFooter>
+        </Modal>
+
+      </ReactCSSTransitionGroup>
     </Fragment>
   )
 }
-
-export default BookExample;

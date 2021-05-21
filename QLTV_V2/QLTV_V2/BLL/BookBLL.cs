@@ -50,7 +50,14 @@ namespace QLTV_V2.BLL
             {
                 if (checkBookCategoryExist(book.BookCategory_Id))
                 {
-                    _bookDAL.AddBook(book);
+                    // check book code is already exist
+                    var b = _context.Book.Where(item => item.BookCode == book.BookCode).Select(item => new { item.Id }).SingleOrDefault();
+                    if (b == null)
+                    {
+                        _bookDAL.AddBook(book);
+                    }
+                    else
+                        throw new Exception("Book code already exist");
                 }
                 else
                 {

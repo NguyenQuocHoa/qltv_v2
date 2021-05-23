@@ -50,7 +50,9 @@ export default function BookForm(props) {
                 <Col>
                   <FormGroup>
                     <Label className="font-weight-bold" for="bookname">Book name</Label>
-                    <Input type="text" name="book name" id="bookname" 
+                    <Input 
+                      valid={book.bookName.length > 0}
+                      type="text" name="book name" id="bookname" 
                       value={book.bookName} 
                       onChange={e => setBook({...book, bookName: e.target.value})} />
                   </FormGroup>
@@ -68,7 +70,9 @@ export default function BookForm(props) {
                 <Col>
                   <FormGroup>
                     <Label className="font-weight-bold" for="author">Author</Label>
-                    <Input type="text" name="author" id="author" 
+                    <Input 
+                      valid={book.author != undefined && book.author.length > 0}
+                      type="text" name="author" id="author" 
                       value={book.author} 
                       onChange={e => setBook({...book, author: e.target.value})} />
                   </FormGroup>
@@ -76,7 +80,7 @@ export default function BookForm(props) {
                 <Col>
                   <FormGroup>
                     <Label className="font-weight-bold" for="bookCategory">Book Category</Label>
-                    <Input valid={book.bookCategory_Id > 0} invalid={book.bookCategory_Id == -1}
+                    <Input valid={book.bookCategory_Id > 0} invalid={book.bookCategory_Id === -1}
                       type="select" name="bookCategory" id="bookCategory"
                       value={book.bookCategory_Id}
                       onChange={e => setBook({...book, bookCategory_Id: e.target.value })}>
@@ -95,7 +99,9 @@ export default function BookForm(props) {
                 <Col>
                   <FormGroup>
                     <Label className="font-weight-bold" for="mainContent">Main content</Label>
-                    <Input type="textarea" name="mainContent" id="mainContent" 
+                    <Input
+                      valid={book.mainContent != undefined && book.mainContent.length > 0} 
+                      type="textarea" name="mainContent" id="mainContent" 
                       value={book.mainContent} 
                       onChange={e => setBook({...book, mainContent: e.target.value})} />
                   </FormGroup>
@@ -105,7 +111,9 @@ export default function BookForm(props) {
                 <Col>
                   <FormGroup>
                     <Label className="font-weight-bold" for="exampleDescription">Description</Label>
-                    <Input type="textarea" name="description" id="description" 
+                    <Input 
+                      valid={book.description != undefined && book.description.length > 0}
+                      type="textarea" name="description" id="description" 
                       value={book.description} 
                       onChange={e => setBook({...book, description: e.target.value})} />
                   </FormGroup>

@@ -38,7 +38,7 @@ export default function StudentForm(props) {
             <ModalBody>
               <Form>
                 <Row>
-                  <Col>
+                  <Col sm="6">
                     <FormGroup>
                       <Label className="font-weight-bold" for="stduentcode">Student code</Label>
                       <Input readOnly={isEdit} invalid={student.studentCode.length !== 10} 
@@ -48,7 +48,7 @@ export default function StudentForm(props) {
                       <FormFeedback>Lenght of Student code have to equal 10!</FormFeedback>
                     </FormGroup>
                   </Col>
-                  <Col>
+                  <Col sm="6">
                     <FormGroup>
                       <Label className="font-weight-bold" for="studentname">Student name</Label>
                       <Input
@@ -58,9 +58,7 @@ export default function StudentForm(props) {
                         onChange={e => setStudent({...student, studentName: e.target.value})} />
                     </FormGroup>
                   </Col>
-                </Row>
-                <Row>
-                  <Col>
+                  <Col sm="6">
                     <FormGroup>
                       <Label className="font-weight-bold" for="class">Class</Label>
                       <Input 
@@ -70,7 +68,7 @@ export default function StudentForm(props) {
                         onChange={e => setStudent({...student, class: e.target.value})} />
                     </FormGroup>
                   </Col>
-                  <Col>
+                  <Col sm="6">
                     <FormGroup>
                       <Label className="font-weight-bold" for="dob">Date of Birth</Label>
                       <Input
@@ -83,9 +81,7 @@ export default function StudentForm(props) {
                       />
                     </FormGroup>
                   </Col>
-                </Row>
-                <Row>
-                  <Col>
+                  <Col sm="6">
                     <FormGroup>
                       <Label className="font-weight-bold" for="nativeland">Native land</Label>
                       <Input 
@@ -95,7 +91,7 @@ export default function StudentForm(props) {
                         onChange={e => setStudent({...student, nativeLand: e.target.value})} />
                     </FormGroup>
                   </Col>
-                  <Col>
+                  <Col sm="6">
                     <FormGroup>
                       <Label className="font-weight-bold" for="course">Course</Label>
                       <Input 
@@ -105,9 +101,7 @@ export default function StudentForm(props) {
                         onChange={e => setStudent({...student, course: e.target.value})} />
                     </FormGroup>
                   </Col>
-                </Row>
-                <Row>
-                  <Col>
+                  <Col sm="6">
                     <FormGroup>
                       <Label className="font-weight-bold" for="faculty">Faculty</Label>
                       <Input 
@@ -117,7 +111,7 @@ export default function StudentForm(props) {
                         onChange={e => setStudent({...student, faculty: e.target.value})} />
                     </FormGroup>
                   </Col>
-                  <Col>
+                  <Col sm="6">
                     <FormGroup>
                       <Label className="font-weight-bold" for="exampleDescription">Description</Label>
                       <Input 
@@ -127,9 +121,7 @@ export default function StudentForm(props) {
                         onChange={e => setStudent({...student, description: e.target.value})} />
                     </FormGroup>
                   </Col>
-                </Row>
-                <Row>
-                  <Col>
+                  <Col sm="6">
                     <FormGroup>
                       <Label className="font-weight-bold" for="password">Password</Label>
                       <Input valid={student.password !== '' && checkPasswordConfirm(student.password, student.passwordConfirm)} 
@@ -138,7 +130,7 @@ export default function StudentForm(props) {
                         onChange={e => setStudent({...student, password: e.target.value})} />
                     </FormGroup>
                   </Col>
-                  <Col>
+                  <Col sm="6">
                     <FormGroup>
                       <Label className="font-weight-bold" for="password">Password Confirm</Label>
                       <Input valid={student.password !== '' && checkPasswordConfirm(student.password, student.passwordConfirm)} 

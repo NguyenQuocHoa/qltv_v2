@@ -7,22 +7,27 @@ import {fab} from '@fortawesome/free-brands-svg-icons'
 import {
   faEdit,
   faTrashAlt,
+  faCheckCircle,
+  faTimesCircle
 
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-
-library.add(
-  fab,
-  faEdit,
-  faTrashAlt,
-);
 
 import {
   toast,
 } from 'react-toastify';
 
-
 import ButtonAdd from '../ButtonAdd';
+
+library.add(
+  fab,
+  faEdit,
+  faTrashAlt,
+  faCheckCircle,
+  faTimesCircle
+);
+
+
 
 function CategoryExample(props) {
   const {
@@ -63,7 +68,7 @@ function CategoryExample(props) {
     toast['error'](message);
   }
  
-  const addCategory = () => {
+  const addBookCategory = () => {
     toggle();
     
     axios.post('bookcategory', {
@@ -169,67 +174,14 @@ function CategoryExample(props) {
           </Table> 
 
           {/* Add Category */}
-          <Modal isOpen={modal} toggle={toggle} className={className} backdrop={true}>
-            <ModalHeader toggle={toggle}>Add Book Category</ModalHeader>
-            <ModalBody>
-              <Form>
-                <FormGroup>
-									<Label for="exampleBookCategoryCode">Book category code</Label>
-									<Input type="text" name="exampleBookCategoryCode" id="exampleBookCategoryName" 
-										placeholder="Input a book category code" value={category.bookCategoryCode} 
-										onChange={e => setCategory({...category, bookCategoryCode: e.target.value })} />
-                </FormGroup>
-                <FormGroup>
-									<Label for="exampleBookCategoryName">Book category name</Label>
-									<Input type="text" name="exampleBookCategoryName" id="exampleBookCategoryName" 
-										placeholder="Input a book category name" value={category.bookCategoryName} 
-										onChange={e => setCategory({...category, bookCategoryName: e.target.value})} />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleDescription">Description</Label>
-                  <Input type="text" name="description" id="description" 
-										placeholder="Input description" value={category.description} 
-										onChange={e => setCategory({...category, description: e.target.value})} />
-                </FormGroup>
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="success" onClick={addCategory}>Accept</Button>{' '}
-              <Button color="secondary" onClick={toggle}>Cancel</Button>
-            </ModalFooter>
-          </Modal>
-          
+          <CategoryForm category={category} setCategory={setCategory} modal={modal} toggle={toggle} 
+            className={className} addBookCategory={addBookCategory} />
+
 
           {/* Edit Category */}
-          <Modal isOpen={modalEdit} toggle={toggleEdit} className={className} backdrop={true}>
-            <ModalHeader toggle={toggleEdit}>Edit Book Category</ModalHeader>
-            <ModalBody>
-						<Form>
-                <FormGroup>
-									<Label for="exampleBookCategoryCode">Book category code</Label>
-									<Input type="text" name="exampleBookCategoryCode" id="exampleBookCategoryName" 
-										placeholder="Input a book category code" value={category.bookCategoryCode} 
-										onChange={e => setCategory({...category, bookCategoryCode: e.target.value })} />
-                </FormGroup>
-                <FormGroup>
-									<Label for="exampleBookCategoryName">Book category name</Label>
-									<Input type="text" name="exampleBookCategoryName" id="exampleBookCategoryName" 
-										placeholder="Input a book category name" value={category.bookCategoryName} 
-										onChange={e => setCategory({...category, bookCategoryName: e.target.value})} />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleDescription">Description</Label>
-                  <Input type="text" name="description" id="description" 
-										placeholder="Input description" value={category.description} 
-										onChange={e => setCategory({...category, description: e.target.value})} />
-                </FormGroup>
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="success" onClick={editBookCategory}>Accept</Button>{' '}
-              <Button color="secondary" onClick={toggleEdit}>Cancel</Button>
-            </ModalFooter>
-          </Modal>
+          <CategoryForm category={category} setCategory={setCategory} modal={modalEdit} toggle={toggleEdit} 
+           className={className} addBookCategory={editBookCategory} isEdit={true} />
+          
 
           {/* Delete Category */}
           <Modal isOpen={modalDelete} toggle={toggleDelete} className={className} backdrop={true}>
@@ -238,8 +190,10 @@ function CategoryExample(props) {
               <h4>Are you sure delete this book category?</h4>
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" onClick={deleteCategory}>Delete</Button>{' '}
-              <Button color="secondary" onClick={toggleDelete}>Cancel</Button>
+              <Button color="danger" onClick={deleteCategory}>
+                <FontAwesomeIcon icon={faTrashAlt} size="1x"/>{' '} Delete</Button>{' '}
+              <Button color="secondary" onClick={toggleDelete}>
+                <FontAwesomeIcon icon={faTimesCircle} size="1x"/>{' '} Cancel</Button>
             </ModalFooter>
           </Modal>
 
@@ -248,4 +202,54 @@ function CategoryExample(props) {
   )
 }
 
+function CategoryForm(props) {
+  const {
+    category,
+    setCategory,
+    modal,
+    toggle,
+    className,
+    addBookCategory,
+    isEdit = false,
+
+  } = props;
+
+  return (
+    <Modal isOpen={modal} toggle={toggle} className={className} backdrop={true}>
+      <ModalHeader toggle={toggle}>{ isEdit ? 'Edit ' : 'Add ' }Book Category</ModalHeader>
+      <ModalBody>
+        <Form>
+          <FormGroup>
+            <Label className="font-weight-bold" for="exampleBookCategoryCode">Book category code</Label>
+            <Input readOnly={isEdit} type="text" name="exampleBookCategoryCode" id="exampleBookCategoryName" 
+              value={category.bookCategoryCode} 
+              onChange={e => setCategory({...category, bookCategoryCode: e.target.value })} />
+          </FormGroup>
+          <FormGroup>
+            <Label className="font-weight-bold" for="exampleBookCategoryName">Book category name</Label>
+            <Input type="text" name="exampleBookCategoryName" id="exampleBookCategoryName" 
+              value={category.bookCategoryName} 
+              onChange={e => setCategory({...category, bookCategoryName: e.target.value})} />
+          </FormGroup>
+          <FormGroup>
+            <Label className="font-weight-bold" for="exampleDescription">Description</Label>
+            <Input type="text" name="description" id="description" 
+              value={category.description} 
+              onChange={e => setCategory({...category, description: e.target.value})} />
+          </FormGroup>
+        </Form>
+      </ModalBody>
+      <ModalFooter>
+        <Button color="success" onClick={addBookCategory}>
+          <FontAwesomeIcon icon={faCheckCircle} size="1x"/>
+          {' '}Accept</Button>{' '}
+        <Button color="secondary" onClick={toggle}>
+          <FontAwesomeIcon icon={faTimesCircle} size="1x"/>
+          {' '}Cancel</Button>
+      </ModalFooter>
+    </Modal>
+  )
+}
+
 export default CategoryExample;
+

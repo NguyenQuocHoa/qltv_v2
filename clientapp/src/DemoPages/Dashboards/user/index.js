@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import axios from 'axios';
 import {library} from '@fortawesome/fontawesome-svg-core'
@@ -7,22 +7,23 @@ import {fab} from '@fortawesome/free-brands-svg-icons'
 import {
   faEdit,
   faTrashAlt,
+  faCheckCircle,
+  faTimesCircle
 
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+
+import {
+  toast,
+} from 'react-toastify';
+
+import ButtonAdd from '../ButtonAdd';
 
 library.add(
   fab,
   faEdit,
   faTrashAlt,
 );
-
-import {
-  toast,
-} from 'react-toastify';
-
-
-import ButtonAdd from '../ButtonAdd';
 
 function UserExample(props) {
   const {
@@ -113,18 +114,6 @@ function UserExample(props) {
       })
   }
 
-  const inputUserNameChange = (event) => {
-    setUser({ ...user, userName: event.target.value });
-  }
-
-  const inputPasswordChange = (event) => {
-    setUser({ ...user, password: event.target.value });
-  }
-
-  const inputDescriptionChange = (event) => {
-    setUser({ ...user, description: event.target.value });
-  }
-
   const btnAddOnclick = () => {
     setModal(true);
   }
@@ -183,55 +172,12 @@ function UserExample(props) {
           </Table> 
 
           {/* Add User */}
-          <Modal isOpen={modal} toggle={toggle} className={className} backdrop={true}>
-            <ModalHeader toggle={toggle}>Add User</ModalHeader>
-            <ModalBody>
-              <Form>
-                <FormGroup>
-                  <Label for="exampleEmail">User name</Label>
-                  <Input type="text" name="user name" id="username" placeholder="Input a user name" value={user.userName} onChange={inputUserNameChange} />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleEmail">Password</Label>
-                  <Input type="password" name="password" id="password" value={user.password} onChange={inputPasswordChange} />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleDescription">Description</Label>
-                  <Input type="text" name="description" id="description" value={user.description} onChange={inputDescriptionChange} />
-                </FormGroup>
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="success" onClick={addUser}>Accept</Button>{' '}
-              <Button color="secondary" onClick={toggle}>Cancel</Button>
-            </ModalFooter>
-          </Modal>
+          <UserForm user={user} setUser={setUser} modal={modal} toggle={toggle} className={className} addUser={addUser} />
           
 
           {/* Edit User */}
-          <Modal isOpen={modalEdit} toggle={toggleEdit} className={className} backdrop={true}>
-            <ModalHeader toggle={toggleEdit}>Edit User</ModalHeader>
-            <ModalBody>
-              <Form>
-                <FormGroup disabled>
-                  <Label for="exampleEmail">User name</Label>
-                  <Input type="text" name="user name" id="username" placeholder="Input a user name" value={user.userName} />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleEmail">Password</Label>
-                  <Input type="password" name="password" id="password" value={user.password} onChange={inputPasswordChange} placeholder="Keep old password let input empty" />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleDescription">Description</Label>
-                  <Input type="text" name="description" id="description" value={user.description} onChange={inputDescriptionChange} />
-                </FormGroup>
-              </Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="success" onClick={editUser}>Accept</Button>{' '}
-              <Button color="secondary" onClick={toggleEdit}>Cancel</Button>
-            </ModalFooter>
-          </Modal>
+          <UserForm user={user} setUser={setUser} modal={modalEdit} toggle={toggleEdit} className={className} addUser={editUser} isEdit={true} />
+          
 
           {/* Delete User */}
           <Modal isOpen={modalDelete} toggle={toggleDelete} className={className} backdrop={true}>
@@ -240,13 +186,57 @@ function UserExample(props) {
               <h4>Are you sure delete this user?</h4>
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" onClick={deleteUser}>Delete</Button>{' '}
-              <Button color="secondary" onClick={toggleDelete}>Cancel</Button>
+              <Button color="danger" onClick={deleteUser}>
+                <FontAwesomeIcon icon={faTrashAlt} size="1x"/>{' '} Delete</Button>{' '}
+              <Button color="secondary" onClick={toggleDelete}>
+                <FontAwesomeIcon icon={faTimesCircle} size="1x"/>{' '}Cancel</Button>  
             </ModalFooter>
           </Modal>
 
         </ReactCSSTransitionGroup>
     </Fragment>
+  )
+}
+
+function UserForm(props) {
+  const {
+    user,
+    setUser,
+    modal, 
+    toggle,
+    className,
+    addUser,
+    isEdit = false,
+  } = props;
+
+  return (
+    <Modal isOpen={modal} toggle={toggle} className={className} backdrop={true}>
+      <ModalHeader toggle={toggle}>Add User</ModalHeader>
+      <ModalBody>
+        <Form>
+          <FormGroup>
+            <Label for="exampleEmail">User name</Label>
+            <Input type="text" name="user name" id="username" placeholder="Input a user name" value={user.userName} onChange={e => setUser({...user, userName: e.target.value})} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="exampleEmail">Password</Label>
+            <Input readOnly={isEdit} type="password" name="password" id="password" value={user.password} onChange={e => setUser({...user, password: e.target.value})} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="exampleDescription">Description</Label>
+            <Input type="text" name="description" id="description" value={user.description} onChange={e => setUser({...user, description: e.target.value})} />
+          </FormGroup>
+        </Form>
+      </ModalBody>
+      <ModalFooter>
+        <Button color="success" onClick={addUser}>
+        <FontAwesomeIcon icon={faCheckCircle} size="1x"/>
+          {' '}Accept</Button>{' '}
+        <Button color="secondary" onClick={toggle}>
+        <FontAwesomeIcon icon={faTimesCircle} size="1x"/>
+          {' '}Cancel</Button>
+      </ModalFooter>
+    </Modal>
   )
 }
 

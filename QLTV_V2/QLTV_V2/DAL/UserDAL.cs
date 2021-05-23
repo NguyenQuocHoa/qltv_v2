@@ -68,6 +68,19 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public void ResetPassword(User oldUser, string newPassword)
+        {
+            try
+            {
+                oldUser.Password = newPassword;
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from UserDAL: " + ex.Message.ToString());
+            }
+        }
+
         public void DeleteUser(User user)
         {
             try

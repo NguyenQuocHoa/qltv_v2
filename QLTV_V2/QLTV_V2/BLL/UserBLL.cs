@@ -84,6 +84,25 @@ namespace QLTV_V2.BLL
             }
         }
 
+        public void ResetPassword(int id)
+        {
+            try
+            {
+                User oldUser = _context.User.Where(st => st.Id == id).SingleOrDefault();
+                if (oldUser != null)
+                {
+                    string newPassword = BCrypt.Net.BCrypt.HashPassword("1");
+                    _userDAL.ResetPassword(oldUser, newPassword);
+                }
+                else
+                    throw new Exception("User doesn't exist");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from UserBLL: " + ex.Message.ToString());
+            }
+        }
+
         public void DeleteUser(int id)
         {
             try

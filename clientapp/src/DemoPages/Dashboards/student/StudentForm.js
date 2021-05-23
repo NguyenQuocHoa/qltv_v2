@@ -51,7 +51,9 @@ export default function StudentForm(props) {
                   <Col>
                     <FormGroup>
                       <Label className="font-weight-bold" for="studentname">Student name</Label>
-                      <Input type="text" name="student name" id="studentname" 
+                      <Input
+                        valid={student.studentName.length > 0} 
+                        type="text" name="student name" id="studentname" 
                         value={student.studentName} 
                         onChange={e => setStudent({...student, studentName: e.target.value})} />
                     </FormGroup>
@@ -61,7 +63,9 @@ export default function StudentForm(props) {
                   <Col>
                     <FormGroup>
                       <Label className="font-weight-bold" for="class">Class</Label>
-                      <Input type="text" name="class" id="class" 
+                      <Input 
+                        valid={student.class.length > 0} 
+                        type="text" name="class" id="class" 
                         value={student.class} 
                         onChange={e => setStudent({...student, class: e.target.value})} />
                     </FormGroup>
@@ -70,6 +74,7 @@ export default function StudentForm(props) {
                     <FormGroup>
                       <Label className="font-weight-bold" for="dob">Date of Birth</Label>
                       <Input
+                        valid={student.doB !== undefined} 
                         type="date"
                         name="dob"
                         id="dob"
@@ -83,7 +88,9 @@ export default function StudentForm(props) {
                   <Col>
                     <FormGroup>
                       <Label className="font-weight-bold" for="nativeland">Native land</Label>
-                      <Input type="text" name="native land" id="nativeland" 
+                      <Input 
+                        valid={student.nativeLand.length > 0} 
+                        type="text" name="native land" id="nativeland" 
                         value={student.nativeLand} 
                         onChange={e => setStudent({...student, nativeLand: e.target.value})} />
                     </FormGroup>
@@ -91,7 +98,9 @@ export default function StudentForm(props) {
                   <Col>
                     <FormGroup>
                       <Label className="font-weight-bold" for="course">Course</Label>
-                      <Input type="text" name="course" id="course" 
+                      <Input 
+                        valid={student.course.length > 0} 
+                        type="text" name="course" id="course" 
                         value={student.course} 
                         onChange={e => setStudent({...student, course: e.target.value})} />
                     </FormGroup>
@@ -101,7 +110,9 @@ export default function StudentForm(props) {
                   <Col>
                     <FormGroup>
                       <Label className="font-weight-bold" for="faculty">Faculty</Label>
-                      <Input type="text" name="faculty" id="faculty" 
+                      <Input 
+                        valid={student.faculty.length > 0} 
+                        type="text" name="faculty" id="faculty" 
                         value={student.faculty} 
                         onChange={e => setStudent({...student, faculty: e.target.value})} />
                     </FormGroup>
@@ -109,7 +120,9 @@ export default function StudentForm(props) {
                   <Col>
                     <FormGroup>
                       <Label className="font-weight-bold" for="exampleDescription">Description</Label>
-                      <Input type="text" name="description" id="description" 
+                      <Input 
+                        valid={student.description.length > 0} 
+                        type="text" name="description" id="description" 
                         value={student.description} 
                         onChange={e => setStudent({...student, description: e.target.value})} />
                     </FormGroup>

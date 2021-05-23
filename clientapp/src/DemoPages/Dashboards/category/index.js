@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import axios from 'axios';
 import {library} from '@fortawesome/fontawesome-svg-core'
@@ -160,7 +160,7 @@ function CategoryExample(props) {
                   <td>{category.description}</td>
                   <td>
                     <Button title="Edit book category" outline className="mb-2 mr-2 btn-transition"
-                                            color="warning" size="sm" onClick={() => btnEditOnclick(category.id)}>
+                                            color="info" size="sm" onClick={() => btnEditOnclick(category.id)}>
                       <FontAwesomeIcon icon={faEdit} size="1x"/>
                     </Button>
                     <Button title="Delete book category" outline className="mb-2 mr-2 btn-transition"
@@ -221,19 +221,27 @@ function CategoryForm(props) {
         <Form>
           <FormGroup>
             <Label className="font-weight-bold" for="exampleBookCategoryCode">Book category code</Label>
-            <Input readOnly={isEdit} type="text" name="exampleBookCategoryCode" id="exampleBookCategoryName" 
+            <Input
+              valid={category.bookCategoryCode.length > 1}
+              invalid={category.bookCategoryCode.length <= 1}
+              readOnly={isEdit} type="text" name="exampleBookCategoryCode" id="exampleBookCategoryName" 
               value={category.bookCategoryCode} 
               onChange={e => setCategory({...category, bookCategoryCode: e.target.value })} />
+              <FormFeedback>Book category code length have to less than 1</FormFeedback>
           </FormGroup>
           <FormGroup>
             <Label className="font-weight-bold" for="exampleBookCategoryName">Book category name</Label>
-            <Input type="text" name="exampleBookCategoryName" id="exampleBookCategoryName" 
+            <Input
+              valid={category.bookCategoryName.length > 0} 
+              type="text" name="exampleBookCategoryName" id="exampleBookCategoryName" 
               value={category.bookCategoryName} 
               onChange={e => setCategory({...category, bookCategoryName: e.target.value})} />
           </FormGroup>
           <FormGroup>
             <Label className="font-weight-bold" for="exampleDescription">Description</Label>
-            <Input type="text" name="description" id="description" 
+            <Input
+              valid={category.description.length > 0} 
+              type="text" name="description" id="description" 
               value={category.description} 
               onChange={e => setCategory({...category, description: e.target.value})} />
           </FormGroup>

@@ -8,8 +8,10 @@ import {fab} from '@fortawesome/free-brands-svg-icons'
 import {
   faEdit,
   faTrashAlt,
+  faTimesCircle
 
 } from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {
   toast,
@@ -23,6 +25,7 @@ library.add(
   fab,
   faEdit,
   faTrashAlt,
+  faTimesCircle
 );
 
 export default function BookExample(props) {
@@ -170,8 +173,10 @@ export default function BookExample(props) {
             <h4>Are you sure delete this book?</h4>
           </ModalBody>
           <ModalFooter>
-            <Button color="danger" onClick={deleteBook}>Delete</Button>{' '}
-            <Button color="secondary" onClick={toggleDelete}>Cancel</Button>
+            <Button color="danger" onClick={deleteBook}>
+              <FontAwesomeIcon icon={faTrashAlt} size="1x"/>{' '} Delete</Button>{' '}
+            <Button color="secondary" onClick={toggleDelete}>
+              <FontAwesomeIcon icon={faTimesCircle} size="1x"/>{' '}Cancel</Button>
           </ModalFooter>
         </Modal>
 

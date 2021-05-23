@@ -5,13 +5,18 @@ import {fab} from '@fortawesome/free-brands-svg-icons'
 import {
   faEdit,
   faTrashAlt,
+  faCheckCircle,
+  faTimesCircle,
 
 } from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 library.add(
   fab,
   faEdit,
   faTrashAlt,
+  faCheckCircle,
+  faTimesCircle,
 );
 
 export default function StudentForm(props) {
@@ -134,8 +139,12 @@ export default function StudentForm(props) {
               </Form>
             </ModalBody>
             <ModalFooter>
-              <Button color="success" onClick={addStudent}>Accept</Button>{' '}
-              <Button color="secondary" onClick={toggle}>Cancel</Button>
+              <Button color="success" onClick={addStudent}>
+                <FontAwesomeIcon icon={faCheckCircle} size="1x"/>
+                {' '}Accept</Button>{' '}
+              <Button color="secondary" onClick={toggle}>
+                <FontAwesomeIcon icon={faTimesCircle} size="1x"/>
+                {' '}Cancel</Button>
             </ModalFooter>
           </Modal>
     )

@@ -46,8 +46,6 @@ namespace QLTV_V2.Controllers
             }
         }
 
-        
-
         [HttpPost]
         public IActionResult Post([FromBody] User user)
         {
@@ -68,6 +66,20 @@ namespace QLTV_V2.Controllers
             try
             {
                 _userBLL.EditUser(id, user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message.ToString());
+            }
+            return Ok(id);
+        }
+
+        [HttpPut("reset_password/{id}")]
+        public IActionResult ResetPassword(int id)
+        {
+            try
+            {
+                _userBLL.ResetPassword(id);
             }
             catch (Exception ex)
             {

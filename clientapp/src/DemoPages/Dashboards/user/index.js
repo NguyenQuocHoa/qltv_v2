@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Row, Col, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import axios from 'axios';
 import {library} from '@fortawesome/fontawesome-svg-core'
@@ -7,8 +7,9 @@ import {fab} from '@fortawesome/free-brands-svg-icons'
 import {
   faEdit,
   faTrashAlt,
+  faSyncAlt,
   faCheckCircle,
-  faTimesCircle
+  faTimesCircle,
 
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -23,6 +24,7 @@ library.add(
   fab,
   faEdit,
   faTrashAlt,
+  faSyncAlt,
 );
 
 function UserExample(props) {
@@ -34,11 +36,13 @@ function UserExample(props) {
   const [modal, setModal] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
-  const [user, setUser] = useState({ userName: "user name", password: "password", description: null });
+  const [modalResetPass, setModalResetPass] = useState(false);
+  const [user, setUser] = useState({ userName: "", password: "", passwordConfirm: '', description: '' });
 
   const toggle = () => setModal(!modal);
   const toggleEdit = () => setModalEdit(!modalEdit);
   const toggleDelete = () => setModalDelete(!modalDelete);
+  const toggleResetPass = () => setModalResetPass(!modalResetPass);
 
   useEffect(() => {
     axios.get('user')
@@ -64,6 +68,10 @@ function UserExample(props) {
   }
  
   const addUser = () => {
+    if (!checkPasswordConfirm(user.password, user.passwordConfirm)) {
+      showToastError('Password confirm is invalid!');
+      return;
+    }
     toggle();
     
     axios.post('user', {
@@ -71,7 +79,7 @@ function UserExample(props) {
     })
       .then(res => {
         console.log(res);
-        if (res.status == 200) {
+        if (res.status === 200) {
           showToastSuccess('Add user success!');
         }
       })
@@ -89,7 +97,7 @@ function UserExample(props) {
     })
       .then(res => {
         console.log(res);
-        if (res.status == 200) {
+        if (res.status === 200) {
           showToastSuccess('Update user success!');
         }
       })
@@ -114,12 +122,27 @@ function UserExample(props) {
       })
   }
 
+  const resetPassword = () => {
+    toggleResetPass();
+
+    axios.put(`user/reset_password/${user.id}`)
+      .then(res => {
+        if (res.data.status === 500)
+        {
+          showToastError('Reset password failure, ' + res.data.message);
+          return;
+        }
+        showToastSuccess('Reset password success!');
+      })
+  }
+
   const btnAddOnclick = () => {
+    resetUser();
     setModal(true);
   }
 
   const btnEditOnclick = (id) => {
-    const user = userList.find(u => u.id == id);
+    const user = userList.find(u => u.id === id);
     console.log(user);
     user.password = '';
     setUser(user);
@@ -129,6 +152,18 @@ function UserExample(props) {
   const btnDeleteOnClick = (id) => {
     setUser({ ...user, id: id });
     setModalDelete(!modalDelete);
+  }
+
+  const checkPasswordConfirm = (pass, passCon) => {
+    if (pass === '' && passCon === '' && user.id !== undefined)
+      return true;
+    if (pass === passCon && pass !== '') 
+      return true;
+    return false;
+  }
+
+  const resetUser = () => {
+    setUser({ userName: "", password: "", passwordConfirm: '', description: '' })
   }
 
   return (
@@ -158,12 +193,17 @@ function UserExample(props) {
                   <td>{user.description}</td>
                   <td>
                     <Button title="Edit user" outline className="mb-2 mr-2 btn-transition"
-                                            color="warning" size="sm" onClick={() => btnEditOnclick(user.id)}>
+                                            color="info" size="sm" onClick={() => btnEditOnclick(user.id)}>
                       <FontAwesomeIcon icon={faEdit} size="1x"/>
                     </Button>
                     <Button title="Delete user" outline className="mb-2 mr-2 btn-transition"
                                             color="danger" size="sm" onClick={() => btnDeleteOnClick(user.id)}>
                       <FontAwesomeIcon icon={faTrashAlt} size="1x"/>
+                    </Button>
+                    <Button title="Reset password" outline className="mb-2 mr-2 btn-transition"
+                                            color="warning" size="sm" onClick={() => {setModalResetPass(!modalResetPass)
+                                            setUser({...user, id: user.id})}}>
+                    <FontAwesomeIcon icon={faSyncAlt} size="1x"/>
                     </Button>
                   </td>
                 </tr>
@@ -172,11 +212,13 @@ function UserExample(props) {
           </Table> 
 
           {/* Add User */}
-          <UserForm user={user} setUser={setUser} modal={modal} toggle={toggle} className={className} addUser={addUser} />
+          <UserForm user={user} setUser={setUser} modal={modal} toggle={toggle} 
+            className={className} checkPasswordConfirm={checkPasswordConfirm} addUser={addUser} />
           
 
           {/* Edit User */}
-          <UserForm user={user} setUser={setUser} modal={modalEdit} toggle={toggleEdit} className={className} addUser={editUser} isEdit={true} />
+          <UserForm user={user} setUser={setUser} modal={modalEdit} toggle={toggleEdit} 
+            lassName={className} checkPasswordConfirm={checkPasswordConfirm} addUser={editUser} isEdit={true} />
           
 
           {/* Delete User */}
@@ -193,6 +235,21 @@ function UserExample(props) {
             </ModalFooter>
           </Modal>
 
+          {/* Reset Password User */}
+          <Modal isOpen={modalResetPass} toggle={toggleResetPass} className={className} backdrop={true}>
+            <ModalHeader toggle={toggleResetPass}>Reset Password User</ModalHeader>
+            <ModalBody>
+              <h4>Are you sure reset password become '1' this user?</h4>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="danger" onClick={resetPassword}>
+              <FontAwesomeIcon icon={faSyncAlt} size="1x"/>{' '}Reset</Button>{' '}
+              <Button color="secondary" onClick={toggleResetPass}>
+              <FontAwesomeIcon icon={faTimesCircle} size="1x"/>
+              {' '}Cancel</Button>
+            </ModalFooter>
+          </Modal>
+
         </ReactCSSTransitionGroup>
     </Fragment>
   )
@@ -206,25 +263,49 @@ function UserForm(props) {
     toggle,
     className,
     addUser,
+    checkPasswordConfirm,
     isEdit = false,
   } = props;
 
   return (
     <Modal isOpen={modal} toggle={toggle} className={className} backdrop={true}>
-      <ModalHeader toggle={toggle}>Add User</ModalHeader>
+      <ModalHeader toggle={toggle}>{ isEdit ? 'Edit ' : 'Add ' } User</ModalHeader>
       <ModalBody>
         <Form>
           <FormGroup>
-            <Label for="exampleEmail">User name</Label>
-            <Input type="text" name="user name" id="username" placeholder="Input a user name" value={user.userName} onChange={e => setUser({...user, userName: e.target.value})} />
+            <Label className="font-weight-bold" for="username">User name</Label>
+            <Input 
+              valid={user.userName.length > 1}  invalid={user.userName.length <= 1}
+              readOnly={isEdit}
+              type="text" name="user name" id="username" value={user.userName} onChange={e => setUser({...user, userName: e.target.value})} />
+            <FormFeedback>User name length have to less than 1</FormFeedback>
           </FormGroup>
+          { !isEdit && 
+          <Row>
+            <Col>
+              <FormGroup>
+                <Label className="font-weight-bold" for="password">Password</Label>
+                <Input 
+                  valid={user.password !== '' && checkPasswordConfirm(user.password, user.passwordConfirm)} 
+                  invalid={!checkPasswordConfirm(user.password, user.passwordConfirm)}
+                  type="password" name="password" id="password" value={user.password} onChange={e => setUser({...user, password: e.target.value})} />
+              </FormGroup>
+            </Col>
+            <Col>
+              <FormGroup>
+                <Label className="font-weight-bold" for="passwordConfirm">Password Confirm</Label>
+                <Input 
+                  valid={!isEdit && user.password !== '' && checkPasswordConfirm(user.password, user.passwordConfirm)} 
+                  invalid={!checkPasswordConfirm(user.password, user.passwordConfirm)}
+                  type="password" name="passwordConfirm" id="passwordConfirm" value={user.passwordConfirm} onChange={e => setUser({...user, passwordConfirm: e.target.value})} />
+               <FormFeedback>Password confirm have to equal password!</FormFeedback>
+              </FormGroup>
+            </Col>
+          </Row>
+          }
           <FormGroup>
-            <Label for="exampleEmail">Password</Label>
-            <Input readOnly={isEdit} type="password" name="password" id="password" value={user.password} onChange={e => setUser({...user, password: e.target.value})} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="exampleDescription">Description</Label>
-            <Input type="text" name="description" id="description" value={user.description} onChange={e => setUser({...user, description: e.target.value})} />
+            <Label className="font-weight-bold" for="description">Description</Label>
+            <Input valid={user.description.length > 0} type="textarea" name="description" id="description" value={user.description} onChange={e => setUser({...user, description: e.target.value})} />
           </FormGroup>
         </Form>
       </ModalBody>

@@ -129,7 +129,7 @@ export default function BookExample(props) {
   }
 
   const btnEditOnclick = (id) => {
-    const book = books.find(u => u.id == id);
+    const book = books.find(u => u.id === id);
     setBook(book);
     setModalEdit(!modalEdit);
   }

@@ -58,7 +58,7 @@ export default function StudentList(props) {
                         <td>{student.description}</td>
                         <td>
                             <Button title="Edit student" outline className="mb-2 mr-2 btn-transition"
-                                                    color="warning" size="sm" onClick={() => btnEditOnclick(student.id)}>
+                                                    color="info" size="sm" onClick={() => btnEditOnclick(student.id)}>
                             <FontAwesomeIcon icon={faEdit} size="1x"/>
                             </Button>
                             <Button title="Delete student" outline className="mb-2 mr-2 btn-transition"
@@ -66,7 +66,7 @@ export default function StudentList(props) {
                             <FontAwesomeIcon icon={faTrashAlt} size="1x"/>
                             </Button>
                             <Button title="Reset password" outline className="mb-2 mr-2 btn-transition"
-                                                    color="danger" size="sm" onClick={() => {setModalResetPass(!modalResetPass)
+                                                    color="warning" size="sm" onClick={() => {setModalResetPass(!modalResetPass)
                                                     setStudent({...student, id: student.id})}}>
                             <FontAwesomeIcon icon={faSyncAlt} size="1x"/>
                             </Button>

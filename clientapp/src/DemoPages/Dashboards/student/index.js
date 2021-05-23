@@ -39,7 +39,7 @@ function StudentExample(props) {
   const [modalDelete, setModalDelete] = useState(false);
   const [modalResetPass, setModalResetPass] = useState(false);
   const [student, setStudent] = useState(
-    { studentCode: '', studentName: '', class: '', doB: null, nativeLand: '', course: '', faculty: '', description: '', password: '', passwordConfirm: '' }
+    { studentCode: '', studentName: '', class: '', doB: undefined, nativeLand: '', course: '', faculty: '', description: '', password: '', passwordConfirm: '' }
   );
 
   const toggle = () => setModal(!modal);

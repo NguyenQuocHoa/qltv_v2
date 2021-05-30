@@ -5,6 +5,16 @@ export const MainNav = [
         to: '#/dashboards/basic',
     },
     {
+        icon: 'pe-7s-wallet',
+        label: 'Borrow Book',
+        to: '#/dashboards/borrowbook',
+    },
+    {
+        icon: 'pe-7s-back',
+        label: 'Borrow Book',
+        to: '#/dashboards/borrowbook',
+    },
+    {
         icon: 'pe-7s-user',
         label: 'User',
         to: '#/dashboards/user',

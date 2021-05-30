@@ -108,7 +108,7 @@ export default function BookForm(props) {
                 </Col>
               </Row>
               <Row>
-                <Col>
+                <Col> 
                   <FormGroup>
                     <Label className="font-weight-bold" for="exampleDescription">Description</Label>
                     <Input 

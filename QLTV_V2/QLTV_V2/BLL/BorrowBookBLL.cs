@@ -48,14 +48,6 @@ namespace QLTV_V2.BLL
         {
             try
             {
-                // check inventory of book is enough
-                //foreach(BorrowBookDetail borrowBookDetail in borrowBookPLus.BorrowBookDetails)
-                //{
-                //    Book book = _context.Book.Where(b => b.Id == borrowBookDetail.Book_Id).SingleOrDefault();
-                //    if (book != null && book.Inventory < borrowBookDetail.Quantity)
-                //        throw new Exception($"Inventory of Book '{book.BookCode.Trim()}_{book.BookName}' isn't enough");
-                //}    
-
                 _borrowBookDAL.AddBorrowBook(borrowBookPLus);
             }
             catch (Exception ex)
@@ -68,23 +60,6 @@ namespace QLTV_V2.BLL
         {
             try
             {
-                // check inventory of book is enough
-                //foreach (BorrowBookDetail newBorrowBookDetail in newBorrowBookPlus.BorrowBookDetails)
-                //{
-                //    Book book = _context.Book.Where(b => b.Id == newBorrowBookDetail.Book_Id).SingleOrDefault();
-                //    if (newBorrowBookDetail.Id > 0 && book != null)
-                //    {
-                //        BorrowBookDetail oldBorrowBookDetail = _context.BorrowBookDetail.Where(oldBBD => oldBBD.Id == newBorrowBookDetail.Id).SingleOrDefault();
-                //        if (book.Inventory + oldBorrowBookDetail.Quantity < newBorrowBookDetail.Quantity)
-                //            throw new Exception($"Inventory of Book '{book.BookCode.Trim()}_{book.BookName}' isn't enough");
-                //    }
-                //    else
-                //    {
-                //        if (book.Inventory < newBorrowBookDetail.Quantity)
-                //            throw new Exception($"Inventory of Book '{book.BookCode.Trim()}_{book.BookName}' isn't enough");
-                //    } 
-                //}
-                
                 _borrowBookDAL.EditBorrowBook(id, newBorrowBookPlus);
             }
             catch (Exception ex)

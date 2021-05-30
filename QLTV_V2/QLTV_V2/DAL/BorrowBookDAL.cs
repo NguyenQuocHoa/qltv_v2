@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using QLTV_V2.Data;
 using QLTV_V2.Models;
 using System;
@@ -32,9 +33,9 @@ namespace QLTV_V2.DAL
                     borrowBook.NumberOfDayBorrow,
                     borrowBook.Student_Id,
                     borrowBook.Description,
-                    BorrowBookDetails = (_context.BorrowBookDetail.Where(detail => detail.BK_Id == borrowBook.Id)
+                    BorrowBookDetails = (_context.BorrowBookDetail.Where(detail => detail.BorrowBook_Id == borrowBook.Id)
                                                                  ).ToList()
-                });
+                }).OrderByDescending(br => br.BorrowDate).ThenBy(d => d.NumberOfDayBorrow);
                 return borrowBooks;
             }
             catch (Exception ex)
@@ -55,7 +56,7 @@ namespace QLTV_V2.DAL
                     borrowBook.NumberOfDayBorrow,
                     borrowBook.Student_Id,
                     borrowBook.Description,
-                    BorrowBookDetails = (_context.BorrowBookDetail.Where(detail => detail.BK_Id == borrowBook.Id)
+                    BorrowBookDetails = (_context.BorrowBookDetail.Where(detail => detail.BorrowBook_Id == borrowBook.Id)
                                                                  ).ToList()
                 }).FirstOrDefault();
                 return borrowBook_data;
@@ -76,22 +77,16 @@ namespace QLTV_V2.DAL
                     _context.SaveChanges();
                     foreach (BorrowBookDetail detail in borrowBookPlus.BorrowBookDetails)
                     {
-                        detail.BK_Id = borrowBookPlus.BorrowBook.Id;
-                        _context.BorrowBookDetail.Add(detail);
-                        _context.SaveChanges();
-
-                        // update Inventory of Book
-                        if (detail.Book_Id != null)
-                        {
-                            _bookDAL.UpdateInventory((int)detail.Book_Id, (int)-detail.Quantity);
-                        }    
+                        detail.BorrowBook_Id = borrowBookPlus.BorrowBook.Id;
                     }
+                    _context.BorrowBookDetail.AddRange(borrowBookPlus.BorrowBookDetails);
+                    _context.SaveChanges();
                     transaction.Complete();
                 }
                 catch (Exception ex)
                 {
                     transaction.Dispose();
-                    throw new Exception("Error from BorrowBookDAL: " + ex.Message.ToString());
+                    throw new Exception("Error from BorrowBookDAL: " + ex.InnerException.Message.ToString());
                 }
             }    
         }
@@ -116,33 +111,81 @@ namespace QLTV_V2.DAL
                     else
                         throw new Exception("Borrow Book doesn't exist");
 
-                    foreach (BorrowBookDetail newBorrowBookDetail in newBorrowBookPlus.BorrowBookDetails)
-                    {
-                        BorrowBookDetail oldBorrowBookDetail = _context.BorrowBookDetail.
-                            Where(bbDetail => bbDetail.Id == newBorrowBookDetail.Id).SingleOrDefault();
+                    // delete borrow book detail 
+                    //foreach (int item in newBorrowBookPlus.DeletItems)
+                    //{
+                    //    BorrowBookDetail deleteItem = _context.BorrowBookDetail.
+                    //      Where(bbDetail => bbDetail.Id == item).SingleOrDefault();
+                    //    _context.BorrowBookDetail.Remove(deleteItem);
 
-                        if (newBorrowBookDetail != null && newBorrowBookDetail.Id != 0 && oldBorrowBookDetail != null)
-                        {
-                            // update inventory of book
-                            if (newBorrowBookDetail.Book_Id != null)
-                            {
-                                int? quantityOfUpdate = newBorrowBookDetail.Quantity - oldBorrowBookDetail.Quantity;
-                                _bookDAL.UpdateInventory((int)newBorrowBookDetail.Book_Id, (int)-quantityOfUpdate);
-                            }
+                    //    _bookDAL.UpdateInventory((int)deleteItem.Book_Id, (int)deleteItem.Quantity);
+                    //} 
 
-                            oldBorrowBookDetail.BorrowBookDetailCode = newBorrowBookDetail.BorrowBookDetailCode;
-                            oldBorrowBookDetail.Quantity = newBorrowBookDetail.Quantity;
-                            oldBorrowBookDetail.Description = newBorrowBookDetail.Description;
-                            oldBorrowBookDetail.Book_Id = newBorrowBookDetail.Book_Id;
-                            oldBorrowBookDetail.BK_Id = newBorrowBookDetail.BK_Id;
-                            _context.SaveChanges();
-                        }
-                        else
-                        {
-                            transaction.Dispose();
-                            throw new Exception("Borrow Book Detail doesn't not exist");
-                        }
-                    }
+                    // delete all old borrow book detail
+                    List<BorrowBookDetail> borrowBookDetails = _context.BorrowBookDetail.Where(item => item.BorrowBook_Id == id).ToList();
+                    _context.BorrowBookDetail.RemoveRange(borrowBookDetails);
+                    _context.SaveChanges();
+
+                    // add all new borrow book detail
+                    _context.BorrowBookDetail.AddRange(newBorrowBookPlus.BorrowBookDetails);
+                    _context.SaveChanges();
+                  
+                    //foreach (BorrowBookDetail newBorrowBookDetail in newBorrowBookPlus.BorrowBookDetails)
+                    //{
+                    //    BorrowBookDetail oldBorrowBookDetail = _context.BorrowBookDetail.
+                    //        Where(bbDetail => bbDetail.Id == newBorrowBookDetail.Id).SingleOrDefault();
+
+                    //    // delete old borrow book detail
+                    //    if (newBorrowBookDetail.BorrowBook_Id > 0)
+                    //    {
+                    //        _context.BorrowBookDetail.Remove(oldBorrowBookDetail);
+                    //        _context.SaveChanges();
+                    //        // update new inventory after remove borrowbookdetail
+                    //        _bookDAL.UpdateInventory((int)oldBorrowBookDetail.Book_Id, (int)oldBorrowBookDetail.Quantity);
+                    //    }
+
+                    //    //add new borrow book detail
+                    //    newBorrowBookDetail.BorrowBook_Id = oldBorrowBook.Id;
+                    //    newBorrowBookDetail.Id = 0;
+                    //    _context.BorrowBookDetail.Add(newBorrowBookDetail);
+                    //    _context.SaveChanges();
+
+                    //    // update new inventory after add borrowbookdetail
+                    //    if (newBorrowBookDetail.Book_Id != null)
+                    //    {
+                    //        _bookDAL.UpdateInventory((int)newBorrowBookDetail.Book_Id, (int)-newBorrowBookDetail.Quantity);
+                    //    }
+
+                    //    // case add new borrow book detail
+                    //    //if (newBorrowBookDetail.Id == 0)
+                    //    //{
+                    //    //    newBorrowBookDetail.BorrowBook_Id = oldBorrowBook.Id;
+                    //    //    _context.BorrowBookDetail.Add(newBorrowBookDetail);
+                    //    //    _context.SaveChanges();
+                    //    //}   
+                    //    //// case update old borrow book detail
+                    //    //else if (newBorrowBookDetail.Id != 0 && oldBorrowBookDetail != null)
+                    //    //{
+                    //    //    // update inventory of book
+                    //    //    if (newBorrowBookDetail.Book_Id != null)
+                    //    //    {
+                    //    //        int? quantityOfUpdate = newBorrowBookDetail.Quantity - oldBorrowBookDetail.Quantity;
+                    //    //        _bookDAL.UpdateInventory((int)newBorrowBookDetail.Book_Id, (int)-quantityOfUpdate);
+                    //    //    }
+
+                    //    //    oldBorrowBookDetail.BorrowBookDetailCode = newBorrowBookDetail.BorrowBookDetailCode;
+                    //    //    oldBorrowBookDetail.Quantity = newBorrowBookDetail.Quantity;
+                    //    //    oldBorrowBookDetail.Description = newBorrowBookDetail.Description;
+                    //    //    oldBorrowBookDetail.Book_Id = newBorrowBookDetail.Book_Id;
+                    //    //    oldBorrowBookDetail.BorrowBook_Id = newBorrowBookDetail.BorrowBook_Id;
+                    //    //    _context.SaveChanges();
+                    //    //}
+                    //    //else
+                    //    //{
+                    //    //    transaction.Dispose();
+                    //    //    throw new Exception("Borrow Book Detail doesn't not exist");
+                    //    //}
+                    //}
                     transaction.Complete();
                 }
                 catch (Exception ex)
@@ -160,17 +203,9 @@ namespace QLTV_V2.DAL
                 try
                 {
                     BorrowBook borrowBook = _context.BorrowBook.Where(rb => rb.Id == id).FirstOrDefault();
-                    List<BorrowBookDetail> borrowBookDetails = _context.BorrowBookDetail.Where(bbd => bbd.BK_Id == borrowBook.Id).ToList();
-
-                    foreach(BorrowBookDetail borrowBookDetail in borrowBookDetails)
-                    {
-                        if (borrowBookDetail.Book_Id != null)
-                        {
-                            _bookDAL.UpdateInventory((int)borrowBookDetail.Book_Id, (int)borrowBookDetail.Quantity);
-                        }
-                        _context.Remove(borrowBookDetail);
-                        _context.SaveChanges();
-                    }    
+                    List<BorrowBookDetail> borrowBookDetails = _context.BorrowBookDetail.Where(bbd => bbd.BorrowBook_Id == borrowBook.Id).ToList();
+                    _context.BorrowBookDetail.RemoveRange(borrowBookDetails);
+                    _context.SaveChanges();
                     _context.Remove(borrowBook);
                     _context.SaveChanges();
                     transaction.Complete();

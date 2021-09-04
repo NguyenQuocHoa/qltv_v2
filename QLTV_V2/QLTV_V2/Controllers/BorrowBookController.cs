@@ -33,6 +33,20 @@ namespace QLTV_V2.Controllers
             return null;
         }
 
+        [HttpGet("getall_withstudent")]
+        public IEnumerable<Object> GetAllWithStudent()
+        {
+            try
+            {
+                return _borrowBookBLL.GetAllWithStudent();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return null;
+        }
+
         [HttpGet("{id}")]
         public ActionResult<Object> Get(int id)
         {

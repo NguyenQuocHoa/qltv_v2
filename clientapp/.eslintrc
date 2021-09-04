@@ -1,0 +1,20 @@
+{
+	"extends": ["react-app", "prettier"],
+	"plugins": ["react", "prettier", "eslint-comments"],
+	"rules": {
+		"prettier/prettier": [
+			"warn",
+			{
+				"arrowParens": "avoid",
+				"semi": true,
+				"trailingComma": "none",
+				"endOfLine": "auto",
+				"tabWidth": 4,
+				"printWidth": 80,
+				"useTabs": true
+			}
+		],
+		"eqeqeq": 0,
+		"eslint-comments/disable-enable-pair": ["error", {"allowWholeFile": true}]
+	}
+}

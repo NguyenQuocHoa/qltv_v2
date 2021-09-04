@@ -44,6 +44,43 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public IEnumerable<Object> GetAllWithStudent()
+        {
+            try
+            {
+                var borrowBoks = from bb in _context.BorrowBook
+                                 join st in _context.Student
+                                 on bb.Student_Id equals st.Id
+                                 select new
+                                 {
+                                     bb.Id,
+                                     bb.BorrowBookCode,
+                                     st.StudentCode,
+                                     st.StudentName,
+                                     BorrowBookDetails = (from bbd in _context.BorrowBookDetail
+                                                          join b in _context.Book
+                                                          on bbd.Book_Id equals b.Id
+                                                          where bbd.BorrowBook_Id == bb.Id
+                                                          select new
+                                                          {
+                                                              bbd.Id,
+                                                              bbd.BorrowBookDetailCode,
+                                                              bbd.Quantity,
+                                                              bbd.Description,
+                                                              b.BookCode,
+                                                              b.BookName
+                                                          }).ToList()
+                                     
+                                 };
+                return borrowBoks;
+                                 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from borrowBookDAL: " + ex.Message.ToString());
+            }
+        }
+
         public ActionResult<Object> GetById(int id)
         {
             try

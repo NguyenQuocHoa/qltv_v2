@@ -32,6 +32,18 @@ namespace QLTV_V2.BLL
             }
         }
 
+        public IEnumerable<Object> GetBookActive()
+        {
+            try
+            {
+                return _bookDAL.GetBookActive();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BookBLL: " + ex.Message.ToString());
+            }
+        }
+
         public ActionResult<Object> GetById(int id)
         {
             try

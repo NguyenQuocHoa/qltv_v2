@@ -32,6 +32,18 @@ namespace QLTV_V2.BLL
             }
         }
 
+        public IEnumerable<Object> GetAllWithStudent()
+        {
+            try
+            {
+                return _borrowBookDAL.GetAllWithStudent();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BorrowBookBLL: " + ex.Message.ToString());
+            }
+        }
+
         public ActionResult<Object> GetById(int id)
         {
             try

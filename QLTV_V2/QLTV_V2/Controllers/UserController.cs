@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLTV_V2.BLL;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static QLTV_V2.Helper.StatusCode;
 
 namespace QLTV_V2.Controllers
 {
@@ -19,87 +21,103 @@ namespace QLTV_V2.Controllers
             _userBLL = new UserBLL(context);
         }
 
-        [HttpGet]
-        public IEnumerable<Object> Get()
+        [HttpGet("get-all")]
+        public ResultModel Get()
         {
             try
             {
-                return _userBLL.GetAll();
+                return new ResultModel(Code.OK, _userBLL.GetAll(), "thành công");
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-               
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return null;
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Object> Get(int id)
+        [HttpGet("get-all-active")]
+        public ResultModel GetActive()
         {
             try
             {
-                return _userBLL.GetById(id);
+                return new ResultModel(Code.OK, _userBLL.GetActive(), "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 
-        [HttpPost]
-        public IActionResult Post([FromBody] User user)
+        [HttpGet("get-by-id/{id}")]
+        public ResultModel Get(int id)
+        {
+            try
+            {
+                return new ResultModel(Code.OK, _userBLL.GetById(id), "thành công");
+            }
+            catch (Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
+        [HttpPost("create")]
+        public ResultModel Post([FromBody] User user)
         {
             try
             {
                 _userBLL.AddUser(user);
+                return new ResultModel(Code.CREATED, "thành công");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message.ToString());
+                if (ex.Message.Contains("User name can't duplicate"))
+                {
+                    return new ResultModel(Code.CONFLICT, "username đã tồn tại");
+                }
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return Ok(user);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] User user)
+        [HttpPut("update/{id}")]
+        public ResultModel Put(int id, [FromBody] User user)
         {
             try
             {
                 _userBLL.EditUser(id, user);
+                return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return Ok(id);
         }
 
         [HttpPut("reset_password/{id}")]
-        public IActionResult ResetPassword(int id)
+        public ResultModel ResetPassword(int id)
         {
             try
             {
                 _userBLL.ResetPassword(id);
+                return new ResultModel(Code.OK, "thành công");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return Ok(id);
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete("delete/{id}")]
+        public ResultModel Delete(int id)
         {
             try
             {
                 _userBLL.DeleteUser(id);
+                return new ResultModel(Code.OK, "thành công");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return Ok(id);
         }
     }
 }

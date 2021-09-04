@@ -34,7 +34,7 @@ namespace QLTV_V2.Controllers
             }
         }
 
-        [HttpGet("get-active")]
+        [HttpGet("get-all-active")]
         public ResultModel GetBookActive()
         {
             try

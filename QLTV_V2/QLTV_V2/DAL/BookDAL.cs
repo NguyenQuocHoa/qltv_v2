@@ -29,6 +29,32 @@ namespace QLTV_V2.DAL
                     book.Author,
                     book.MainContent,
                     book.Description,
+                    book.IsActive,
+                    book.BookCategory_Id
+                });
+                return books;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BookDAL: " + ex.Message.ToString());
+            }
+        }
+
+        public IEnumerable<Object> GetBookActive()
+        {
+            try
+            {
+                var books = _context.Book.Where(book => book.IsActive == true).Select(book =>
+                new
+                {
+                    book.Id,
+                    book.BookCode,
+                    book.BookName,
+                    book.Inventory,
+                    book.Author,
+                    book.MainContent,
+                    book.Description,
+                    book.IsActive,
                     book.BookCategory_Id
                 });
                 return books;
@@ -52,6 +78,7 @@ namespace QLTV_V2.DAL
                     book.Author,
                     book.MainContent,
                     book.Description,
+                    book.IsActive,
                     book.BookCategory_Id
                 }).FirstOrDefault();
                 return book_data;
@@ -85,6 +112,7 @@ namespace QLTV_V2.DAL
                 oldBook.Author = newBook.Author;
                 oldBook.MainContent = newBook.MainContent;
                 oldBook.Description = newBook.Description;
+                oldBook.IsActive = newBook.IsActive;
                 oldBook.BookCategory_Id = newBook.BookCategory_Id;
                 _context.SaveChanges();
             }

@@ -23,16 +23,23 @@ namespace QLTV_V2.DAL
         {
             try
             {
-                var returnBooks = _context.ReturnBook.Select(returnBook =>
-                new
-                {
-                    returnBook.Id,
-                    returnBook.ReturnBookCode,
-                    returnBook.ReturnDate,
-                    returnBook.BorrowBook_Id,
-                    ReturnBookDetails = (_context.ReturnBookDetail.Where(detail => detail.ReturnBook_Id == returnBook.Id)
-                                                                ).ToList()
-                });
+                var returnBooks = from rb in _context.ReturnBook
+                                  join bb in _context.BorrowBook
+                                  on rb.BorrowBook_Id equals bb.Id
+                                  join st in _context.Student
+                                  on bb.Student_Id equals st.Id
+                                  select new
+                                  {
+                                      rb.Id,
+                                      rb.ReturnBookCode,
+                                      rb.ReturnDate,
+                                      rb.BorrowBook_Id,
+                                      bb.BorrowBookCode,
+                                      bb.BorrowDate,
+                                      bb.Student_Id,
+                                      st.StudentCode,
+                                      st.StudentName
+                                  };
                 return returnBooks;
             }
             catch (Exception ex)

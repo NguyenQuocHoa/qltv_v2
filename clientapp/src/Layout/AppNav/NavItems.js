@@ -11,8 +11,8 @@ export const MainNav = [
     },
     {
         icon: 'pe-7s-back',
-        label: 'Borrow Book',
-        to: '#/dashboards/borrowbook',
+        label: 'Return Book',
+        to: '#/dashboards/returnbook',
     },
     {
         icon: 'pe-7s-user',

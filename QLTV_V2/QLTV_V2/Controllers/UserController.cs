@@ -26,9 +26,24 @@ namespace QLTV_V2.Controllers
         {
             try
             {
-                return new ResultModel(Code.OK, _userBLL.GetAll(), "thành công");
+                var resultQuery = _userBLL.GetAll();
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
             }
             catch(Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
+        [HttpGet("get-all-paging")]
+        public ResultModel GetAllPaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                int total = _userBLL.getCountUser();
+                return new ResultModel(Code.OK, _userBLL.GetAllPaging(pageIndex, pageSize), total, "thành công");
+            }
+            catch (Exception)
             {
                 return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
@@ -39,7 +54,22 @@ namespace QLTV_V2.Controllers
         {
             try
             {
-                return new ResultModel(Code.OK, _userBLL.GetActive(), "thành công");
+                var resultQuery = _userBLL.GetActive();
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
+            }
+            catch (Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
+        [HttpGet("get-all-active-paging")]
+        public ResultModel GetActive(int pageIndex, int pageSize)
+        {
+            try
+            {
+                int totalActive = _userBLL.getCountActiveUser();
+                return new ResultModel(Code.OK, _userBLL.GetActivePaging(pageIndex, pageSize), totalActive, "thành công");
             }
             catch (Exception)
             {
@@ -100,7 +130,7 @@ namespace QLTV_V2.Controllers
                 _userBLL.ResetPassword(id);
                 return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
@@ -114,7 +144,7 @@ namespace QLTV_V2.Controllers
                 _userBLL.DeleteUser(id);
                 return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }

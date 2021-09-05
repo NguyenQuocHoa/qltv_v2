@@ -26,8 +26,8 @@ namespace QLTV_V2.Controllers
         {
             try
             {
-                int total = _bookBLL.getCountBook();
-                return new ResultModel(Code.OK, _bookBLL.GetAll(), total, "thành công");
+                var resultQuery = _bookBLL.GetAll();
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
             }
             catch (Exception)
             {
@@ -54,8 +54,8 @@ namespace QLTV_V2.Controllers
         {
             try
             {
-                int totalActive = _bookBLL.getCountActiveBook();
-                return new ResultModel(Code.OK, _bookBLL.GetBookActive(), totalActive, "thành công");
+                var resultQuery = _bookBLL.GetBookActive();
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
             }
             catch (Exception)
             {

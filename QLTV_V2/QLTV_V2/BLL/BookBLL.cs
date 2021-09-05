@@ -156,7 +156,7 @@ namespace QLTV_V2.BLL
 
         public int getCountActiveBook()
         {
-            return _context.Book.Where(student => student.IsActive == true).Count();
+            return _context.Book.Where(book => book.IsActive == true).Count();
         }
     }
 }

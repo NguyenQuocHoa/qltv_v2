@@ -27,6 +27,20 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        {
+            try
+            { 
+                var users = _context.User.Skip((pageIndex - 1) * pageSize).Take(pageSize)
+                    .Select(user => new { user.Id, user.UserName, user.Description }).ToList();
+                return users;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from UserDAL: " + ex.Message.ToString());
+            }
+        }
+
         public IEnumerable<Object> GetActive()
         {
             try
@@ -34,6 +48,26 @@ namespace QLTV_V2.DAL
                 var users = _context.User.Where(user => user.IsActive == true).Select(user => 
                     new { user.Id, user.UserName, user.IsActive, user.Description 
                 });
+                return users;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from UserDAL: " + ex.Message.ToString());
+            }
+        }
+
+        public IEnumerable<Object> GetActivePaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                var users = _context.User.Skip((pageIndex - 1) * pageSize).Take(pageSize)
+                    .Where(user => user.IsActive == true).Select(user =>
+                    new {
+                        user.Id,
+                        user.UserName,
+                        user.IsActive,
+                        user.Description
+                    });
                 return users;
             }
             catch (Exception ex)

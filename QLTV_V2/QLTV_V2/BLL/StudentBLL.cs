@@ -32,6 +32,42 @@ namespace QLTV_V2.BLL
             }
         }
 
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                return _studentDAL.GetAllPaging(pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from StudentBLL: " + ex.Message.ToString());
+            }
+        }
+
+        public IEnumerable<Object> GetActive()
+        {
+            try
+            {
+                return _studentDAL.GetActive();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from StudentBLL: " + ex.Message.ToString());
+            }
+        }
+
+        public IEnumerable<Object> GetActivePaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                return _studentDAL.GetActivePaging(pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from StudentBLL: " + ex.Message.ToString());
+            }
+        }
+
         public ActionResult<Object> GetById(int id)
         {
             try
@@ -114,6 +150,16 @@ namespace QLTV_V2.BLL
             {
                 throw new Exception("Error from StudentBLL: " + ex.Message.ToString());
             }
+        }
+
+        public int getCountStudent()
+        {
+            return _context.Student.Count();
+        }
+
+        public int getCountActiveStudent()
+        {
+            return _context.Student.Where(student => student.IsActive == true).Count();
         }
     }
 }

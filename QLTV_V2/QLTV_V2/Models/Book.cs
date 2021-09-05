@@ -14,6 +14,7 @@ namespace QLTV_V2.Models
         public string MainContent { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }
+        public string Image { get; set; }
         public int? BookCategory_Id { get; set; }
     }
 }

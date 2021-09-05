@@ -32,11 +32,35 @@ namespace QLTV_V2.BLL
             }
         }
 
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                return _bookDAL.GetAllPaging(pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BookBLL: " + ex.Message.ToString());
+            }
+        }
+
         public IEnumerable<Object> GetBookActive()
         {
             try
             {
                 return _bookDAL.GetBookActive();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BookBLL: " + ex.Message.ToString());
+            }
+        }
+
+        public IEnumerable<Object> GetBookActive(int pageIndex, int pageSize)
+        {
+            try
+            {
+                return _bookDAL.GetBookActivePaging(pageIndex, pageSize);
             }
             catch (Exception ex)
             {
@@ -123,7 +147,16 @@ namespace QLTV_V2.BLL
         public bool checkBookCategoryExist(int? bookCategory_id)
         {
             return _context.BookCategory.Find(bookCategory_id) != null ? true : false;
-        } 
-            
+        }
+
+        public int getCountBook()
+        {
+            return _context.Book.Count();
+        }
+
+        public int getCountActiveBook()
+        {
+            return _context.Book.Where(student => student.IsActive == true).Count();
+        }
     }
 }

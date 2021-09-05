@@ -85,7 +85,7 @@ namespace QLTV_V2.BLL
         {
             try
             {
-                if (checkUserNameNotExist(user.UserName))
+                if (checkUserNameNotExist(user.Username))
                 {
                     user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
                     _userDAL.AddUser(user);
@@ -159,7 +159,7 @@ namespace QLTV_V2.BLL
         {
             try
             {
-                User user = _context.User.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
+                User user = _context.User.Where(u => u.Username.Equals(userName)).FirstOrDefault();
                 if (user == null)
                     return true;
                 else

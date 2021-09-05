@@ -18,7 +18,7 @@ namespace QLTV_V2.DAL
         {
             try
             {
-                var users = _context.User.Select(user => new { user.Id, user.UserName, user.Description });
+                var users = _context.User.Select(user => new { user.Id, user.Username, user.Description });
                 return users;
             }
             catch (Exception ex)
@@ -32,7 +32,7 @@ namespace QLTV_V2.DAL
             try
             { 
                 var users = _context.User.Skip((pageIndex - 1) * pageSize).Take(pageSize)
-                    .Select(user => new { user.Id, user.UserName, user.Description }).ToList();
+                    .Select(user => new { user.Id, user.Username, user.Description }).ToList();
                 return users;
             }
             catch (Exception ex)
@@ -46,7 +46,7 @@ namespace QLTV_V2.DAL
             try
             {
                 var users = _context.User.Where(user => user.IsActive == true).Select(user => 
-                    new { user.Id, user.UserName, user.IsActive, user.Description 
+                    new { user.Id, user.Username, user.IsActive, user.Description 
                 });
                 return users;
             }
@@ -64,7 +64,7 @@ namespace QLTV_V2.DAL
                     .Where(user => user.IsActive == true).Select(user =>
                     new {
                         user.Id,
-                        user.UserName,
+                        user.Username,
                         user.IsActive,
                         user.Description
                     });
@@ -81,7 +81,7 @@ namespace QLTV_V2.DAL
             try
             {
                 var user_data = _context.User.Where(u => u.Id == id).Select(u => 
-                    new { u.Id, u.UserName, u.IsActive, u.Description 
+                    new { u.Id, u.Username, u.IsActive, u.Description 
                 }).FirstOrDefault();
                 return user_data;
             }
@@ -108,7 +108,7 @@ namespace QLTV_V2.DAL
         {
             try
             {
-                oldUser.UserName = newUser.UserName;
+                oldUser.Username = newUser.Username;
                 oldUser.Password = newUser.Password;
                 oldUser.IsActive = newUser.IsActive;
                 oldUser.Description = newUser.Description;

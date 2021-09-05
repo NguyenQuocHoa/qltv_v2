@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using QLTV_V2.BLL;
 using QLTV_V2.Data;
 using QLTV_V2.Helper;
@@ -11,6 +12,7 @@ using static QLTV_V2.Helper.StatusCode;
 
 namespace QLTV_V2.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class BookController : ControllerBase

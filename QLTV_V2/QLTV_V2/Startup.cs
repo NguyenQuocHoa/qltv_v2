@@ -42,33 +42,10 @@ namespace QLTV_V2
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-               
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), p => p.UseRowNumberForPaging())
+            );
 
             services.AddControllers();
-
-            //services.AddSwaggerGen(c => {
-            //    c.SwaggerDoc("v1", new OpenApiInfo
-            //    {
-            //        Version = "v1",
-            //        Title = "QLTV API",
-            //        Description = "Library Management API",
-
-            //        TermsOfService = new Uri("https://pragimtech.com"),
-            //        Contact = new OpenApiContact
-            //        {
-            //            Name = "hoa.nq",
-            //            Email = "nguyenquoclhoa2000tb2@gmail.com",
-            //            Url = new Uri("https://twitter.com/kudvenkat"),
-            //        },
-            //        License = new OpenApiLicense
-            //        {
-            //            Name = "PragimTech Open License",
-            //            Url = new Uri("https://pragimtech.com"),
-            //        }
-            //    });
-               
-            //});
 
             services.AddSwaggerGen();
         }

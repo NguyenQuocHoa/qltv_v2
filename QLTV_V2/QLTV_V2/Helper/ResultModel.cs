@@ -20,6 +20,13 @@ namespace QLTV_V2.Helper
             this.message = message;
             this.items = items;
         }
+        public ResultModel(StatusCode.Code code, IEnumerable items, int total, string message)
+        {
+            this.code = code;
+            this.message = message;
+            this.total = total;
+            this.items = items;
+        }
         public ResultModel(StatusCode.Code code, ActionResult<Object> item, string message)
         {
             this.code = code;
@@ -29,6 +36,7 @@ namespace QLTV_V2.Helper
         public StatusCode.Code code { get; set; }
         public IEnumerable items { get; set; }
         public ActionResult<Object> item { get; set; }
+        public int total { get; set; }
         public string message { get; set; }
     }
 }

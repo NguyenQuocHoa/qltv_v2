@@ -33,6 +33,42 @@ namespace QLTV_V2.BLL
             }
         }
 
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                return _userDAL.GetAllPaging(pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from UserBLL: " + ex.Message.ToString());
+            }
+        }
+
+        public IEnumerable<Object> GetActive()
+        {
+            try
+            {
+                return _userDAL.GetActive();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from UserBLL: " + ex.Message.ToString());
+            }
+        }
+
+        public IEnumerable<Object> GetActivePaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                return _userDAL.GetActivePaging(pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from UserBLL: " + ex.Message.ToString());
+            }
+        }
+
         public ActionResult<Object> GetById(int id)
         {
             try
@@ -70,7 +106,7 @@ namespace QLTV_V2.BLL
             try
             {
                 User oldUser = _context.User.Where(us => us.Id == id).SingleOrDefault();
-                if (newUser.Password.Trim() != "")
+                if (newUser.Password != null && newUser.Password.Trim() != "")
                 {
                     newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
                 }
@@ -133,6 +169,16 @@ namespace QLTV_V2.BLL
             {
                 throw new Exception("Error from UserBLL: " + ex.Message.ToString());
             }
+        }
+
+        public int getCountUser()
+        {
+            return _context.User.Count();
+        }
+
+        public int getCountActiveUser()
+        {
+            return _context.User.Where(user => user.IsActive == true).Count();
         }
     }
 }

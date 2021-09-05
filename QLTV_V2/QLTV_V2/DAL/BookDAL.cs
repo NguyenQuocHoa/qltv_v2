@@ -40,6 +40,31 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                var books = _context.Book.Skip((pageIndex - 1) * pageSize).Take(pageSize)
+                    .Select(book =>
+                    new {
+                        book.Id,
+                        book.BookCode,
+                        book.BookName,
+                        book.Inventory,
+                        book.Author,
+                        book.MainContent,
+                        book.Description,
+                        book.IsActive,
+                        book.BookCategory_Id
+                    }).ToList();
+                return books;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BookDAL: " + ex.Message.ToString());
+            }
+        }
+
         public IEnumerable<Object> GetBookActive()
         {
             try
@@ -57,6 +82,32 @@ namespace QLTV_V2.DAL
                     book.IsActive,
                     book.BookCategory_Id
                 });
+                return books;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BookDAL: " + ex.Message.ToString());
+            }
+        }
+
+        public IEnumerable<Object> GetBookActivePaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                var books = _context.Book.Skip((pageIndex - 1) * pageSize).Take(pageSize)
+                    .Where(book => book.IsActive == true).Select(book =>
+                    new
+                    {
+                        book.Id,
+                        book.BookCode,
+                        book.BookName,
+                        book.Inventory,
+                        book.Author,
+                        book.MainContent,
+                        book.Description,
+                        book.IsActive,
+                        book.BookCategory_Id
+                    }).ToList();
                 return books;
             }
             catch (Exception ex)

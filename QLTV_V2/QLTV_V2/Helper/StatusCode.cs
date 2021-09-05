@@ -13,6 +13,7 @@ namespace QLTV_V2.Helper
             CREATED = 201,
             UNAUTHORIZED = 401,
             NOTFOUND = 404,
+            CONFLICT = 409,
             SVERROR = 500
         }
     }

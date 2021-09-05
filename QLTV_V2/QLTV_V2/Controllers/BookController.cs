@@ -26,7 +26,8 @@ namespace QLTV_V2.Controllers
         {
             try
             {
-                return new ResultModel(Code.OK, _bookBLL.GetAll(), "thành công");
+                var resultQuery = _bookBLL.GetAll();
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
             }
             catch (Exception)
             {
@@ -34,12 +35,41 @@ namespace QLTV_V2.Controllers
             }
         }
 
-        [HttpGet("get-active")]
+        [HttpGet("get-all-paging")]
+        public ResultModel GetAllPaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                int total = _bookBLL.getCountBook();
+                return new ResultModel(Code.OK, _bookBLL.GetAllPaging(pageIndex, pageSize), total, "thành công");
+            }
+            catch (Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
+        [HttpGet("get-all-active")]
         public ResultModel GetBookActive()
         {
             try
             {
-                return new ResultModel(Code.OK, _bookBLL.GetBookActive(), "thành công");
+                var resultQuery = _bookBLL.GetBookActive();
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
+            }
+            catch (Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
+        [HttpGet("get-all-active-paging")]
+        public ResultModel GetBookActivePaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                int totalActive = _bookBLL.getCountActiveBook();
+                return new ResultModel(Code.OK, _bookBLL.GetBookActive(pageIndex, pageSize), totalActive, "thành công");
             }
             catch (Exception)
             {

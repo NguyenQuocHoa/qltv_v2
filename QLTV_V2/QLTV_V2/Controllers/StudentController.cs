@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static QLTV_V2.Helper.StatusCode;
 
 namespace QLTV_V2.Controllers
 {
@@ -19,89 +20,133 @@ namespace QLTV_V2.Controllers
         {
             _studentBLL = new StudentBLL(context);
         }
-      
-        [HttpGet]
-        public IEnumerable<Object> Get()
+
+        [HttpGet("get-all")]
+        public ResultModel Get()
         {
             try
             {
-                return _studentBLL.GetAll();
+                var resultQuery = _studentBLL.GetAll();
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return null;
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Object> Get(int id)
+        [HttpGet("get-all-paging")]
+        public ResultModel GetAllPaging(int pageIndex, int pageSize)
         {
             try
             {
-                return _studentBLL.GetById(id);
+                int total = _studentBLL.getCountStudent();
+                return new ResultModel(Code.OK, _studentBLL.GetAllPaging(pageIndex, pageSize), total, "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Ok(new Error(500, ex.Message.ToString()));
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
+        [HttpGet("get-all-active")]
+        public ResultModel GetActive()
+        {
+            try
+            {
+                var resultQuery = _studentBLL.GetActive();
+                return new ResultModel(Code.OK, _studentBLL.GetActive(), resultQuery.Count(), "thành công");
+            }
+            catch (Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
+        [HttpGet("get-all-active-paging")]
+        public ResultModel GetActivePaging(int pageIndex, int pageSize)
+        {
+            try
+            {
+                int totalActive = _studentBLL.getCountActiveStudent();
+                return new ResultModel(Code.OK, _studentBLL.GetActivePaging(pageIndex, pageSize), totalActive, "thành công");
+            }
+            catch (Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 
 
-        [HttpPost]
-        public IActionResult Post([FromBody] Student student)
+        [HttpGet("get-by-id/{id}")]
+        public ResultModel Get(int id)
+        {
+            try
+            {
+                return new ResultModel(Code.OK, _studentBLL.GetById(id), "thành công");
+            }
+            catch (Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
+
+        [HttpPost("create")]
+        public ResultModel Post([FromBody] Student student)
         {
             try
             {
                 _studentBLL.AddStudent(student);
+                return new ResultModel(Code.CREATED, "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Ok(new Error(500, ex.Message.ToString()));
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return Ok(student);
         }
 
         [HttpPut("reset_password/{id}")]
-        public IActionResult ResetPassword(int id)
+        public ResultModel ResetPassword(int id)
         {
             try
             {
                 _studentBLL.ResetPassword(id);
+                return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Ok(new Error(500, ex.Message.ToString()));
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return Ok(id);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Student student)
+        [HttpPut("update/{id}")]
+        public ResultModel Put(int id, [FromBody] Student student)
         {
             try
             {
                 _studentBLL.EditStudent(id, student);
+                return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Ok(new Error(500, ex.Message.ToString()));
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return Ok(id);
         }
 
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public ResultModel Delete(int id)
         {
             try
             {
                 _studentBLL.DeleteStudent(id);
+                return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Ok(new Error(500, ex.Message.ToString()));
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return Ok(id);
         }
     }
 }

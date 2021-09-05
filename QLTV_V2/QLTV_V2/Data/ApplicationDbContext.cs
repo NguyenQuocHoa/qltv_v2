@@ -25,5 +25,7 @@ namespace QLTV_V2.Data
         public DbSet<ReturnBookDetail> ReturnBookDetail { get; set; }
         public DbSet<BorrowBookDetail> BorrowBookDetail { get; set; }
         public DbSet<Post> Post { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<Permission> Permission { get; set; }
     }
 }

@@ -18,18 +18,22 @@ namespace QLTV_V2.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IJwtAuthenticationManager jwtAuthenticationManager;
-        public AuthController(IJwtAuthenticationManager jwtAuthenticationManager)
+        private readonly ApplicationDbContext _context;
+
+        public AuthController(IJwtAuthenticationManager jwtAuthenticationManager, ApplicationDbContext context)
         {
             this.jwtAuthenticationManager = jwtAuthenticationManager;
+            this._context = context;
         }
 
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] UserLogin user)
         {
-            var token = jwtAuthenticationManager.Authenticate(user.Username, user.Password);
+            var token = jwtAuthenticationManager.Authenticate(user.Username, user.Password, _context);
+            var id = 1;
             if (token == null)
                 return Unauthorized();
-            return Ok(token);
+            return Ok(new { token, id, username = user.Username });
         }
     }
 }

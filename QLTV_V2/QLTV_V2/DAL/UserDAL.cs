@@ -91,6 +91,21 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public String GetUserPassword(string username)
+        {
+            try
+            {
+                var user = _context.User.Where(us => us.Username == username).Select(u => new { u.Password }).FirstOrDefault();
+                if (user.Password != null && user.Password != "")
+                    return user.Password;
+                return "";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from UserBLL: " + ex.Message.ToString());
+            }
+        }
+
         public void AddUser(User user)
         {
             try

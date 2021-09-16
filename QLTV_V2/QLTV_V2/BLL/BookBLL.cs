@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLTV_V2.DAL;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
@@ -32,11 +33,11 @@ namespace QLTV_V2.BLL
             }
         }
 
-        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, List<BodyObject> requestBody)
         {
             try
             {
-                return _bookDAL.GetAllPaging(pageIndex, pageSize);
+                return _bookDAL.GetAllPaging(pageIndex, pageSize, sortColumn, sortOrder, requestBody);
             }
             catch (Exception ex)
             {

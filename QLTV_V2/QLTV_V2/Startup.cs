@@ -49,7 +49,7 @@ namespace QLTV_V2
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), p => p.UseRowNumberForPaging())
             );
 
-            services.AddControllers();
+            services.AddControllers(x => x.AllowEmptyInputInBodyModelBinding = true);
 
             services.AddSwaggerGen();
 

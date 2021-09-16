@@ -6,7 +6,7 @@ import { Button, Col, InputNumber, Pagination, Row, Spin } from "antd";
 import { useHistory } from "react-router";
 import styles from "./style.less";
 import qs from "query-string";
-// import BookTable from "./components/bookTable";
+import BookTable from "./components/bookTable";
 
 const Book = props => {
 	const { booksPayload, deleteSuccess, userRoles, dispatch, loading } = props;
@@ -16,8 +16,12 @@ const Book = props => {
 
 	const [params, setParams] = useState({
 		pageIndex: 1,
-		pageSize: 10
+		pageSize: 10,
+		sortColumn: "id",
+		sortOrder: 1
 	});
+
+	const [body, setBody] = useState([]);
 
 	const getAllBookRequest = params => {
 		setParams(params);
@@ -27,22 +31,10 @@ const Book = props => {
 		});
 
 		dispatch({
-			type: "bookList/getAllBookRequest",
-			payload: params
+			type: "bookList/getBookPagingRequest",
+			payload: { params, body: [] }
 		});
 	};
-
-	// const handleSearchChange = e => {
-	// 	setParams({
-	// 		...params,
-	// 		search: e.target.value
-	// 	});
-	// 	getAllBookRequest({ ...params, search: e.target.value });
-	// };
-
-	// const handleSearchPress = () => {
-	// 	// getAllBookRequest({ ...params });
-	// };
 
 	const handlePageIndexChange = newPageIndex => {
 		getAllBookRequest({ ...params, pageIndex: newPageIndex });
@@ -73,7 +65,7 @@ const Book = props => {
 
 	useEffect(() => {
 		if (deleteSuccess) {
-			getAllBookRequest(params);
+			getAllBookRequest(params, body);
 		}
 	}, [deleteSuccess]);
 
@@ -87,17 +79,10 @@ const Book = props => {
 
 	return (
 		<div className={styles.container}>
-			<Row justify="space-between" align="middle">
-				{/* <Col xs={8}>
-					<Search
-						placeholder="Tìm kiếm"
-						value={params.search}
-						onChange={handleSearchChange}
-						onSearch={handleSearchPress}
-						enterButton
-					/>
+			<Row className={styles.mt16} justify="space-between">
+				<Col>
+					Tổng số sách: <span className={styles.title}>{total}</span>
 				</Col>
-				<Spin spinning={loading} /> */}
 				<Col>
 					<Button
 						onClick={() => {
@@ -112,18 +97,12 @@ const Book = props => {
 				</Col>
 			</Row>
 
-			<Row className={styles.mt16}>
-				<Col>
-					Tổng số sách: <span className={styles.title}>{total}</span>
-				</Col>
-			</Row>
-
-			{/* <div className={styles.mt16}>
+			<div className={styles.mt16}>
 				<BookTable
 					books={records}
 					onParamsChange={handleParamsChange}
 				/>
-			</div> */}
+			</div>
 
 			{total !== 0 ? (
 				<Row
@@ -166,9 +145,9 @@ const Book = props => {
 const mapStateToProps = state => {
 	return {
 		booksPayload: state.bookList.payload,
-		// deleteSuccess: state.bookDelete.success,
+		deleteSuccess: state.bookDelete.success,
 		// userRoles: state.UserRole.userRoles,
-		loading: state.loading.effects["bookList/getAllBookRequest"]
+		loading: state.loading.effects["bookList/getBookPagingRequest"]
 	};
 };
 

@@ -1,5 +1,5 @@
 import { notification } from "antd";
-import { getAllAllBook, getAllBook } from "../../services/book";
+import { getBookPaging, getAllBook } from "../../services/book";
 
 const AllBookModel = {
 	namespace: "bookList",
@@ -30,33 +30,57 @@ const AllBookModel = {
 				});
 			}
 		},
-		// *getAllAllBookRequest(_, { call, put }) {
-		// 	const response = yield call(getAllAllBook);
-		// 	if (response.status === 400) {
-		// 		notification.error({
-		// 			message: response.message
-		// 		});
-		// 		yield put({
-		// 			type: "getAllAllBookFailure",
-		// 			payload: response
-		// 		});
-		// 	} else {
-		// 		yield put({
-		// 			type: "getAllAllBookSuccess",
-		// 			payload: response
-		// 		});
-		// 	}
-		// }
+		*getBookPagingRequest({ payload }, { call, put }) {
+			const response = yield call(getBookPaging, payload);
+			if (response.status === 400) {
+				notification.error({
+					message: response.message
+				});
+				yield put({
+					type: "getBookPagingFailure",
+					payload: response
+				});
+			} else {
+				yield put({
+					type: "getBookPagingSuccess",
+					payload: response
+				});
+			}
+		}
 	},
 	reducers: {
 		getAllBookRequest(state, action) {
 			return {
 				...state,
+				allBookSuccess: false,
+				allBookFailure: false
+			};
+		},
+		getAllBookSuccess(state, action) {
+			return {
+				...state,
+				payload: action.payload,
+				allBookSuccess: true,
+				allBookFailure: false
+			};
+		},
+		getAllBookFailure(state, action) {
+			return {
+				...state,
+				allBookSuccess: false,
+				allBookFailure: true
+			};
+		},
+
+		getBookPagingRequest(state, action) {
+			return {
+				...state,
+				payload: [],
 				success: false,
 				failure: false
 			};
 		},
-		getAllBookSuccess(state, action) {
+		getBookPagingSuccess(state, action) {
 			return {
 				...state,
 				payload: action.payload,
@@ -64,35 +88,11 @@ const AllBookModel = {
 				failure: false
 			};
 		},
-		getAllBookFailure(state, action) {
+		getBookPagingFailure(state, action) {
 			return {
 				...state,
 				success: false,
 				failure: true
-			};
-		},
-
-		getAllAllBookRequest(state, action) {
-			return {
-				...state,
-				allBooks: [],
-				allBookSuccess: false,
-				allBookFailure: false
-			};
-		},
-		getAllAllBookSuccess(state, action) {
-			return {
-				...state,
-				allBooks: action.payload,
-				allBookSuccess: true,
-				allBookFailure: false
-			};
-		},
-		getAllAllBookFailure(state, action) {
-			return {
-				...state,
-				allBookSuccess: false,
-				allBookFailure: true
 			};
 		}
 	}

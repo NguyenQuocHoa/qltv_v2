@@ -67,10 +67,21 @@ export default defineConfig({
 					component: "../layouts/BasicLayout",
 					authority: ["admin", "user"],
 					routes: [
-						// {
-						// 	path: "/",
-						// 	redirect: "/latest-reports"
-						// },
+						{
+							path: "/",
+							redirect: "/dashboard"
+						},
+						{
+							name: "dashboard",
+							path: "/dashboard",
+							icon: "BarChartOutlined",
+							routes: [
+								{
+									path: "/dashboard",
+									component: "./dashboard"
+								}
+							]
+						},
 						// {
 						// 	name: "latestReport",
 						// 	path: "/latest-reports",
@@ -180,16 +191,16 @@ export default defineConfig({
 						{
 							name: "books",
 							path: "/books",
-							icon: "UserAddOutlined",
+							icon: "BookOutlined",
 							routes: [
 								{
 									path: "/books",
 									component: "./book"
 								},
-								// {
-								// 	path: "/books/create",
-								// 	component: "./book/userForm"
-								// },
+								{
+									path: "/books/create",
+									component: "./book/create"
+								},
 								// {
 								// 	path: "/books/:id",
 								// 	component: "./book/userForm"

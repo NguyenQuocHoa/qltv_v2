@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 namespace QLTV_V2.DAL
 {
@@ -27,12 +29,19 @@ namespace QLTV_V2.DAL
             }
         }
 
-        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
         {
             try
-            { 
-                var users = _context.User.Skip((pageIndex - 1) * pageSize).Take(pageSize)
-                    .Select(user => new { user.Id, user.Username, user.Description }).ToList();
+            {
+                ProviderDAL providerDAL = new ProviderDAL();
+                DataTable dt = providerDAL.GetDataPaging("spGetUserPaging", pageIndex, pageSize, sortColumn, sortOrder);
+                var users = dt.AsEnumerable().Select(row => new User()
+                {
+                    Id = (int)row["id"],
+                    Username = (string)row["username"],
+                    Description = (string)row["description"],
+                    IsActive = (bool)row["isactive"]
+                }).ToList();
                 return users;
             }
             catch (Exception ex)

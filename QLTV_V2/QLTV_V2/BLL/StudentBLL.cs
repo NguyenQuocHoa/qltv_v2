@@ -32,11 +32,11 @@ namespace QLTV_V2.BLL
             }
         }
 
-        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
         {
             try
             {
-                return _studentDAL.GetAllPaging(pageIndex, pageSize);
+                return _studentDAL.GetAllPaging(pageIndex, pageSize, sortColumn, sortOrder);
             }
             catch (Exception ex)
             {

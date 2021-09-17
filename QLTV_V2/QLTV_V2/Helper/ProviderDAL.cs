@@ -78,6 +78,64 @@ namespace QLTV_V2.Helper
                 return ds.Tables[0];
             }    
         }
+
+        public DataTable GetDataPagingWithId(string spName, int pageIndex, int pageSize, string sortColumn, int sortOrder, string nameCol, int objId)
+        {
+            using (SqlConnection con = sqlConnecttion)
+            {
+                DataSet ds = new DataSet();
+                try
+                {
+                    string col = sortColumn.Replace("&", "&amp");
+                    SqlParameter pageIndexParam, pageSizeParam, colParam, sortParam;
+                    SqlDataAdapter adapter;
+
+                    con.Open();
+                    SqlCommand command = new SqlCommand(spName, con);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    if (col.Length != 0)
+                    {
+                        pageIndexParam = new SqlParameter("@PageIndex", pageIndex);
+                        pageIndexParam.Direction = ParameterDirection.Input;
+                        pageIndexParam.DbType = DbType.Int32;
+                        command.Parameters.Add(pageIndexParam);
+
+                        pageSizeParam = new SqlParameter("@PageSize", pageSize);
+                        pageSizeParam.Direction = ParameterDirection.Input;
+                        pageSizeParam.DbType = DbType.Int32;
+                        command.Parameters.Add(pageSizeParam);
+
+                        colParam = new SqlParameter("@Col", col);
+                        colParam.Direction = ParameterDirection.Input;
+                        colParam.DbType = DbType.String;
+                        command.Parameters.Add(colParam);
+
+                        sortParam = new SqlParameter("@SortOrder", sortOrder);
+                        sortParam.Direction = ParameterDirection.Input;
+                        sortParam.DbType = DbType.Int32;
+                        command.Parameters.Add(sortParam);
+
+                        sortParam = new SqlParameter($"@{nameCol}", objId);
+                        sortParam.Direction = ParameterDirection.Input;
+                        sortParam.DbType = DbType.Int32;
+                        command.Parameters.Add(sortParam);
+                    }
+                    adapter = new SqlDataAdapter(command);
+                    adapter.Fill(ds, spName);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    con.Close();
+                    con.Dispose();
+                }
+                return ds.Tables[0];
+            }
+        }
     }
 
     public static class ConvertToEnumerable

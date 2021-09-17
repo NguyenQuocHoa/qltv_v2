@@ -36,17 +36,14 @@ namespace QLTV_V2.Controllers
         }
 
         [HttpGet("get-all-paging")]
-        public ResultModel GetAllPaging(int pageIndex, int pageSize)
+        public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
         {
             try
             {
                 int total = _userBLL.getCountUser();
-                return new ResultModel(Code.OK, _userBLL.GetAllPaging(pageIndex, pageSize), total, "thành công");
+                return new ResultModel(Code.OK, _userBLL.GetAllPaging(pageIndex, pageSize, sortColumn, sortOrder), total, "thành công");
             }
-            catch (Exception)
-            {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
-            }
+            catch (Exception) { return new ResultModel(Code.SVERROR, "lỗi hệ thống");}
         }
 
         [HttpGet("get-all-active")]

@@ -32,11 +32,11 @@ namespace QLTV_V2.BLL
             }
         }
 
-        public IEnumerable<Object> GetAllWithStudent()
+        public IEnumerable<Object> GetAllPagingWithStudent(int pageIndex, int pageSize, string sortColumn, int sortOrder, int studentId)
         {
             try
             {
-                return _borrowBookDAL.GetAllWithStudent();
+                return _borrowBookDAL.GetAllPagingWithStudent(pageIndex, pageSize, sortColumn, sortOrder, studentId);
             }
             catch (Exception ex)
             {
@@ -90,6 +90,11 @@ namespace QLTV_V2.BLL
             {
                 throw new Exception("Error from BorrowBookBLL: " + ex.Message.ToString());
             }
+        }
+
+        public int getCountBorrowBookWithStudent(int studentId)
+        {
+            return _context.BorrowBook.Where(borrowBook => borrowBook.Student_Id == studentId).Count();
         }
     }
 }

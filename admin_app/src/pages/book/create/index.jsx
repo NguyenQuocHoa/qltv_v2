@@ -184,7 +184,7 @@ const CreateBook = props => {
 							<Input />
 						</Form.Item>
 					</Col>
-					<Col xs={8}>
+					<Col xs={6}>
 						<Form.Item
 							name="isActive"
 							label={

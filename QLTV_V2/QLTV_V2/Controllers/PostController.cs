@@ -36,12 +36,12 @@ namespace QLTV_V2.Controllers
         }
 
         [HttpGet("get-all-paging")]
-        public ResultModel GetAllPaging(int pageIndex, int pageSize)
+        public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
         {
             try
             {
                 int total = _postBLL.getCountPost();
-                return new ResultModel(Code.OK, _postBLL.GetAllPaging(pageIndex, pageSize), total, "thành công");
+                return new ResultModel(Code.OK, _postBLL.GetAllPaging(pageIndex, pageSize, sortColumn, sortOrder), total, "thành công");
             }
             catch (Exception)
             {

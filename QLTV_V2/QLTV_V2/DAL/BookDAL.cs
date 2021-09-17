@@ -47,42 +47,22 @@ namespace QLTV_V2.DAL
         {
             try
             {
-                if (requestBody.Count == 0)
+                ProviderDAL providerDAL = new ProviderDAL();
+                DataTable dt = providerDAL.GetDataPaging("spGetBookPaging", pageIndex, pageSize, sortColumn, sortOrder);
+                var books = dt.AsEnumerable().Select(row => new Book()
                 {
-                    var books = _context.Book.Skip((pageIndex - 1) * pageSize).Take(pageSize)
-                     .Select(book =>
-                     new {
-                         book.Id,
-                         book.BookCode,
-                         book.BookName,
-                         book.Inventory,
-                         book.Author,
-                         book.MainContent,
-                         book.Description,
-                         book.IsActive,
-                         book.BookCategory_Id
-                     }).OrderByDescending(book => book.Id).ToList();
-                    return books;
-                }
-                else
-                {
-                    ProviderDAL providerDAL = new ProviderDAL();
-                    DataTable dt = providerDAL.GetDataPaging("spGetBookPaging", pageIndex, pageSize, sortColumn, sortOrder);
-                    var books = dt.AsEnumerable().Select(row => new Book()
-                    {
-                        Id = (int)row["id"],
-                        BookCode = (string)row["bookcode"],
-                        BookName = (string)row["bookname"],
-                        Inventory = (int)row["inventory"],
-                        Author = (string)row["author"],
-                        MainContent = (string)row["maincontent"],
-                        Description = (string)row["description"],
-                        BookCategory_Id = (int)row["bookcategory_id"],
-                        IsActive = (bool)row["isactive"],
-                        Image = (string)row["image"]
-                    }).ToList();
-                    return books;
-                } 
+                    Id = (int)row["id"],
+                    BookCode = (string)row["bookcode"],
+                    BookName = (string)row["bookname"],
+                    Inventory = (int)row["inventory"],
+                    Author = (string)row["author"],
+                    MainContent = (string)row["maincontent"],
+                    Description = (string)row["description"],
+                    BookCategory_Id = (int)row["bookcategory_id"],
+                    IsActive = (bool)row["isactive"],
+                    Image = (string)row["image"]
+                }).ToList();
+                return books;
             }
             catch (Exception ex)
             {

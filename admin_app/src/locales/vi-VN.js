@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import component from "./vi-VN/component";
 import globalHeader from "./vi-VN/globalHeader";
 import menu from "./vi-VN/menu";
@@ -5,6 +6,7 @@ import pwa from "./vi-VN/pwa";
 import settingDrawer from "./vi-VN/settingDrawer";
 import settings from "./vi-VN/settings";
 import pages from "./vi-VN/pages";
+import customPages from "./vi-VN/pages/index";
 export default {
 	"navBar.lang": "Languages",
 	"layout.user.link.help": "Help",
@@ -20,5 +22,6 @@ export default {
 	...settings,
 	...pwa,
 	...component,
-	...pages
+	...pages,
+	...customPages
 };

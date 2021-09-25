@@ -35,6 +35,7 @@ namespace QLTV_V2.Controllers
             }
         }
 
+
         [HttpGet("get-all-paging")]
         public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
         {
@@ -48,6 +49,7 @@ namespace QLTV_V2.Controllers
                 return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
+
 
         [HttpGet("get-all-active")]
         public ResultModel GetPostActive()
@@ -77,6 +79,7 @@ namespace QLTV_V2.Controllers
             }
         }
 
+
         [HttpGet("get-by-id/{id}")]
         public ResultModel Get(int id)
         {
@@ -99,11 +102,15 @@ namespace QLTV_V2.Controllers
                 _postBLL.AddPost(post);
                 return new ResultModel(Code.CREATED, "thành công");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+                if (ex.Message.Contains("Post code already exist"))
+                    return new ResultModel(Code.SVERROR, ex.Message.ToString());
+                else
+                    return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
+
 
         [HttpPut("update/{id}")]
         public ResultModel Put(int id, [FromBody] Post post)
@@ -113,9 +120,12 @@ namespace QLTV_V2.Controllers
                 _postBLL.EditPost(id, post);
                 return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+                if (ex.Message.Contains("Post code already exist"))
+                    return new ResultModel(Code.SVERROR, ex.Message.ToString());
+                else
+                    return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 

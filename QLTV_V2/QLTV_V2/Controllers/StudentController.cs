@@ -100,9 +100,12 @@ namespace QLTV_V2.Controllers
                 _studentBLL.AddStudent(student);
                 return new ResultModel(Code.CREATED, "thành công");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+                if (ex.Message.Contains("Student code already exist"))
+                    return new ResultModel(Code.SVERROR, ex.Message.ToString());
+                else
+                    return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 
@@ -128,9 +131,12 @@ namespace QLTV_V2.Controllers
                 _studentBLL.EditStudent(id, student);
                 return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+                if (ex.Message.Contains("Student code already exist"))
+                    return new ResultModel(Code.SVERROR, ex.Message.ToString());
+                else
+                    return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 

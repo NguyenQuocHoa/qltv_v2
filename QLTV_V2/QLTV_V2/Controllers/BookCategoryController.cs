@@ -79,7 +79,7 @@ namespace QLTV_V2.Controllers
                 if (ex.Message.Contains("Book category code already exist"))
                     return new ResultModel(Code.SVERROR, ex.Message.ToString());
                 else 
-                 return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+                    return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         } 
 

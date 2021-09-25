@@ -85,7 +85,7 @@ namespace QLTV_V2.BLL
             try
             {
                 // check Student code is exist
-                var st = _context.Student.Where(item => item.StudentCode == student.StudentCode).Select(item => new { item.Id }).SingleOrDefault();
+                var st = _context.Student.Where(item => item.StudentCode == student.StudentCode).SingleOrDefault();
                 if (st == null)
                 {
                     student.Password = BCrypt.Net.BCrypt.HashPassword(student.Password);
@@ -96,7 +96,10 @@ namespace QLTV_V2.BLL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from StudentBLL: " + ex.Message.ToString());
+                if (ex.Message.Contains("Student code already exist"))
+                    throw new Exception(ex.Message.ToString());
+                else
+                    throw new Exception("Error from StudentBLL: " + ex.Message.ToString());
             }
         }
 
@@ -122,17 +125,27 @@ namespace QLTV_V2.BLL
         public void EditStudent(int id, Student newStudent)
         {
             try
-            {
-                Student oldStudent = _context.Student.Where(us => us.Id == id).SingleOrDefault();
-                if (newStudent.Password == null || newStudent.Password.Trim() == "")
-                    newStudent.Password = oldStudent.Password;
+            { 
+                var s = _context.Student
+                    .Where(item => item.StudentCode == newStudent.StudentCode && item.Id != newStudent.Id).SingleOrDefault();
+                if (s == null)
+                {
+                    Student oldStudent = _context.Student.Where(us => us.Id == id).SingleOrDefault();
+                    if (newStudent.Password == null || newStudent.Password.Trim() == "")
+                        newStudent.Password = oldStudent.Password;
+                    else
+                        newStudent.Password = BCrypt.Net.BCrypt.HashPassword(newStudent.Password);
+                    _studentDAL.EditStudent(oldStudent, newStudent);
+                }    
                 else
-                    newStudent.Password = BCrypt.Net.BCrypt.HashPassword(newStudent.Password);
-                _studentDAL.EditStudent(oldStudent, newStudent);
+                    throw new Exception("Student code already exist");
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from StudentBLL: " + ex.Message.ToString());
+                if (ex.Message.Contains("Student code already exist"))
+                    throw new Exception(ex.Message.ToString());
+                else
+                    throw new Exception("Error from StudentBLL: " + ex.Message.ToString());
             }
         }
 

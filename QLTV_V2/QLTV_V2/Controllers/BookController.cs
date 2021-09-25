@@ -101,9 +101,12 @@ namespace QLTV_V2.Controllers
                 _bookBLL.AddBook(book);
                 return new ResultModel(Code.CREATED, "thành công");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+                if (ex.Message.Contains("Book code already exist") || ex.Message.Contains("Book Category doesn't exist"))
+                    return new ResultModel(Code.SVERROR, ex.Message.ToString());
+                else
+                    return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 
@@ -115,9 +118,12 @@ namespace QLTV_V2.Controllers
                 _bookBLL.EditBook(id, book);
                 return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+                if (ex.Message.Contains("Book code already exist") || ex.Message.Contains("Book Category doesn't exist"))
+                    return new ResultModel(Code.SVERROR, ex.Message.ToString());
+                else
+                    return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 

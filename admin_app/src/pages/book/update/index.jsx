@@ -21,8 +21,13 @@ import SelectCategory from "../../shared/select/selectCategory";
 const { TextArea } = Input;
 const { Title } = Typography;
 
-const CreateBook = props => {
-	const { createBookSuccess, dispatch } = props;
+const UpdateBook = props => {
+	const {
+		getDetailSuccess,
+		detailPayload,
+		updateBookSuccess,
+		dispatch
+	} = props;
 	const [form] = Form.useForm();
 	const history = useHistory();
 	const formLayout = {
@@ -37,11 +42,12 @@ const CreateBook = props => {
 	const handleSubmit = payload => {
 		const converPayload = {
 			...payload,
+			id: +props.match.params.id,
 			bookCategory_Id: payload.bookCategoryId
 		};
 
 		dispatch({
-			type: "bookCreate/createBookRequest",
+			type: "bookUpdate/updateBookRequest",
 			payload: converPayload
 		});
 	};
@@ -55,8 +61,28 @@ const CreateBook = props => {
 	}, []);
 
 	useEffect(() => {
-		if (createBookSuccess) history.goBack();
-	}, [createBookSuccess]);
+		if (updateBookSuccess) {
+			dispatch({
+				type: "bookUpdate/clearState"
+			});
+			history.goBack();
+		}
+	}, [updateBookSuccess]);
+
+	useEffect(() => {
+		dispatch({
+			type: "bookDetail/getBookDetailRequest",
+			id: +props.match.params.id
+		});
+	}, []);
+
+	useEffect(() => {
+		if (getDetailSuccess) {
+			const data = detailPayload?.item?.value;
+			if (data) data.bookCategoryId = data.bookCategory_Id;
+			form.setFieldsValue({ ...data });
+		}
+	}, [getDetailSuccess]);
 
 	return (
 		<div className={styles.container}>
@@ -328,10 +354,12 @@ const CreateBook = props => {
 
 const mapStateToProps = state => {
 	return {
-		loading: state.loading.effects["bookCreate/getBookCreateRequest"],
-		createPayload: state.bookCreate.payload,
-		createBookSuccess: state.bookCreate.success
+		loading: state.loading.effects["bookUpdate/getBookUpdateRequest"],
+		updatePayload: state.bookUpdate.payload,
+		updateBookSuccess: state.bookUpdate.success,
+		detailPayload: state.bookDetail.payload,
+		getDetailSuccess: state.bookDetail.success
 	};
 };
 
-export default connect(mapStateToProps)(CreateBook);
+export default connect(mapStateToProps)(UpdateBook);

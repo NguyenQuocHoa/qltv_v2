@@ -1,19 +1,19 @@
 import { notification } from "antd";
-import { getBookDetail } from "../../services/book";
+import { getBookCategoryDetail } from "../../services/bookCategory";
 
-const BookDetailModel = {
-	namespace: "bookDetail",
+const BookCategoryDetailModel = {
+	namespace: "bookCategoryDetail",
 	state: {
 		payload: {},
 		success: false,
 		failure: false
 	},
 	effects: {
-		*getBookDetailRequest({ id }, { call, put }) {
-			const response = yield call(getBookDetail, id);
+		*getBookCategoryDetailRequest({ id }, { call, put }) {
+			const response = yield call(getBookCategoryDetail, id);
 			if (response?.code === 200) {
 				yield put({
-					type: "getBookDetailSuccess",
+					type: "getBookCategoryDetailSuccess",
 					payload: response
 				});
 			} else {
@@ -21,14 +21,14 @@ const BookDetailModel = {
 					message: response.message
 				});
 				yield put({
-					type: "getBookDetailFailure",
+					type: "getBookCategoryDetailFailure",
 					payload: response
 				});
 			}
 		}
 	},
 	reducers: {
-		getBookDetailRequest(state, action) {
+		getBookCategoryDetailRequest(state, action) {
 			return {
 				...state,
 				payload: {},
@@ -36,7 +36,7 @@ const BookDetailModel = {
 				failure: false
 			};
 		},
-		getBookDetailSuccess(state, action) {
+		getBookCategoryDetailSuccess(state, action) {
 			return {
 				...state,
 				payload: action.payload,
@@ -44,7 +44,7 @@ const BookDetailModel = {
 				failure: false
 			};
 		},
-		getBookDetailFailure(state, action) {
+		getBookCategoryDetailFailure(state, action) {
 			return {
 				...state,
 				payload: action.payload,
@@ -54,4 +54,4 @@ const BookDetailModel = {
 		}
 	}
 };
-export default BookDetailModel;
+export default BookCategoryDetailModel;

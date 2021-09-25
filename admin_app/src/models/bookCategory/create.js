@@ -1,22 +1,22 @@
 import { notification } from "antd";
-import { createBook } from "../../services/book";
+import { createBookCategory } from "../../services/bookCategory";
 
-const BookCreateModel = {
-	namespace: "bookCreate",
+const BookCategoryCreateModel = {
+	namespace: "bookCategoryCreate",
 	state: {
 		payload: {},
 		success: false,
 		failure: false
 	},
 	effects: {
-		*createBookRequest({ payload }, { call, put }) {
-			const response = yield call(createBook, payload);
+		*createBookCategoryRequest({ payload }, { call, put }) {
+			const response = yield call(createBookCategory, payload);
 			if (response?.code === 201) {
 				notification.success({
-					message: "Thêm sách mới thành công"
+					message: "Thêm loại sách mới thành công"
 				});
 				yield put({
-					type: "createBookSuccess",
+					type: "createBookCategorySuccess",
 					payload: response
 				});
 			} else {
@@ -24,7 +24,7 @@ const BookCreateModel = {
 					message: response?.message
 				});
 				yield put({
-					type: "createBookFailure",
+					type: "createBookCategoryFailure",
 					payload: response
 				});
 			}
@@ -36,14 +36,14 @@ const BookCreateModel = {
 		}
 	},
 	reducers: {
-		createBookRequest(state, action) {
+		createBookCategoryRequest(state, action) {
 			return {
 				...state,
 				success: false,
 				failure: false
 			};
 		},
-		createBookSuccess(state, action) {
+		createBookCategorySuccess(state, action) {
 			return {
 				...state,
 				payload: action.payload,
@@ -51,7 +51,7 @@ const BookCreateModel = {
 				failure: false
 			};
 		},
-		createBookFailure(state, action) {
+		createBookCategoryFailure(state, action) {
 			return {
 				...state,
 				success: false,
@@ -68,4 +68,4 @@ const BookCreateModel = {
 		}
 	}
 };
-export default BookCreateModel;
+export default BookCategoryCreateModel;

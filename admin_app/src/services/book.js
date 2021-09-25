@@ -6,7 +6,7 @@ export async function getAllBook() {
 
 export async function getBookPaging({ params, body }) {
 	return request(
-		`/api/Book/get-all-paging?pageIndex=${params.pageIndex}&pageSize=${params.pageSize}`,
+		`/api/Book/get-all-paging?pageIndex=${params.pageIndex}&pageSize=${params.pageSize}&sortColumn=${params.sortColumn}&sortOrder=${params.sortOrder}`,
 		{
 			method: "POST",
 			data: body

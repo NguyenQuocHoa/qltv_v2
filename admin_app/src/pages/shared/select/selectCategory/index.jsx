@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Select } from "antd";
 import { useEffect } from "react";
-import styles from "../style/selectStyle.less";
+import styles from "../../style/selectStyle.less";
 import { connect, setLocale } from "umi";
 setLocale("vi-VN", false);
 
@@ -15,16 +15,18 @@ const SelectCategory = props => {
 		value,
 		dispatch,
 		onSelect,
-		placeholder = "Tất cả",
+		placeholder = "Chọn loại sách",
 		mode = null,
 		tagRender = null
 	} = props;
 
 	useEffect(() => {
 		dispatch({
-			type: "Common/getAllCategoryListRequest"
+			type: "bookCategoryAll/getAllBookCategoryRequest"
 		});
 	}, []);
+
+	const categories = bookCategoryList?.items ? bookCategoryList?.items : [];
 
 	return (
 		<Select
@@ -39,18 +41,20 @@ const SelectCategory = props => {
 			mode={mode}
 			tagRender={tagRender}
 		>
-			{bookCategoryList.map((bookCategory, index) => (
-				<Option value={bookCategory.id} key={bookCategory.id}>
-					{bookCategory.tenNhanVien}
-				</Option>
-			))}
+			{categories.length > 0 &&
+				categories.map((bookCategory, index) => (
+					<Option value={bookCategory.id} key={bookCategory.id}>
+						{bookCategory.bookCategoryName}
+					</Option>
+				))}
 		</Select>
 	);
 };
 
 const mapStateToProps = state => {
 	return {
-		bookCategoryList: state.Common.allCategorys
+		bookCategoryList: state.bookCategoryAll.payload,
+		success: state.bookCategoryAll.success
 	};
 };
 

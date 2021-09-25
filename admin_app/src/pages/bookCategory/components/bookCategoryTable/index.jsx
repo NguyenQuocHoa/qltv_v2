@@ -5,14 +5,19 @@ import { Link } from "react-router-dom";
 import { connect } from "umi";
 import columnSearchProps from "../../../shared/filterTableProps/columnSearchProps";
 // import columnDatePickerProps from "../../../shared/filterTableProps/columnDatePickerProps";
-import { numberWithComas } from "../../../../utils/utils";
 import styles from "../../../shared/style/tableStyle.less";
 
-const BookTable = props => {
-	const { onParamsChange, userRoles, dispatch, books, loading } = props;
+const BookCategoryTable = props => {
+	const {
+		onParamsChange,
+		userRoles,
+		dispatch,
+		bookCategories,
+		loading
+	} = props;
 	const handleDeleteCustomer = id => {
 		dispatch({
-			type: "bookDelete/deleteBookRequest",
+			type: "bookCategoryDelete/deleteBookCategoryRequest",
 			id
 		});
 	};
@@ -21,33 +26,20 @@ const BookTable = props => {
 
 	const columns = [
 		{
-			title: "Mã sách",
-			dataIndex: "bookCode",
-			key: "bookCode",
+			title: "Mã loại sách",
+			dataIndex: "bookCategoryCode",
+			key: "bookCategoryCode",
 			filterMultiple: false,
-			...columnSearchProps("bookCode")
+			align: "center",
+			...columnSearchProps("bookCategoryCode")
 		},
 		{
-			title: "Tên sách",
-			dataIndex: "bookName",
-			key: "bookName",
+			title: "Tên loại sách",
+			dataIndex: "bookCategoryName",
+			key: "bookCategoryName",
 			filterMultiple: false,
-			...columnSearchProps("bookName")
-		},
-		{
-			title: "Tác giả",
-			dataIndex: "author",
-			key: "author",
-			filterMultiple: false,
-			...columnSearchProps("author")
-		},
-		{
-			title: "Tồn kho",
-			dataIndex: "inventory",
-			key: "inventory",
-			filterMultiple: false,
-			align: "right",
-			render: data => <div>{numberWithComas(data)}</div>
+			align: "center",
+			...columnSearchProps("bookCategoryName")
 		},
 		{
 			title: "Trạng thái",
@@ -70,23 +62,22 @@ const BookTable = props => {
 			)
 		},
 		{
-			title: "Nội dung chính",
-			dataIndex: "mainContent",
-			key: "mainContent",
+			title: "Ghi chú",
+			dataIndex: "description",
+			key: "description",
 			filterMultiple: false,
-			width: 300,
-			...columnSearchProps("mainContent")
+			align: "center",
+			...columnSearchProps("description")
 		},
 		{
 			title: "Thao tác",
 			key: "action",
-			width: "5%",
 			align: "center",
 			render: (text, record, index) => (
 				<div key={index}>
 					<Space>
 						{true ? (
-							<Link to={`/books/${record.id}`}>
+							<Link to={`/book-category/${record.id}`}>
 								<Tooltip title="Xem chi tiết">
 									<Button
 										type="link"
@@ -105,7 +96,7 @@ const BookTable = props => {
 						)}
 						{true ? (
 							<Popconfirm
-								title="Xác nhận xóa quyển sách này?"
+								title="Xác nhận xóa loại sách này?"
 								onConfirm={() => {
 									handleDeleteCustomer(record.id);
 								}}
@@ -156,7 +147,7 @@ const BookTable = props => {
 	return (
 		<Table
 			columns={columns}
-			dataSource={books}
+			dataSource={bookCategories}
 			pagination={false}
 			onChange={handleParamsChange}
 			size="small"
@@ -169,8 +160,11 @@ const BookTable = props => {
 const mapStateTopProps = state => {
 	return {
 		// userRoles: state.UserRole.userRoles,
-		loading: state.loading.effects["bookList/getBookPagingRequest"]
+		loading:
+			state.loading.effects[
+				"bookCategoryList/getBookCateogryPagingRequest"
+			]
 	};
 };
 
-export default connect(mapStateTopProps)(BookTable);
+export default connect(mapStateTopProps)(BookCategoryTable);

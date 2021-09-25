@@ -1,22 +1,22 @@
 import { notification } from "antd";
-import { createBook } from "../../services/book";
+import { updateBookCategory } from "../../services/bookCategory";
 
-const BookCreateModel = {
-	namespace: "bookCreate",
+const BookCategoryUpdateModel = {
+	namespace: "bookCategoryUpdate",
 	state: {
 		payload: {},
 		success: false,
 		failure: false
 	},
 	effects: {
-		*createBookRequest({ payload }, { call, put }) {
-			const response = yield call(createBook, payload);
-			if (response?.code === 201) {
+		*updateBookCategoryRequest({ payload }, { call, put }) {
+			const response = yield call(updateBookCategory, payload);
+			if (response?.code === 200) {
 				notification.success({
-					message: "Thêm sách mới thành công"
+					message: "Cập nhật loại sách thành công"
 				});
 				yield put({
-					type: "createBookSuccess",
+					type: "updateBookCategorySuccess",
 					payload: response
 				});
 			} else {
@@ -24,7 +24,7 @@ const BookCreateModel = {
 					message: response?.message
 				});
 				yield put({
-					type: "createBookFailure",
+					type: "updateBookCategoryFailure",
 					payload: response
 				});
 			}
@@ -36,14 +36,15 @@ const BookCreateModel = {
 		}
 	},
 	reducers: {
-		createBookRequest(state, action) {
+		updateBookCategoryRequest(state, action) {
 			return {
 				...state,
+				payload: {},
 				success: false,
 				failure: false
 			};
 		},
-		createBookSuccess(state, action) {
+		updateBookCategorySuccess(state, action) {
 			return {
 				...state,
 				payload: action.payload,
@@ -51,9 +52,10 @@ const BookCreateModel = {
 				failure: false
 			};
 		},
-		createBookFailure(state, action) {
+		updateBookCategoryFailure(state, action) {
 			return {
 				...state,
+				payload: action.payload,
 				success: false,
 				failure: true
 			};
@@ -68,4 +70,4 @@ const BookCreateModel = {
 		}
 	}
 };
-export default BookCreateModel;
+export default BookCategoryUpdateModel;

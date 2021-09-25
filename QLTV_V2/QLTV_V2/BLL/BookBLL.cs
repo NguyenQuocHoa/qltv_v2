@@ -90,9 +90,7 @@ namespace QLTV_V2.BLL
                     // check book code is already exist
                     var b = _context.Book.Where(item => item.BookCode == book.BookCode).Select(item => new { item.Id }).SingleOrDefault();
                     if (b == null)
-                    {
                         _bookDAL.AddBook(book);
-                    }
                     else
                         throw new Exception("Book code already exist");
                 }
@@ -104,7 +102,11 @@ namespace QLTV_V2.BLL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookBLL: " + ex.Message.ToString());
+                if (ex.Message.Contains("Book code already exist") 
+                    || ex.Message.Contains("Book Category doesn't exist"))
+                    throw new Exception(ex.Message.ToString());
+                else
+                    throw new Exception("Error from BookBLL: " + ex.Message.ToString());
             }
         }
 
@@ -116,7 +118,12 @@ namespace QLTV_V2.BLL
                 Book oldBook = _context.Book.Where(us => us.Id == id).SingleOrDefault();
                 if (checkBookCategoryExist(newBook.BookCategory_Id) && oldBook != null)
                 {
-                    _bookDAL.EditBook(oldBook, newBook);
+                    var b = _context.Book.Where(item => item.BookCode == newBook.BookCode && item.Id != newBook.Id)
+                        .Select(item => new { item.Id }).SingleOrDefault();
+                    if (b == null)
+                        _bookDAL.EditBook(oldBook, newBook);
+                    else
+                        throw new Exception("Book code already exist");
                 }
                 else
                 {
@@ -125,7 +132,11 @@ namespace QLTV_V2.BLL
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookBLL: " + ex.Message.ToString());
+                if (ex.Message.Contains("Book code already exist")
+                     || ex.Message.Contains("Book Category doesn't exist"))
+                    throw new Exception(ex.Message.ToString());
+                else
+                    throw new Exception("Error from BookBLL: " + ex.Message.ToString());
             }
         }
 

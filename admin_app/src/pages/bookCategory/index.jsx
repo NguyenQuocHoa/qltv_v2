@@ -6,13 +6,19 @@ import { Button, Col, InputNumber, Pagination, Row, Spin } from "antd";
 import { useHistory } from "react-router";
 import styles from "../shared/style/listStyle.less";
 import qs from "query-string";
-import BookTable from "./components/bookTable";
+import BookCategoryTable from "./components/bookCategoryTable";
 
-const Book = props => {
-	const { booksPayload, deleteSuccess, userRoles, dispatch, loading } = props;
+const BookCategory = props => {
+	const {
+		bookCategoriesPayload,
+		deleteSuccess,
+		userRoles,
+		dispatch,
+		loading
+	} = props;
 	const history = useHistory();
-	const total = booksPayload?.total || 0;
-	const records = booksPayload?.items || [];
+	const total = bookCategoriesPayload?.total || 0;
+	const records = bookCategoriesPayload?.items || [];
 
 	const [params, setParams] = useState({
 		pageIndex: 1,
@@ -23,26 +29,25 @@ const Book = props => {
 
 	const [body, setBody] = useState([]);
 
-	const getAllBookRequest = (params, filterParams) => {
-		console.log("params", params);
+	const getAllBookCategoryRequest = (params, filterParams) => {
 		setParams(params);
 		history.push({
-			pathname: "/books",
+			pathname: "/book-category",
 			search: qs.stringify(params)
 		});
 
 		dispatch({
-			type: "bookList/getBookPagingRequest",
+			type: "bookCategoryList/getBookCategoryPagingRequest",
 			payload: { params, body: [] }
 		});
 	};
 
 	const handlePageIndexChange = newPageIndex => {
-		getAllBookRequest({ ...params, pageIndex: newPageIndex }, body);
+		getAllBookCategoryRequest({ ...params, pageIndex: newPageIndex }, body);
 	};
 
 	const handlePageSizeChange = newPageSize => {
-		getAllBookRequest(
+		getAllBookCategoryRequest(
 			{
 				...params,
 				pageIndex: 1,
@@ -60,12 +65,12 @@ const Book = props => {
 	};
 
 	useEffect(() => {
-		getAllBookRequest(params);
+		getAllBookCategoryRequest(params);
 	}, []);
 
 	useEffect(() => {
 		if (deleteSuccess) {
-			getAllBookRequest(params, body);
+			getAllBookCategoryRequest(params, body);
 		}
 	}, [deleteSuccess]);
 
@@ -81,12 +86,13 @@ const Book = props => {
 		<div className={styles.container}>
 			<Row className={styles.mt16} justify="space-between">
 				<Col>
-					Tổng số sách: <span className={styles.title}>{total}</span>
+					Tổng số loại sách:{" "}
+					<span className={styles.title}>{total}</span>
 				</Col>
 				<Col>
 					<Button
 						onClick={() => {
-							history.push("/books/create");
+							history.push("/book-category/create");
 						}}
 						type="primary"
 						icon={<PlusOutlined />}
@@ -98,8 +104,8 @@ const Book = props => {
 			</Row>
 
 			<div className={styles.mt16}>
-				<BookTable
-					books={records}
+				<BookCategoryTable
+					bookCategories={records}
 					onParamsChange={handleParamsChange}
 				/>
 			</div>
@@ -124,7 +130,7 @@ const Book = props => {
 					</Col>
 					<Col>
 						<Row justify="center" align="middle" gutter={[8, 8]}>
-							<Col>Số sách mỗi trang</Col>
+							<Col>Số loại sách mỗi trang</Col>
 							<Col>
 								<InputNumber
 									style={{ width: 60 }}
@@ -144,11 +150,14 @@ const Book = props => {
 
 const mapStateToProps = state => {
 	return {
-		booksPayload: state.bookList.payload,
-		deleteSuccess: state.bookDelete.success,
+		bookCategoriesPayload: state.bookCategoryList.payload,
+		deleteSuccess: state.bookCategoryDelete.success,
 		// userRoles: state.UserRole.userRoles,
-		loading: state.loading.effects["bookList/getBookPagingRequest"]
+		loading:
+			state.loading.effects[
+				"bookCategoryList/getBookCategoryPagingRequest"
+			]
 	};
 };
 
-export default connect(mapStateToProps)(Book);
+export default connect(mapStateToProps)(BookCategory);

@@ -189,6 +189,25 @@ export default defineConfig({
 						// 	]
 						// },
 						{
+							name: "bookCategories",
+							path: "/book-category",
+							icon: "DatabaseOutlined",
+							routes: [
+								{
+									path: "/book-category",
+									component: "./bookCategory"
+								},
+								{
+									path: "/book-category/create",
+									component: "./bookCategory/create"
+								},
+								{
+									path: "/book-category/:id",
+									component: "./bookCategory/update"
+								}
+							]
+						},
+						{
 							name: "books",
 							path: "/books",
 							icon: "BookOutlined",
@@ -201,10 +220,10 @@ export default defineConfig({
 									path: "/books/create",
 									component: "./book/create"
 								},
-								// {
-								// 	path: "/books/:id",
-								// 	component: "./book/userForm"
-								// }
+								{
+									path: "/books/:id",
+									component: "./book/update"
+								}
 							]
 						},
 						// {

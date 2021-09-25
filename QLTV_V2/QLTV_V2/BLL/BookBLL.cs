@@ -92,18 +92,18 @@ namespace QLTV_V2.BLL
                     if (b == null)
                         _bookDAL.AddBook(book);
                     else
-                        throw new Exception("Book code already exist");
+                        throw new Exception("Mã sách đã tồn tại");
                 }
                 else
                 {
-                    throw new Exception("Book Category doesn't exist");
+                    throw new Exception("Mã loại sách không tồn tại");
                 }
                   
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Book code already exist") 
-                    || ex.Message.Contains("Book Category doesn't exist"))
+                if (ex.Message.Contains("Mã sách đã tồn tại") 
+                    || ex.Message.Contains("Mã loại sách không tồn tại"))
                     throw new Exception(ex.Message.ToString());
                 else
                     throw new Exception("Error from BookBLL: " + ex.Message.ToString());
@@ -123,7 +123,7 @@ namespace QLTV_V2.BLL
                     if (b == null)
                         _bookDAL.EditBook(oldBook, newBook);
                     else
-                        throw new Exception("Book code already exist");
+                        throw new Exception("Mã sách đã tồn tại");
                 }
                 else
                 {
@@ -132,8 +132,8 @@ namespace QLTV_V2.BLL
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Book code already exist")
-                     || ex.Message.Contains("Book Category doesn't exist"))
+                if (ex.Message.Contains("Mã sách đã tồn tại")
+                     || ex.Message.Contains("Mã loại sách không tồn tại"))
                     throw new Exception(ex.Message.ToString());
                 else
                     throw new Exception("Error from BookBLL: " + ex.Message.ToString());

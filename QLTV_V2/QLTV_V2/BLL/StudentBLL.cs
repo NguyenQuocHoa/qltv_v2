@@ -92,11 +92,11 @@ namespace QLTV_V2.BLL
                     _studentDAL.AddStudent(student);
                 }
                 else
-                    throw new Exception("Student code already exist"); 
+                    throw new Exception("Mã sinh viên đã tồn tại"); 
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Student code already exist"))
+                if (ex.Message.Contains("Mã sinh viên đã tồn tại"))
                     throw new Exception(ex.Message.ToString());
                 else
                     throw new Exception("Error from StudentBLL: " + ex.Message.ToString());
@@ -138,11 +138,11 @@ namespace QLTV_V2.BLL
                     _studentDAL.EditStudent(oldStudent, newStudent);
                 }    
                 else
-                    throw new Exception("Student code already exist");
+                    throw new Exception("Mã sinh viên đã tồn tại");
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Student code already exist"))
+                if (ex.Message.Contains("Mã sinh viên đã tồn tại"))
                     throw new Exception(ex.Message.ToString());
                 else
                     throw new Exception("Error from StudentBLL: " + ex.Message.ToString());

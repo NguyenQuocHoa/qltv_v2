@@ -91,12 +91,12 @@ namespace QLTV_V2.BLL
                     _postDAL.AddPost(post);
                 }
                 else
-                    throw new Exception("Post code already exist");
+                    throw new Exception("Mã bài viết đã tồn tại");
 
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Post code already exist"))
+                if (ex.Message.Contains("Mã bài viết đã tồn tại"))
                     throw new Exception(ex.Message.ToString());
                 else 
                     throw new Exception("Error from PostBLL: " + ex.Message.ToString());
@@ -114,11 +114,11 @@ namespace QLTV_V2.BLL
                     _postDAL.EditPost(oldPost, newPost);
                 } 
                 else
-                    throw new Exception("Post code already exist");
+                    throw new Exception("Mã bài viết đã tồn tại");
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Post code already exist"))
+                if (ex.Message.Contains("Mã bài viết đã tồn tại"))
                     throw new Exception(ex.Message.ToString());
                 else
                     throw new Exception("Error from PostBLL: " + ex.Message.ToString());

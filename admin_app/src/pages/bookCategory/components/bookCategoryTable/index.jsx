@@ -162,7 +162,7 @@ const mapStateTopProps = state => {
 		// userRoles: state.UserRole.userRoles,
 		loading:
 			state.loading.effects[
-				"bookCategoryList/getBookCateogryPagingRequest"
+				"bookCategoryList/getBookCategoryPagingRequest"
 			]
 	};
 };

@@ -103,7 +103,7 @@ namespace QLTV_V2.Controllers
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Book code already exist") || ex.Message.Contains("Book Category doesn't exist"))
+                if (ex.Message.Contains("Mã sách không tồn tại") || ex.Message.Contains("Mã loại sách không tồn tại"))
                     return new ResultModel(Code.SVERROR, ex.Message.ToString());
                 else
                     return new ResultModel(Code.SVERROR, "lỗi hệ thống");
@@ -120,7 +120,7 @@ namespace QLTV_V2.Controllers
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Book code already exist") || ex.Message.Contains("Book Category doesn't exist"))
+                if (ex.Message.Contains("Mã sách không tồn tại") || ex.Message.Contains("Mã loại sách không tồn tại"))
                     return new ResultModel(Code.SVERROR, ex.Message.ToString());
                 else
                     return new ResultModel(Code.SVERROR, "lỗi hệ thống");

@@ -104,7 +104,7 @@ namespace QLTV_V2.Controllers
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Post code already exist"))
+                if (ex.Message.Contains("Mã bài viết đã tồn tại"))
                     return new ResultModel(Code.SVERROR, ex.Message.ToString());
                 else
                     return new ResultModel(Code.SVERROR, "lỗi hệ thống");
@@ -122,7 +122,7 @@ namespace QLTV_V2.Controllers
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Post code already exist"))
+                if (ex.Message.Contains("Mã bài viết đã tồn tại"))
                     return new ResultModel(Code.SVERROR, ex.Message.ToString());
                 else
                     return new ResultModel(Code.SVERROR, "lỗi hệ thống");

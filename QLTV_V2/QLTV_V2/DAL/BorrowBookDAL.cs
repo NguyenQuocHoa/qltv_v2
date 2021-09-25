@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -44,36 +46,36 @@ namespace QLTV_V2.DAL
             }
         }
 
-        public IEnumerable<Object> GetAllWithStudent()
+        public IEnumerable<Object> GetAllPagingWithStudent(int pageSize, int pageIndex, string sortColumn, int sortOrder, int studentId)
         {
             try
             {
-                var borrowBoks = from bb in _context.BorrowBook
-                                 join st in _context.Student
-                                 on bb.Student_Id equals st.Id
-                                 select new
-                                 {
-                                     bb.Id,
-                                     bb.BorrowBookCode,
-                                     st.StudentCode,
-                                     st.StudentName,
-                                     BorrowBookDetails = (from bbd in _context.BorrowBookDetail
-                                                          join b in _context.Book
-                                                          on bbd.Book_Id equals b.Id
-                                                          where bbd.BorrowBook_Id == bb.Id
-                                                          select new
-                                                          {
-                                                              bbd.Id,
-                                                              bbd.BorrowBookDetailCode,
-                                                              bbd.Quantity,
-                                                              bbd.Description,
-                                                              b.BookCode,
-                                                              b.BookName
-                                                          }).ToList()
-                                     
-                                 };
-                return borrowBoks;
-                                 
+                var borrowBooks = from bb in _context.BorrowBook
+                                  join st in _context.Student
+                                  on bb.Student_Id equals st.Id
+                                  where bb.Student_Id == studentId
+                                  select new
+                                  {
+                                      bb.Id,
+                                      bb.BorrowBookCode,
+                                      st.StudentCode,
+                                      st.StudentName,
+                                      BorrowBookDetails = (from bbd in _context.BorrowBookDetail
+                                                           join b in _context.Book
+                                                           on bbd.Book_Id equals b.Id
+                                                           where bbd.BorrowBook_Id == bb.Id
+                                                           select new
+                                                           {
+                                                               bbd.Id,
+                                                               bbd.BorrowBookDetailCode,
+                                                               bbd.Quantity,
+                                                               bbd.Description,
+                                                               b.BookCode,
+                                                               b.BookName
+                                                           }).ToList()
+
+                                  };
+                return borrowBooks;
             }
             catch (Exception ex)
             {

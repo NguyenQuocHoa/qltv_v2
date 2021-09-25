@@ -36,12 +36,12 @@ namespace QLTV_V2.Controllers
         }
 
         [HttpGet("get-all-paging")]
-        public ResultModel GetAllPaging(int pageIndex, int pageSize)
+        public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
         {
             try
             {
                 int total = _studentBLL.getCountStudent();
-                return new ResultModel(Code.OK, _studentBLL.GetAllPaging(pageIndex, pageSize), total, "thành công");
+                return new ResultModel(Code.OK, _studentBLL.GetAllPaging(pageIndex, pageSize, sortColumn, sortOrder), total, "thành công");
             }
             catch (Exception)
             {
@@ -100,9 +100,12 @@ namespace QLTV_V2.Controllers
                 _studentBLL.AddStudent(student);
                 return new ResultModel(Code.CREATED, "thành công");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+                if (ex.Message.Contains("Mã sinh viên đã tồn tại"))
+                    return new ResultModel(Code.SVERROR, ex.Message.ToString());
+                else
+                    return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 
@@ -128,9 +131,12 @@ namespace QLTV_V2.Controllers
                 _studentBLL.EditStudent(id, student);
                 return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+                if (ex.Message.Contains("Mã sinh viên đã tồn tại"))
+                    return new ResultModel(Code.SVERROR, ex.Message.ToString());
+                else
+                    return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 

@@ -37,13 +37,13 @@ namespace QLTV_V2.Controllers
             }
         }
 
-        [HttpGet("get-all-paging")]
-        public ResultModel GetAllPaging(int pageIndex, int pageSize)
+        [HttpPost("get-all-paging")]
+        public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, [FromBody] List<BodyObject> requestBody)
         {
             try
             {
                 int total = _bookBLL.getCountBook();
-                return new ResultModel(Code.OK, _bookBLL.GetAllPaging(pageIndex, pageSize), total, "thành công");
+                return new ResultModel(Code.OK, _bookBLL.GetAllPaging(pageIndex, pageSize, sortColumn, sortOrder, requestBody), total, "thành công");
             }
             catch (Exception)
             {
@@ -101,9 +101,12 @@ namespace QLTV_V2.Controllers
                 _bookBLL.AddBook(book);
                 return new ResultModel(Code.CREATED, "thành công");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+                if (ex.Message.Contains("Mã sách không tồn tại") || ex.Message.Contains("Mã loại sách không tồn tại"))
+                    return new ResultModel(Code.SVERROR, ex.Message.ToString());
+                else
+                    return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 
@@ -115,9 +118,12 @@ namespace QLTV_V2.Controllers
                 _bookBLL.EditBook(id, book);
                 return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+                if (ex.Message.Contains("Mã sách không tồn tại") || ex.Message.Contains("Mã loại sách không tồn tại"))
+                    return new ResultModel(Code.SVERROR, ex.Message.ToString());
+                else
+                    return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 

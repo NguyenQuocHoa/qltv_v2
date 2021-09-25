@@ -10,5 +10,6 @@ namespace QLTV_V2.Models
         public string BookCategoryCode { get; set; }
         public string BookCategoryName { get; set; }
         public string Description { get; set; }
+        public bool IsActive { get; set; }
     }
 }

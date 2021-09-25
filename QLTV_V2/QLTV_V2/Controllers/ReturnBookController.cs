@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLTV_V2.BLL;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static QLTV_V2.Helper.StatusCode;
 
 namespace QLTV_V2.Controllers
 {
@@ -19,75 +21,74 @@ namespace QLTV_V2.Controllers
             _returnBookBLL = new ReturnBookBLL(context);
         }
 
-        [HttpGet]
-        public IEnumerable<Object> Get()
+        [HttpGet("get-all")]
+        public ResultModel Get()
         {
             try
             {
-                return _returnBookBLL.GetAll();
+                var resultQuery = _returnBookBLL.GetAll();
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.ToString());
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return null;
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Object> Get(int id)
+        [HttpGet("get-by-id/{id}")]
+        public ResultModel Get(int id)
         {
             try
             {
-                return _returnBookBLL.GetById(id);
+                return new ResultModel(Code.OK, _returnBookBLL.GetById(id), "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
 
-
-        [HttpPost]
-        public IActionResult Post([FromBody] ReturnBookPlus returnBookPlus)
+        [HttpPost("create")]
+        public ResultModel Post([FromBody] ReturnBookPlus returnBookPlus)
         {
             try
             {
                 _returnBookBLL.AddReturnBook(returnBookPlus);
+                return new ResultModel(Code.CREATED, "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return Ok(returnBookPlus);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] ReturnBookPlus returnBookPlus)
+        [HttpPut("update/{id}")]
+        public ResultModel Put(int id, [FromBody] ReturnBookPlus returnBookPlus)
         {
             try
             {
                 _returnBookBLL.EditReturnBook(id, returnBookPlus);
+                return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return Ok(id);
         }
 
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete("delete/{id}")]
+        public ResultModel Delete(int id)
         {
             try
             {
                 _returnBookBLL.DeleteReturnBook(id);
+                return new ResultModel(Code.OK, "thành công");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, ex.Message.ToString());
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
-            return Ok(id);
         }
     }
 }

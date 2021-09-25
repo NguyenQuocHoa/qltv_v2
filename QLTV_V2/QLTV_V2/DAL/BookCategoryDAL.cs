@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,6 +38,28 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
+        {
+            try
+            {
+                ProviderDAL providerDAL = new ProviderDAL();
+                DataTable dt = providerDAL.GetDataPaging("spGetBookCategoryPaging", pageIndex, pageSize, sortColumn, sortOrder);
+                var bookCategories = dt.AsEnumerable().Select(row => new BookCategory()
+                {
+                    Id = (int)row["id"],
+                    BookCategoryCode = (string)row["bookcategorycode"],
+                    BookCategoryName = (string)row["bookcategoryname"],
+                    Description = (string)row["description"],
+                    IsActive = (bool)row["isactive"],
+                }).ToList();
+                return bookCategories;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BookCategoryDAL: " + ex.Message.ToString());
+            }
+        }
+
         public ActionResult<Object> GetById(int id)
         {
             try
@@ -44,7 +68,8 @@ namespace QLTV_V2.DAL
                     bookCategory.Id,
                     bookCategory.BookCategoryCode,
                     bookCategory.BookCategoryName,
-                    bookCategory.Description
+                    bookCategory.Description,
+                    bookCategory.IsActive
                 }).FirstOrDefault();
                 return bookCategory_data;
             }
@@ -74,6 +99,7 @@ namespace QLTV_V2.DAL
                 oldBookCategory.BookCategoryCode = newBookCategory.BookCategoryCode;
                 oldBookCategory.BookCategoryName = newBookCategory.BookCategoryName;
                 oldBookCategory.Description = newBookCategory.Description;
+                oldBookCategory.IsActive = newBookCategory.IsActive;
                 _context.SaveChanges();
             }
             catch (Exception ex)

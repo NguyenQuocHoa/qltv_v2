@@ -32,11 +32,11 @@ namespace QLTV_V2.BLL
             }
         }
 
-        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
         {
             try
             {
-                return _postDAL.GetAllPaging(pageIndex, pageSize);
+                return _postDAL.GetAllPaging(pageIndex, pageSize, sortColumn, sortOrder);
             }
             catch (Exception ex)
             {
@@ -85,18 +85,21 @@ namespace QLTV_V2.BLL
             try
             {
                 // check post code is already exist
-                var b = _context.Post.Where(item => item.CodePost == post.CodePost).Select(item => new { item.Id }).SingleOrDefault();
+                var b = _context.Post.Where(item => item.CodePost == post.CodePost).SingleOrDefault();
                 if (b == null)
                 {
                     _postDAL.AddPost(post);
                 }
                 else
-                    throw new Exception("Post code already exist");
+                    throw new Exception("Mã bài viết đã tồn tại");
 
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from PostBLL: " + ex.Message.ToString());
+                if (ex.Message.Contains("Mã bài viết đã tồn tại"))
+                    throw new Exception(ex.Message.ToString());
+                else 
+                    throw new Exception("Error from PostBLL: " + ex.Message.ToString());
             }
         }
 
@@ -104,13 +107,21 @@ namespace QLTV_V2.BLL
         {
             try
             {
-
-                Post oldPost = _context.Post.Where(us => us.Id == id).SingleOrDefault();
-                _postDAL.EditPost(oldPost, newPost);
+                var post = _context.Post.Where(item => item.CodePost == newPost.CodePost && item.Id != newPost.Id).SingleOrDefault();
+                if (post == null)
+                {
+                    Post oldPost = _context.Post.Where(us => us.Id == id).SingleOrDefault();
+                    _postDAL.EditPost(oldPost, newPost);
+                } 
+                else
+                    throw new Exception("Mã bài viết đã tồn tại");
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from PostBLL: " + ex.Message.ToString());
+                if (ex.Message.Contains("Mã bài viết đã tồn tại"))
+                    throw new Exception(ex.Message.ToString());
+                else
+                    throw new Exception("Error from PostBLL: " + ex.Message.ToString());
             }
         }
 

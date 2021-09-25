@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -40,23 +43,25 @@ namespace QLTV_V2.DAL
             }
         }
 
-        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, List<BodyObject> requestBody)
         {
             try
             {
-                var books = _context.Book.Skip((pageIndex - 1) * pageSize).Take(pageSize)
-                    .Select(book =>
-                    new {
-                        book.Id,
-                        book.BookCode,
-                        book.BookName,
-                        book.Inventory,
-                        book.Author,
-                        book.MainContent,
-                        book.Description,
-                        book.IsActive,
-                        book.BookCategory_Id
-                    }).ToList();
+                ProviderDAL providerDAL = new ProviderDAL();
+                DataTable dt = providerDAL.GetDataPaging("spGetBookPaging", pageIndex, pageSize, sortColumn, sortOrder);
+                var books = dt.AsEnumerable().Select(row => new Book()
+                {
+                    Id = (int)row["id"],
+                    BookCode = (string)row["bookcode"],
+                    BookName = (string)row["bookname"],
+                    Inventory = (int)row["inventory"],
+                    Author = (string)row["author"],
+                    MainContent = (string)row["maincontent"],
+                    Description = (string)row["description"],
+                    BookCategory_Id = (int)row["bookcategory_id"],
+                    IsActive = (bool)row["isactive"],
+                    Image = (string)row["image"]
+                }).ToList();
                 return books;
             }
             catch (Exception ex)

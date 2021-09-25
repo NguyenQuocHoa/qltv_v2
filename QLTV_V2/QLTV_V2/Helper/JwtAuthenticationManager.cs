@@ -1,4 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using QLTV_V2.DAL;
+using QLTV_V2.Data;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,18 +13,19 @@ namespace QLTV_V2.Helper
 {
     public class JwtAuthenticationManager : IJwtAuthenticationManager
     {
-        private readonly IDictionary<string, string> users = new Dictionary<string, string>
-        { { "test1", "pass1"}, {"test2", "pass2"} };
         private readonly string key;
-
+       
         public JwtAuthenticationManager(string key)
         {
             this.key = key;
         }
 
-        public string Authenticate(string username, string password)
+        public string Authenticate(string username, string password, ApplicationDbContext context)
         {
-            if (!users.Any(u => u.Key == username && u.Value == password))
+            UserDAL _userDAL = new UserDAL(context);
+            string userPassword = _userDAL.GetUserPassword(username);
+            bool verified = BCrypt.Net.BCrypt.Verify(password, userPassword);
+            if (!verified)
             {
                 return null;
             }
@@ -43,6 +46,15 @@ namespace QLTV_V2.Helper
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+    }
+
+    public class AuthDAL
+    {
+        private readonly ApplicationDbContext _context;
+        public AuthDAL(ApplicationDbContext context)
+        {
+            _context = context;
         }
     }
 }

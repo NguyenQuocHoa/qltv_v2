@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,19 +38,20 @@ namespace QLTV_V2.DAL
             }
         }
 
-        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
         {
             try
             {
-                var posts = _context.Post.Skip((pageIndex - 1) * pageSize).Take(pageSize)
-                    .Select(post =>
-                    new {
-                        post.Id,
-                        post.CodePost,
-                        post.Message,
-                        post.Description,
-                        post.IsActive
-                    }).ToList();
+                ProviderDAL providerDAL = new ProviderDAL();
+                DataTable dt = providerDAL.GetDataPaging("spGetPostPaging", pageIndex, pageSize, sortColumn, sortOrder);
+                var posts = dt.AsEnumerable().Select(row => new BookCategory()
+                {
+                    Id = (int)row["id"],
+                    BookCategoryCode = (string)row["codepost"],
+                    BookCategoryName = (string)row["message"],
+                    Description = (string)row["description"],
+                    IsActive = (bool)row["isactive"],
+                }).ToList();
                 return posts;
             }
             catch (Exception ex)

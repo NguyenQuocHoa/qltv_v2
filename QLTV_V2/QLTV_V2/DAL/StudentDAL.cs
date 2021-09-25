@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -42,26 +44,25 @@ namespace QLTV_V2.DAL
             }
         }
 
-        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize)
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
         {
             try
             {
-                var students = _context.Student.Skip((pageIndex - 1) * pageSize).Take(pageSize)
-                    .Select(student =>
-                    new
-                    {
-                        student.Id,
-                        student.StudentCode,
-                        student.StudentName,
-                        student.Class,
-                        student.DoB,
-                        student.NativeLand,
-                        student.Course,
-                        student.Faculty,
-                        student.IsActive,
-                        student.Description
-                    }
-                ).ToList();
+                ProviderDAL providerDAL = new ProviderDAL();
+                DataTable dt = providerDAL.GetDataPaging("spGetStudentPaging", pageIndex, pageSize, sortColumn, sortOrder);
+                var students = dt.AsEnumerable().Select(row => new Student()
+                {
+                    Id = (int)row["id"],
+                    StudentCode = (string)row["studentcode"],
+                    StudentName = (string)row["studentname"],
+                    Class = (string)row["class"],
+                    DoB = (DateTime)row["dob"],
+                    NativeLand = (string)row["nativeland"],
+                    Course = (string)row["course"],
+                    Faculty = (string)row["faculty"],
+                    Description = (string)row["description"],
+                    IsActive = (bool)row["isactive"]
+                }).ToList();
                 return students;
             }
             catch (Exception ex)

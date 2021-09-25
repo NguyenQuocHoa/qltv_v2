@@ -32,6 +32,18 @@ namespace QLTV_V2.BLL
             }
         }
 
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
+        {
+            try
+            {
+                return _bookCategoryDAL.GetAllPaging(pageIndex, pageSize, sortColumn, sortOrder);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BookCategoryBLL: " + ex.Message.ToString());
+            }
+        }
+
         public ActionResult<Object> GetById(int id)
         {
             try
@@ -48,11 +60,20 @@ namespace QLTV_V2.BLL
         {
             try
             {
-                _bookCategoryDAL.AddBookCategory(bookCategory);
+                // check book category code isExist
+                BookCategory bc = _context.BookCategory
+                    .Where(bc => bc.BookCategoryCode == bookCategory.BookCategoryCode).FirstOrDefault();
+                if (bc == null)
+                    _bookCategoryDAL.AddBookCategory(bookCategory);
+                else
+                    throw new Exception("Mã loại sách đã tồn tại");
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryBLL: " + ex.Message.ToString());
+                if (ex.Message.Contains("Mã loại sách đã tồn tại"))
+                    throw new Exception(ex.Message.ToString());
+                else 
+                    throw new Exception("Error from BookCategoryBLL: " + ex.Message.ToString());
             }
         }
 
@@ -60,12 +81,24 @@ namespace QLTV_V2.BLL
         {
             try
             {
-                BookCategory oldBookCategory = _context.BookCategory.Where(us => us.Id == id).SingleOrDefault();
-                _bookCategoryDAL.EditBookCategory(oldBookCategory, newBookCategory);
+                // check book category code isExist
+                BookCategory bc = _context.BookCategory
+                    .Where(bc => bc.BookCategoryCode == newBookCategory.BookCategoryCode 
+                    && bc.Id != newBookCategory.Id).FirstOrDefault();
+                if (bc == null)
+                {
+                    BookCategory oldBookCategory = _context.BookCategory.Where(us => us.Id == id).SingleOrDefault();
+                    _bookCategoryDAL.EditBookCategory(oldBookCategory, newBookCategory);
+                } 
+                else
+                    throw new Exception("Mã loại sách đã tồn tại");
             }
             catch (Exception ex)
             {
-                throw new Exception("Error from BookCategoryBLL: " + ex.Message.ToString());
+                if (ex.Message.Contains("Mã loại sách đã tồn tại"))
+                    throw new Exception(ex.Message.ToString());
+                else
+                    throw new Exception("Error from BookCategoryBLL: " + ex.Message.ToString());
             }
         }
 

@@ -5,5 +5,6 @@ export default {
 	"menu.books": "Sách",
 	"menu.bookCategories": "Loại sách",
 	"menu.posts": "Bài viết",
-	"menu.accounts": "Tài khoản"
+	"menu.accounts": "Tài khoản",
+	"menu.students": "Sinh viên"
 };

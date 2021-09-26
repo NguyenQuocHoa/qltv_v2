@@ -31,6 +31,18 @@ const CreatePost = props => {
 		}
 	};
 
+	const generateCode = () => {
+		const d = new Date();
+		return (
+			"PO" +
+			d.getDate() +
+			"-" +
+			(d.getMonth() * 1 + 1) +
+			"-" +
+			d.getFullYear()
+		);
+	};
+
 	const handleSubmit = payload => {
 		dispatch({
 			type: "postCreate/createPostRequest",
@@ -46,6 +58,10 @@ const CreatePost = props => {
 			history.goBack();
 		}
 	}, [createPostSuccess]);
+
+	useEffect(() => {
+		form.setFieldsValue({ codePost: generateCode() });
+	}, []);
 
 	return (
 		<div className={styles.container}>

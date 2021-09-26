@@ -6,7 +6,7 @@ import common from "./common";
 import post from "./post";
 import returnBook from "./returnBook";
 import student from "./student";
-import user from "./user";
+import account from "./account";
 
 export default {
 	...book,
@@ -16,5 +16,5 @@ export default {
 	...post,
 	...returnBook,
 	...student,
-	...user
+	...account
 };

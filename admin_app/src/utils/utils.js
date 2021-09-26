@@ -224,7 +224,7 @@ export const createDateAsUTC = date => {
 };
 
 export const EROLE = [
-	{ id: 1, name: "NHANVIEN", path: "/users" },
+	{ id: 1, name: "NHANVIEN", path: "/accounts" },
 	{ id: 2, name: "BOOK", path: "/books" },
 	{ id: 3, name: "BCATEGORY", path: "/book-category" },
 	{ id: 4, name: "BBOOK", path: "/borrow-book" },

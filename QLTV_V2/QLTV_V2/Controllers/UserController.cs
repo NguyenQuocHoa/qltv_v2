@@ -35,8 +35,8 @@ namespace QLTV_V2.Controllers
             }
         }
 
-        [HttpGet("get-all-paging")]
-        public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
+        [HttpPost("get-all-paging")]
+        public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, [FromBody] List<BodyObject> requestBody)
         {
             try
             {

@@ -245,6 +245,25 @@ export default defineConfig({
 								}
 							]
 						},
+						{
+							name: "accounts",
+							path: "/accounts",
+							icon: "UserOutlined",
+							routes: [
+								{
+									path: "/accounts",
+									component: "./account"
+								},
+								{
+									path: "/accounts/create",
+									component: "./account/create"
+								},
+								{
+									path: "/accounts/:id",
+									component: "./account/update"
+								}
+							]
+						},
 						// {
 						// 	name: "staffGroup",
 						// 	path: "/staffGroups",

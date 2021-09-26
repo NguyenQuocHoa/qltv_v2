@@ -35,8 +35,8 @@ namespace QLTV_V2.Controllers
             }
         }
 
-        [HttpGet("get-all-paging")]
-        public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder)
+        [HttpPost("get-all-paging")]
+        public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, [FromBody] List<BodyObject> requestBody)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace QLTV_V2.Controllers
             }
         }
 
-        [HttpGet("get-all-active-paging")]
+        [HttpPost("get-all-active-paging")]
         public ResultModel GetActivePaging(int pageIndex, int pageSize)
         {
             try
@@ -141,7 +141,7 @@ namespace QLTV_V2.Controllers
         }
 
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public ResultModel Delete(int id)
         {
             try

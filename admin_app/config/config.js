@@ -246,6 +246,25 @@ export default defineConfig({
 							]
 						},
 						{
+							name: "students",
+							path: "/students",
+							icon: "TeamOutlined",
+							routes: [
+								{
+									path: "/students",
+									component: "./student"
+								},
+								{
+									path: "/students/create",
+									component: "./student/create"
+								},
+								{
+									path: "/students/:id",
+									component: "./student/update"
+								}
+							]
+						},
+						{
 							name: "accounts",
 							path: "/accounts",
 							icon: "UserOutlined",

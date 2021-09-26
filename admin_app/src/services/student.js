@@ -32,6 +32,12 @@ export async function updateStudent(payload) {
 	});
 }
 
+export async function resetPassword(id) {
+	return request(`/api/Student/reset_password/${id}`, {
+		method: "PUT"
+	});
+}
+
 export async function deleteStudent(id) {
 	return request(`/api/Student/delete/${id}`, { method: "DELETE" });
 }

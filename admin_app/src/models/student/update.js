@@ -1,12 +1,16 @@
 import { notification } from "antd";
-import { updateStudent } from "../../services/student";
+import { updateStudent, resetPassword } from "../../services/student";
 
 const StudentUpdateModel = {
 	namespace: "studentUpdate",
 	state: {
 		payload: {},
 		success: false,
-		failure: false
+		failure: false,
+
+		resetPasswordPayload: {},
+		resetPasswordSuccess: false,
+		resetPasswordFailure: false
 	},
 	effects: {
 		*updateStudentRequest({ payload }, { call, put }) {
@@ -25,6 +29,26 @@ const StudentUpdateModel = {
 				});
 				yield put({
 					type: "updateStudentFailure",
+					payload: response
+				});
+			}
+		},
+		*resetPasswordRequest({ id }, { call, put }) {
+			const response = yield call(resetPassword, id);
+			if (response?.code === 200) {
+				notification.success({
+					message: "Đặt lại mật khẩu thành công"
+				});
+				yield put({
+					type: "resetPasswordSuccess",
+					payload: response
+				});
+			} else {
+				notification.error({
+					message: response?.message
+				});
+				yield put({
+					type: "resetPasswordFailure",
 					payload: response
 				});
 			}
@@ -58,6 +82,30 @@ const StudentUpdateModel = {
 				payload: action.payload,
 				success: false,
 				failure: true
+			};
+		},
+		resetPasswordRequest(state, action) {
+			return {
+				...state,
+				resetPasswordPayload: {},
+				resetPasswordSuccess: false,
+				resetPasswordFailure: false
+			};
+		},
+		resetPasswordSuccess(state, action) {
+			return {
+				...state,
+				resetPasswordPayload: action.payload,
+				resetPasswordSuccess: true,
+				resetPasswordFailure: false
+			};
+		},
+		resetPasswordFailure(state, action) {
+			return {
+				...state,
+				resetPasswordPayload: action.payload,
+				resetPasswordSuccess: false,
+				resetPasswordFailure: true
 			};
 		},
 		clearStateSuccess(state) {

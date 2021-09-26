@@ -226,6 +226,25 @@ export default defineConfig({
 								}
 							]
 						},
+						{
+							name: "posts",
+							path: "/posts",
+							icon: "ContainerOutlined",
+							routes: [
+								{
+									path: "/posts",
+									component: "./post"
+								},
+								{
+									path: "/posts/create",
+									component: "./post/create"
+								},
+								{
+									path: "/posts/:id",
+									component: "./post/update"
+								}
+							]
+						},
 						// {
 						// 	name: "staffGroup",
 						// 	path: "/staffGroups",

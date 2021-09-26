@@ -228,8 +228,8 @@ export const EROLE = [
 	{ id: 2, name: "BOOK", path: "/books" },
 	{ id: 3, name: "BCATEGORY", path: "/book-category" },
 	{ id: 4, name: "BBOOK", path: "/borrow-book" },
-	{ id: 5, name: "POST", path: "/post" },
+	{ id: 5, name: "POST", path: "/posts" },
 	{ id: 6, name: "AUTH", path: "/auth" },
 	{ id: 7, name: "RBOOK", path: "/return-book" },
-	{ id: 8, name: "STUDENT", path: "/student" }
+	{ id: 8, name: "STUDENT", path: "/students" }
 ];

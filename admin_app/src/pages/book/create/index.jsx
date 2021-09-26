@@ -55,7 +55,12 @@ const CreateBook = props => {
 	}, []);
 
 	useEffect(() => {
-		if (createBookSuccess) history.goBack();
+		if (createBookSuccess) {
+			dispatch({
+				type: "bookCreate/clearState"
+			});
+			history.goBack();
+		}
 	}, [createBookSuccess]);
 
 	return (

@@ -44,11 +44,11 @@ namespace QLTV_V2.DAL
             {
                 ProviderDAL providerDAL = new ProviderDAL();
                 DataTable dt = providerDAL.GetDataPaging("spGetPostPaging", pageIndex, pageSize, sortColumn, sortOrder);
-                var posts = dt.AsEnumerable().Select(row => new BookCategory()
+                var posts = dt.AsEnumerable().Select(row => new Post()
                 {
                     Id = (int)row["id"],
-                    BookCategoryCode = (string)row["codepost"],
-                    BookCategoryName = (string)row["message"],
+                    CodePost = (string)row["codepost"],
+                    Message = (string)row["message"],
                     Description = (string)row["description"],
                     IsActive = (bool)row["isactive"],
                 }).ToList();

@@ -1,55 +1,85 @@
 import React from "react";
-import { DeleteOutlined, FormOutlined, SyncOutlined } from "@ant-design/icons";
+import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table, Tooltip, Tag } from "antd";
 import { Link } from "react-router-dom";
 import { connect } from "umi";
 import columnSearchProps from "../../../shared/filterTableProps/columnSearchProps";
 // import columnDatePickerProps from "../../../shared/filterTableProps/columnDatePickerProps";
 import styles from "../../../shared/style/tableStyle.less";
+import moment from "moment";
 
-const AccountTable = props => {
-	const { onParamsChange, userRoles, dispatch, accounts, loading } = props;
+const BorrowBookTable = props => {
+	const { onParamsChange, userRoles, dispatch, borrowBooks, loading } = props;
+
+	const date = moment();
+	const customData = borrowBooks.map(br => {
+		return {
+			...br,
+			expiryDate: moment(br.borrowDate)
+				.add(br.numberOfDayBorrow, "days")
+				.diff(date, "days")
+		};
+	});
 
 	const handleDeleteCustomer = id => {
 		dispatch({
-			type: "accountDelete/deleteAccountRequest",
+			type: "borrowBookDelete/deleteBorrowBookRequest",
 			id
 		});
 	};
 
-	const handleResetPassword = id => {
-		dispatch({
-			type: "accountUpdate/resetPasswordRequest",
-			id
-		});
-	};
 	// const allowUpdate = userRoles?.KHACHHANG?.sua ?? false;
 	// const allowRemove = userRoles?.KHACHHANG?.xoa ?? false;
 
 	const columns = [
 		{
-			title: "Tên tài khoản",
-			dataIndex: "username",
-			key: "username",
-			filterMultiple: false,
+			title: "Mã phiếu mượn sách",
+			dataIndex: "borrowBookCode",
+			key: "borrowBookCode",
 			align: "center",
-			...columnSearchProps("Tên tài khoản")
+			filterMultiple: false,
+			...columnSearchProps("Mã phiếu mượn sách")
 		},
 		{
-			title: "Trạng thái",
-			dataIndex: "isActive",
-			key: "isActive",
-			filterMultiple: false,
+			title: "Ngày mượn",
+			dataIndex: "borrowDate",
+			key: "borrowDate",
 			align: "center",
-			render: data => (
+			filterMultiple: false,
+			render: (text, record, index) => (
+				<div>{moment(text).format("DD/MM/YYYY")}</div>
+			)
+		},
+		{
+			title: "Số ngày mượn",
+			dataIndex: "numberOfDayBorrow",
+			key: "numberOfDayBorrow",
+			align: "center",
+			filterMultiple: false
+		},
+		{
+			title: "Số ngày tới hạn",
+			dataIndex: "expiryDate",
+			key: "expiryDate",
+			align: "center",
+			filterMultiple: false,
+			render: (text, record, index) => (
 				<div>
-					{data ? (
-						<Tag className={styles.title} color="blue">
-							Kích hoạt
+					{text > 20 ? (
+						<Tag className={styles.tagCustom} color="#87d068">
+							{text}
+						</Tag>
+					) : text > 10 ? (
+						<Tag className={styles.tagCustom} color="#2db7f5">
+							{text}
+						</Tag>
+					) : text >= -1 ? (
+						<Tag className={styles.tagCustom} color="#f50">
+							{text}
 						</Tag>
 					) : (
-						<Tag className={styles.title} color="red">
-							Chưa kích hoạt
+						<Tag className={styles.tagCustom} color="#cd201f">
+							{text}
 						</Tag>
 					)}
 				</div>
@@ -60,7 +90,6 @@ const AccountTable = props => {
 			dataIndex: "description",
 			key: "description",
 			filterMultiple: false,
-			align: "center",
 			...columnSearchProps("Ghi chú")
 		},
 		{
@@ -72,7 +101,7 @@ const AccountTable = props => {
 				<div key={index}>
 					<Space>
 						{true ? (
-							<Link to={`/accounts/${record.id}`}>
+							<Link to={`/borrow-book/${record.id}`}>
 								<Tooltip title="Xem chi tiết">
 									<Button
 										type="link"
@@ -91,7 +120,7 @@ const AccountTable = props => {
 						)}
 						{true ? (
 							<Popconfirm
-								title="Xác nhận xóa tài khoản này?"
+								title="Xác nhận xóa phiếu mượn sách này?"
 								onConfirm={() => {
 									handleDeleteCustomer(record.id);
 								}}
@@ -112,34 +141,6 @@ const AccountTable = props => {
 									danger
 									type="link"
 									icon={<DeleteOutlined />}
-									disabled
-								/>
-							</Tooltip>
-						)}
-
-						{true ? (
-							<Popconfirm
-								title="Xác nhận đặt lại mật khẩu tài khoản này?"
-								onConfirm={() => {
-									handleResetPassword(record.id);
-								}}
-							>
-								<Tooltip title="Đặt lại mật khẩu">
-									<Button
-										loading={loading}
-										type="link"
-										icon={<SyncOutlined />}
-										style={{ color: "#ff671d" }}
-									/>
-								</Tooltip>
-							</Popconfirm>
-						) : (
-							<Tooltip title="Đặt lại mật khẩu">
-								<Button
-									loading={loading}
-									type="link"
-									icon={<SyncOutlined />}
-									style={{ color: "#ff671d" }}
 									disabled
 								/>
 							</Tooltip>
@@ -170,7 +171,7 @@ const AccountTable = props => {
 	return (
 		<Table
 			columns={columns}
-			dataSource={accounts}
+			dataSource={customData}
 			pagination={false}
 			onChange={handleParamsChange}
 			size="small"
@@ -183,8 +184,9 @@ const AccountTable = props => {
 const mapStateTopProps = state => {
 	return {
 		// userRoles: state.UserRole.userRoles,
-		loading: state.loading.effects["accountList/getAccountPagingRequest"]
+		loading:
+			state.loading.effects["borrowBookList/getBorrowBookPagingRequest"]
 	};
 };
 
-export default connect(mapStateTopProps)(AccountTable);
+export default connect(mapStateTopProps)(BorrowBookTable);

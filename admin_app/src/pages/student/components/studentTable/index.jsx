@@ -2,7 +2,7 @@ import React from "react";
 import {
 	DeleteOutlined,
 	FormOutlined,
-	RetweetOutlined
+	SyncOutlined
 } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table, Tooltip, Tag } from "antd";
 import { Link } from "react-router-dom";
@@ -167,7 +167,7 @@ const StudentTable = props => {
 									<Button
 										loading={loading}
 										type="link"
-										icon={<RetweetOutlined />}
+										icon={<SyncOutlined />}
 										style={{ color: "#ff671d" }}
 									/>
 								</Tooltip>
@@ -177,7 +177,7 @@ const StudentTable = props => {
 								<Button
 									loading={loading}
 									type="link"
-									icon={<RetweetOutlined />}
+									icon={<SyncOutlined />}
 									style={{ color: "#ff671d" }}
 									disabled
 								/>

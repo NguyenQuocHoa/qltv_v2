@@ -1,19 +1,19 @@
 import { notification } from "antd";
-import { getAllBookCategory } from "../../services/bookCategory";
+import { getAllBorrowBook } from "../../services/borrowBook";
 
-const BookCategoryAllModel = {
-	namespace: "bookCategoryAll",
+const BorrowBookAllModel = {
+	namespace: "borrowBookAll",
 	state: {
 		payload: [],
 		success: false,
 		failure: false
 	},
 	effects: {
-		*getAllBookCategoryRequest({ payload }, { call, put }) {
-			const response = yield call(getAllBookCategory, payload);
+		*getAllBorrowBookRequest({ payload }, { call, put }) {
+			const response = yield call(getAllBorrowBook, payload);
 			if (response.code === 200) {
 				yield put({
-					type: "getAllBookCategorySuccess",
+					type: "getAllBorrowBookSuccess",
 					payload: response
 				});
 			} else {
@@ -21,21 +21,21 @@ const BookCategoryAllModel = {
 					message: response.message
 				});
 				yield put({
-					type: "getAllBookCategoryFailure",
+					type: "getAllBorrowBookFailure",
 					payload: response
 				});
 			}
 		}
 	},
 	reducers: {
-		getAllBookCategoryRequest(state, action) {
+		getAllBorrowBookRequest(state, action) {
 			return {
 				...state,
 				success: false,
 				failure: false
 			};
 		},
-		getAllBookCategorySuccess(state, action) {
+		getAllBorrowBookSuccess(state, action) {
 			return {
 				...state,
 				payload: action.payload,
@@ -43,7 +43,7 @@ const BookCategoryAllModel = {
 				failure: false
 			};
 		},
-		getAllBookCategoryFailure(state, action) {
+		getAllBorrowBookFailure(state, action) {
 			return {
 				...state,
 				success: false,
@@ -52,4 +52,4 @@ const BookCategoryAllModel = {
 		}
 	}
 };
-export default BookCategoryAllModel;
+export default BorrowBookAllModel;

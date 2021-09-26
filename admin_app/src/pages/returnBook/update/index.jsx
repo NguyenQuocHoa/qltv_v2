@@ -5,7 +5,7 @@ import {
 	Form,
 	Row,
 	Input,
-	Checkbox,
+	DatePicker,
 	Button,
 	Divider,
 	Typography
@@ -14,13 +14,20 @@ import { useHistory } from "react-router";
 import styles from "../../shared/style/detailStyle.less";
 import { connect, FormattedMessage } from "umi";
 import { useEffect } from "react";
-import { generateCode } from "../../../utils/utils";
+import SelectBorrowBook from "../../shared/select/selectBorrowBook";
+// import DetailTable from "../components/detailTable";
+import moment from "moment";
 
 const { TextArea } = Input;
 const { Title } = Typography;
 
-const CreatePost = props => {
-	const { createPostSuccess, dispatch } = props;
+const UpdateReturnBook = props => {
+	const {
+		getDetailSuccess,
+		detailPayload,
+		updateReturnBookSuccess,
+		dispatch
+	} = props;
 	const [form] = Form.useForm();
 	const history = useHistory();
 	const formLayout = {
@@ -33,24 +40,48 @@ const CreatePost = props => {
 	};
 
 	const handleSubmit = payload => {
+		const convertPayload = {
+			id: +props.match.params.id,
+			returnBook: {
+				...payload,
+				id: +props.match.params.id,
+				borrowBook_Id: payload.borrowBookId
+			},
+			returnBookDetails: []
+		};
+
 		dispatch({
-			type: "postCreate/createPostRequest",
-			payload: payload
+			type: "returnBookUpdate/updateReturnBookRequest",
+			payload: convertPayload
 		});
 	};
 
 	useEffect(() => {
-		if (createPostSuccess) {
+		if (updateReturnBookSuccess) {
 			dispatch({
-				type: "postCreate/clearState"
+				type: "returnBookUpdate/clearState"
 			});
 			history.goBack();
 		}
-	}, [createPostSuccess]);
+	}, [updateReturnBookSuccess]);
 
 	useEffect(() => {
-		form.setFieldsValue({ codePost: generateCode("POST") });
+		dispatch({
+			type: "returnBookDetail/getReturnBookDetailRequest",
+			id: +props.match.params.id
+		});
 	}, []);
+
+	useEffect(() => {
+		if (getDetailSuccess) {
+			const data = detailPayload?.item?.value;
+			if (data) {
+				data.borrowBookId = data.borrowBook_Id;
+				data.returnDate = moment(data.returnDate);
+			}
+			form.setFieldsValue({ ...data });
+		}
+	}, [getDetailSuccess]);
 
 	return (
 		<div className={styles.container}>
@@ -58,8 +89,8 @@ const CreatePost = props => {
 				<Col>
 					<Title level={4}>
 						<FormattedMessage
-							id="pages.post.titleForm"
-							defaultMessage="THÔNG TIN BÀI VIẾT"
+							id="pages.returnBook.titleForm"
+							defaultMessage="THÔNG TIN TRẢ SÁCH"
 						/>
 					</Title>
 				</Col>
@@ -71,14 +102,14 @@ const CreatePost = props => {
 				onFinish={handleSubmit}
 			>
 				<Row gutter={16} className={styles.fullSpan}>
-					<Col xs={9}>
+					<Col xs={8}>
 						<Form.Item
-							name="codePost"
+							name="returnBookCode"
 							label={
 								<Title className={styles.title} level={5}>
 									<FormattedMessage
-										id="pages.post.codePost"
-										defaultMessage="Mã bài viết"
+										id="pages.returnBook.returnBookCode"
+										defaultMessage="Mã trả sách"
 									/>
 								</Title>
 							}
@@ -86,21 +117,21 @@ const CreatePost = props => {
 							rules={[
 								{
 									required: true,
-									message: "Vui lòng nhập Mã bài viết!"
+									message: "Vui lòng nhập Mã trả sách!"
 								}
 							]}
 						>
 							<Input />
 						</Form.Item>
 					</Col>
-					<Col xs={9}>
+					<Col xs={8}>
 						<Form.Item
-							name="message"
+							name="returnDate"
 							label={
 								<Title className={styles.title} level={5}>
 									<FormattedMessage
-										id="pages.post.message"
-										defaultMessage="Nội dung"
+										id="pages.returnBook.returnDate"
+										defaultMessage="Ngày trả sách"
 									/>
 								</Title>
 							}
@@ -108,32 +139,36 @@ const CreatePost = props => {
 							rules={[
 								{
 									required: true,
-									message: "Vui lòng nhập Nội dung!"
+									message: "Vui lòng chọn Ngày trả sách!"
 								}
 							]}
 						>
-							<Input />
+							<DatePicker
+								format={"DD/MM/YYYY"}
+								className={styles.fw}
+							/>
 						</Form.Item>
 					</Col>
-					<Col xs={6}>
+					<Col xs={8}>
 						<Form.Item
-							name="isActive"
+							name="borrowBookId"
 							label={
 								<Title className={styles.title} level={5}>
 									<FormattedMessage
-										id="pages.post.state"
-										defaultMessage="Trạng thái"
+										id="pages.returnBook.borrowBookId"
+										defaultMessage="Phiếu mượn sách"
 									/>
 								</Title>
 							}
-							valuePropName="checked"
+							hasFeedback
+							rules={[
+								{
+									required: true,
+									message: "Vui lòng chọn Phiếu mượn sách!"
+								}
+							]}
 						>
-							<Checkbox>
-								<FormattedMessage
-									id="pages.post.isUse"
-									defaultMessage="Sử dụng"
-								/>
-							</Checkbox>
+							<SelectBorrowBook />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
@@ -142,7 +177,7 @@ const CreatePost = props => {
 							label={
 								<Title className={styles.title} level={5}>
 									<FormattedMessage
-										id="pages.post.description"
+										id="pages.returnBook.description"
 										defaultMessage="Ghi chú"
 									/>
 								</Title>
@@ -153,6 +188,7 @@ const CreatePost = props => {
 						</Form.Item>
 					</Col>
 				</Row>
+				{/* <DetailTable /> */}
 				<Divider />
 				<Row justify="end" gutter={8}>
 					<Col>
@@ -191,10 +227,15 @@ const CreatePost = props => {
 
 const mapStateToProps = state => {
 	return {
-		loading: state.loading.effects["postCreate/getPostCreateRequest"],
-		createPayload: state.postCreate.payload,
-		createPostSuccess: state.postCreate.success
+		loading:
+			state.loading.effects[
+				"returnBookUpdate/getReturnBookUpdateRequest"
+			],
+		updatePayload: state.returnBookUpdate.payload,
+		updateReturnBookSuccess: state.returnBookUpdate.success,
+		detailPayload: state.returnBookDetail.payload,
+		getDetailSuccess: state.returnBookDetail.success
 	};
 };
 
-export default connect(mapStateToProps)(CreatePost);
+export default connect(mapStateToProps)(UpdateReturnBook);

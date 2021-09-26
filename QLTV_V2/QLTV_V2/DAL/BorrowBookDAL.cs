@@ -46,6 +46,29 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, List<BodyObject> requestBody)
+        {
+            try
+            {
+                ProviderDAL providerDAL = new ProviderDAL();
+                DataTable dt = providerDAL.GetDataPaging("spGetBorrowBookPaging", pageIndex, pageSize, sortColumn, sortOrder);
+                var borrowBooks = dt.AsEnumerable().Select(row => new BorrowBook()
+                {
+                    Id = (int)row["id"],
+                    BorrowBookCode = (string)row["borrowbookcode"],
+                    BorrowDate = (DateTime)row["borrowdate"],
+                    NumberOfDayBorrow = (int)row["numberofdayborrow"],
+                    Description = (string)row["description"],
+                    Student_Id = (int)row["student_id"],
+                }).ToList();
+                return borrowBooks;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from borrowBookDAL: " + ex.Message.ToString());
+            }
+        }
+
         public IEnumerable<Object> GetAllPagingWithStudent(int pageSize, int pageIndex, string sortColumn, int sortOrder, int studentId)
         {
             try
@@ -53,7 +76,7 @@ namespace QLTV_V2.DAL
                 var borrowBooks = from bb in _context.BorrowBook
                                   join st in _context.Student
                                   on bb.Student_Id equals st.Id
-                                  where bb.Student_Id == studentId
+                                  where studentId == 0 || bb.Student_Id == studentId
                                   select new
                                   {
                                       bb.Id,
@@ -190,5 +213,10 @@ namespace QLTV_V2.DAL
                 }
             }
         }
+
+        public int getCountBorrowBook()
+        {
+            return _context.BorrowBook.Select(br => br).Count();
+        } 
     }
 }

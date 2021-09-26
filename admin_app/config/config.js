@@ -246,6 +246,44 @@ export default defineConfig({
 							]
 						},
 						{
+							name: "borrowBooks",
+							path: "/borrow-book",
+							icon: "ShoppingOutlined",
+							routes: [
+								{
+									path: "/borrow-book",
+									component: "./borrowBook"
+								},
+								{
+									path: "/borrow-book/create",
+									component: "./borrowBook/create"
+								},
+								{
+									path: "/borrow-book/:id",
+									component: "./borrowBook/update"
+								}
+							]
+						},
+						{
+							name: "returnBooks",
+							path: "/return-book",
+							icon: "SolutionOutlined",
+							routes: [
+								{
+									path: "/return-book",
+									component: "./returnBook"
+								},
+								{
+									path: "/return-book/create",
+									component: "./returnBook/create"
+								},
+								{
+									path: "/return-book/:id",
+									component: "./returnBook/update"
+								}
+							]
+						},
+						{
 							name: "students",
 							path: "/students",
 							icon: "TeamOutlined",

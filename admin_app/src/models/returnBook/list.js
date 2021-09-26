@@ -5,7 +5,7 @@ import {
 } from "../../services/returnBook";
 
 const AllReturnBookModel = {
-	namespace: "returnReturnBookList",
+	namespace: "returnBookList",
 	state: {
 		payload: [],
 		success: false,

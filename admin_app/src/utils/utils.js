@@ -233,3 +233,15 @@ export const EROLE = [
 	{ id: 7, name: "RBOOK", path: "/return-book" },
 	{ id: 8, name: "STUDENT", path: "/students" }
 ];
+
+export const generateCode = (name = "") => {
+	const d = new Date();
+	const year = d.getFullYear();
+	const month =
+		1 + d.getMonth() > 10 ? 1 + d.getMonth() : "0" + (1 + d.getMonth());
+	const date = d.getDate() > 10 ? d.getDate() : "0" + d.getDate();
+	const hour = d.getHours() > 10 ? d.getHours() : "0" + d.getHours();
+	const minute = d.getMinutes() > 10 ? d.getMinutes() : "0" + d.getMinutes();
+	const second = d.getSeconds() > 10 ? d.getSeconds() : "0" + d.getSeconds();
+	return name + year + month + date + hour + minute + second;
+};

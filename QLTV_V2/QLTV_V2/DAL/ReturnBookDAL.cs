@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -48,6 +50,30 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, List<BodyObject> requestBody)
+        {
+            try
+            {
+                ProviderDAL providerDAL = new ProviderDAL();
+                DataTable dt = providerDAL.GetDataPaging("spGetReturnBookPaging", pageIndex, pageSize, sortColumn, sortOrder);
+                var borrowBooks = dt.AsEnumerable().Select(row => new 
+                {
+                    Id = (int)row["id"],
+                    ReturnBookCode = (string)row["returnbookcode"],
+                    ReturnDate = (DateTime)row["returndate"],
+                    Description = (string)row["description"],
+                    BorrowBook_Id = (int)row["borrowbook_id"],
+                    StudentCode = (string)row["studentcode"],
+                    StudentName = (string)row["studentname"]
+                }).ToList();
+                return borrowBooks;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from borrowBookDAL: " + ex.Message.ToString());
+            }
+        }
+
         public ActionResult<Object> GetById(int id)
         {
             try
@@ -59,6 +85,7 @@ namespace QLTV_V2.DAL
                     returnBook.Id,
                     returnBook.ReturnBookCode,
                     returnBook.ReturnDate,
+                    returnBook.Description,
                     returnBook.BorrowBook_Id,
                     ReturnBookDetails = (_context.ReturnBookDetail.Where(detail => detail.ReturnBook_Id == returnBook.Id)
                                                                 ).ToList()
@@ -113,6 +140,7 @@ namespace QLTV_V2.DAL
                     {
                         oldReturnBook.ReturnBookCode = newReturnBook.ReturnBookCode;
                         oldReturnBook.ReturnDate = newReturnBook.ReturnDate;
+                        oldReturnBook.Description = newReturnBook.Description;
                         oldReturnBook.BorrowBook_Id = newReturnBook.BorrowBook_Id;
                         _context.SaveChanges();
                     }
@@ -186,6 +214,11 @@ namespace QLTV_V2.DAL
                     throw new Exception("Error from ReturnBookDAL: " + ex.Message.ToString());
                 }
             }
+        }
+
+        public int getCountReturnBook()
+        {
+            return _context.ReturnBook.Select(rb => rb).Count();
         }
     }
 }

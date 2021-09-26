@@ -2,7 +2,7 @@ import { notification } from "antd";
 import { createBorrowBook } from "../../services/borrowBook";
 
 const BorrowBookCreateModel = {
-	namespace: "borrowBorrowBookCreate",
+	namespace: "borrowBookCreate",
 	state: {
 		payload: {},
 		success: false,

@@ -5,7 +5,8 @@ import {
 	Form,
 	Row,
 	Input,
-	Checkbox,
+	DatePicker,
+	InputNumber,
 	Button,
 	Divider,
 	Typography
@@ -14,13 +15,15 @@ import { useHistory } from "react-router";
 import styles from "../../shared/style/detailStyle.less";
 import { connect, FormattedMessage } from "umi";
 import { useEffect } from "react";
+import SelectStudent from "../../shared/select/selectStudent";
+// import DetailTable from "../components/detailTable";
 import { generateCode } from "../../../utils/utils";
 
 const { TextArea } = Input;
 const { Title } = Typography;
 
-const CreatePost = props => {
-	const { createPostSuccess, dispatch } = props;
+const CreateBorrowBook = props => {
+	const { createBorrowBookSuccess, dispatch } = props;
 	const [form] = Form.useForm();
 	const history = useHistory();
 	const formLayout = {
@@ -33,23 +36,31 @@ const CreatePost = props => {
 	};
 
 	const handleSubmit = payload => {
+		const convertPayload = {
+			borrowBook: {
+				...payload,
+				student_Id: payload.studentId
+			},
+			borrowBookDetails: []
+		};
+
 		dispatch({
-			type: "postCreate/createPostRequest",
-			payload: payload
+			type: "borrowBookCreate/createBorrowBookRequest",
+			payload: convertPayload
 		});
 	};
 
 	useEffect(() => {
-		if (createPostSuccess) {
+		if (createBorrowBookSuccess) {
 			dispatch({
-				type: "postCreate/clearState"
+				type: "borrowBookCreate/clearState"
 			});
 			history.goBack();
 		}
-	}, [createPostSuccess]);
+	}, [createBorrowBookSuccess]);
 
 	useEffect(() => {
-		form.setFieldsValue({ codePost: generateCode("POST") });
+		form.setFieldsValue({ borrowBookCode: generateCode("BB") });
 	}, []);
 
 	return (
@@ -58,8 +69,8 @@ const CreatePost = props => {
 				<Col>
 					<Title level={4}>
 						<FormattedMessage
-							id="pages.post.titleForm"
-							defaultMessage="THÔNG TIN BÀI VIẾT"
+							id="pages.borrowBook.titleForm"
+							defaultMessage="THÔNG TIN MƯỢN SÁCH"
 						/>
 					</Title>
 				</Col>
@@ -71,14 +82,14 @@ const CreatePost = props => {
 				onFinish={handleSubmit}
 			>
 				<Row gutter={16} className={styles.fullSpan}>
-					<Col xs={9}>
+					<Col xs={6}>
 						<Form.Item
-							name="codePost"
+							name="borrowBookCode"
 							label={
 								<Title className={styles.title} level={5}>
 									<FormattedMessage
-										id="pages.post.codePost"
-										defaultMessage="Mã bài viết"
+										id="pages.borrowBook.borrowBookCode"
+										defaultMessage="Mã mượn sách"
 									/>
 								</Title>
 							}
@@ -86,29 +97,7 @@ const CreatePost = props => {
 							rules={[
 								{
 									required: true,
-									message: "Vui lòng nhập Mã bài viết!"
-								}
-							]}
-						>
-							<Input />
-						</Form.Item>
-					</Col>
-					<Col xs={9}>
-						<Form.Item
-							name="message"
-							label={
-								<Title className={styles.title} level={5}>
-									<FormattedMessage
-										id="pages.post.message"
-										defaultMessage="Nội dung"
-									/>
-								</Title>
-							}
-							hasFeedback
-							rules={[
-								{
-									required: true,
-									message: "Vui lòng nhập Nội dung!"
+									message: "Vui lòng nhập Mã mượn sách!"
 								}
 							]}
 						>
@@ -117,23 +106,75 @@ const CreatePost = props => {
 					</Col>
 					<Col xs={6}>
 						<Form.Item
-							name="isActive"
+							name="borrowDate"
 							label={
 								<Title className={styles.title} level={5}>
 									<FormattedMessage
-										id="pages.post.state"
-										defaultMessage="Trạng thái"
+										id="pages.borrowBook.borrowDate"
+										defaultMessage="Ngày mượn sách"
 									/>
 								</Title>
 							}
-							valuePropName="checked"
+							hasFeedback
+							rules={[
+								{
+									required: true,
+									message: "Vui lòng chọn Ngày mượn sách!"
+								}
+							]}
 						>
-							<Checkbox>
-								<FormattedMessage
-									id="pages.post.isUse"
-									defaultMessage="Sử dụng"
-								/>
-							</Checkbox>
+							<DatePicker
+								format={"DD/MM/YYYY"}
+								className={styles.fw}
+							/>
+						</Form.Item>
+					</Col>
+					<Col xs={6}>
+						<Form.Item
+							name="numberOfDayBorrow"
+							label={
+								<Title className={styles.title} level={5}>
+									<FormattedMessage
+										id="pages.borrowBook.numberOfDayBorrow"
+										defaultMessage="Số ngày mượn sách"
+									/>
+								</Title>
+							}
+							hasFeedback
+							rules={[
+								{
+									required: true,
+									message: "Vui lòng nhập số ngày mượn sách!"
+								}
+							]}
+						>
+							<InputNumber
+								className={styles.fw}
+								min={7}
+								max={100}
+							/>
+						</Form.Item>
+					</Col>
+					<Col xs={6}>
+						<Form.Item
+							name="studentId"
+							label={
+								<Title className={styles.title} level={5}>
+									<FormattedMessage
+										id="pages.borrowBook.studentId"
+										defaultMessage="Sinh viên"
+									/>
+								</Title>
+							}
+							hasFeedback
+							rules={[
+								{
+									required: true,
+									message: "Vui lòng chọn Sinh viên!"
+								}
+							]}
+						>
+							<SelectStudent />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
@@ -142,7 +183,7 @@ const CreatePost = props => {
 							label={
 								<Title className={styles.title} level={5}>
 									<FormattedMessage
-										id="pages.post.description"
+										id="pages.borrowBook.description"
 										defaultMessage="Ghi chú"
 									/>
 								</Title>
@@ -153,6 +194,7 @@ const CreatePost = props => {
 						</Form.Item>
 					</Col>
 				</Row>
+				{/* <DetailTable /> */}
 				<Divider />
 				<Row justify="end" gutter={8}>
 					<Col>
@@ -191,10 +233,13 @@ const CreatePost = props => {
 
 const mapStateToProps = state => {
 	return {
-		loading: state.loading.effects["postCreate/getPostCreateRequest"],
-		createPayload: state.postCreate.payload,
-		createPostSuccess: state.postCreate.success
+		loading:
+			state.loading.effects[
+				"borrowBookCreate/getBorrowBookCreateRequest"
+			],
+		createPayload: state.borrowBookCreate.payload,
+		createBorrowBookSuccess: state.borrowBookCreate.success
 	};
 };
 
-export default connect(mapStateToProps)(CreatePost);
+export default connect(mapStateToProps)(CreateBorrowBook);

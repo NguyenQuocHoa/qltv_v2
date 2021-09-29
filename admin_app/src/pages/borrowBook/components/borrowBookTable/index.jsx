@@ -65,19 +65,27 @@ const BorrowBookTable = props => {
 			filterMultiple: false,
 			render: (text, record, index) => (
 				<div>
-					{text > 20 ? (
+					{record.isReturn && (
+						<Tag className={styles.tagCustom} color="default">
+							{"NA"}
+						</Tag>
+					)}
+					{!record.isReturn && text > 20 && (
 						<Tag className={styles.tagCustom} color="#87d068">
 							{text}
 						</Tag>
-					) : text > 10 ? (
+					)}
+					{!record.isReturn && text <= 20 && text > 10 && (
 						<Tag className={styles.tagCustom} color="#2db7f5">
 							{text}
 						</Tag>
-					) : text >= -1 ? (
+					)}
+					{!record.isReturn && text <= 10 && text >= 0 && (
 						<Tag className={styles.tagCustom} color="#f50">
 							{text}
 						</Tag>
-					) : (
+					)}
+					{!record.isReturn && text < 0 && (
 						<Tag className={styles.tagCustom} color="#cd201f">
 							{text}
 						</Tag>

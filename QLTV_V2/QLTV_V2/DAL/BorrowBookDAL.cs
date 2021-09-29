@@ -35,6 +35,7 @@ namespace QLTV_V2.DAL
                     borrowBook.NumberOfDayBorrow,
                     borrowBook.Student_Id,
                     borrowBook.Description,
+                    borrowBook.IsReturn,
                     BorrowBookDetails = (_context.BorrowBookDetail.Where(detail => detail.BorrowBook_Id == borrowBook.Id)
                                                                  ).ToList()
                 }).OrderByDescending(br => br.BorrowDate).ThenBy(d => d.NumberOfDayBorrow);
@@ -60,6 +61,7 @@ namespace QLTV_V2.DAL
                     NumberOfDayBorrow = (int)row["numberofdayborrow"],
                     Description = (string)row["description"],
                     Student_Id = (int)row["student_id"],
+                    IsReturn = (bool)row["isreturn"]
                 }).ToList();
                 return borrowBooks;
             }
@@ -118,6 +120,7 @@ namespace QLTV_V2.DAL
                     borrowBook.NumberOfDayBorrow,
                     borrowBook.Student_Id,
                     borrowBook.Description,
+                    borrowBook.IsReturn,
                     BorrowBookDetails = (_context.BorrowBookDetail.Where(detail => detail.BorrowBook_Id == borrowBook.Id)
                                                                  ).ToList()
                 }).FirstOrDefault();
@@ -168,6 +171,7 @@ namespace QLTV_V2.DAL
                         oldBorrowBook.NumberOfDayBorrow = newBorrowBook.NumberOfDayBorrow;
                         oldBorrowBook.Description = newBorrowBook.Description;
                         oldBorrowBook.Student_Id = newBorrowBook.Student_Id;
+                        oldBorrowBook.IsReturn = newBorrowBook.IsReturn;
                         _context.SaveChanges();
                     }
                     else

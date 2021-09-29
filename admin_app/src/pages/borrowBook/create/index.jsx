@@ -14,9 +14,9 @@ import {
 import { useHistory } from "react-router";
 import styles from "../../shared/style/detailStyle.less";
 import { connect, FormattedMessage } from "umi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SelectStudent from "../../shared/select/selectStudent";
-// import DetailTable from "../components/detailTable";
+import DetailTable from "../components/detailTable";
 import { generateCode } from "../../../utils/utils";
 
 const { TextArea } = Input;
@@ -25,6 +25,7 @@ const { Title } = Typography;
 const CreateBorrowBook = props => {
 	const { createBorrowBookSuccess, dispatch } = props;
 	const [form] = Form.useForm();
+	const [borrowBookDetail, setBorrowBookDetal] = useState([]);
 	const history = useHistory();
 	const formLayout = {
 		labelCol: {
@@ -35,13 +36,26 @@ const CreateBorrowBook = props => {
 		}
 	};
 
+	const dataSourceChange = dataSource => {
+		setBorrowBookDetal(dataSource);
+	};
+
 	const handleSubmit = payload => {
 		const convertPayload = {
 			borrowBook: {
 				...payload,
 				student_Id: payload.studentId
 			},
-			borrowBookDetails: []
+			borrowBookDetails: [
+				...borrowBookDetail.map(row => ({
+					id: 0,
+					book_Id: row.bookIdHide,
+					borrowBookDetailCode: row.borrowBookDetailCode,
+					quantity: row.quantity,
+					description: row.description,
+					borrowBook_Id: 0
+				}))
+			]
 		};
 
 		dispatch({
@@ -194,7 +208,11 @@ const CreateBorrowBook = props => {
 						</Form.Item>
 					</Col>
 				</Row>
-				{/* <DetailTable /> */}
+				<DetailTable
+					code={form.getFieldValue("borrowBookCode")}
+					dataSource={borrowBookDetail}
+					getDataSource={dataSourceChange}
+				/>
 				<Divider />
 				<Row justify="end" gutter={8}>
 					<Col>

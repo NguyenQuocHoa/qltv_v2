@@ -32,6 +32,14 @@ const ReturnBookTable = props => {
 
 	const columns = [
 		{
+			title: "Mã phiếu mượn sách",
+			dataIndex: "borrowBookCode",
+			key: "borrowBookCode",
+			align: "center",
+			filterMultiple: false,
+			...columnSearchProps("Mã phiếu mượn sách")
+		},
+		{
 			title: "Mã phiếu trả sách",
 			dataIndex: "returnBookCode",
 			key: "returnBookCode",

@@ -30,7 +30,7 @@ const UpdateBorrowBook = props => {
 		dispatch
 	} = props;
 	const [form] = Form.useForm();
-	const [borrowBookDetail, setBorrowBookDetal] = useState([]);
+	const [borrowBookDetail, setBorrowBookDetail] = useState([]);
 	const history = useHistory();
 	const formLayout = {
 		labelCol: {
@@ -42,7 +42,7 @@ const UpdateBorrowBook = props => {
 	};
 
 	const dataSourceChange = dataSource => {
-		setBorrowBookDetal(dataSource);
+		setBorrowBookDetail(dataSource);
 	};
 
 	const handleSubmit = payload => {
@@ -96,7 +96,7 @@ const UpdateBorrowBook = props => {
 			if (data) {
 				data.studentId = data.student_Id;
 				data.borrowDate = moment(data.borrowDate);
-				setBorrowBookDetal(data.borrowBookDetails.map(item => ({
+				setBorrowBookDetail(data.borrowBookDetails.map(item => ({
 					id: item.id,
 					bookId: item.book_Id,
 					borrowBookId: item.borrowBook_Id,

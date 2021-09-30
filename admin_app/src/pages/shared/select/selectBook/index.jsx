@@ -20,13 +20,14 @@ const SelectBook = props => {
 		placeholder = "Chọn sách",
 		mode = null,
 		tagRender = null,
-		isCatched = false
+		isCatched = false,
+		disabled
 	} = props;
 
 	useEffect(() => {
 		if (!isCatched) {
 			dispatch({
-				type: "bookAll/getAllBookRequest"
+				type: "bookAll/getAllBookEnoughInventoryRequest"
 			});
 		} else {
 			setBooks(getBookNotSelect());
@@ -58,11 +59,12 @@ const SelectBook = props => {
 			placeholder={placeholder}
 			mode={mode}
 			tagRender={tagRender}
+			disabled={disabled}
 		>
 			{books.length > 0 &&
 				books.map((book, index) => (
 					<Option value={book.id} key={book.id}>
-						{book.bookName}
+						{`${book.bookName} (${book.inventory})`}
 					</Option>
 				))}
 		</Select>

@@ -4,6 +4,10 @@ export async function getAllBook() {
 	return request(`/api/Book/get-all`);
 }
 
+export async function getAllBookEnoughInventory() {
+	return request(`/api/Book/get-all-enough-inventory`);
+}
+
 export async function getBookPaging({ params, body }) {
 	return request(
 		`/api/Book/get-all-paging?pageIndex=${params.pageIndex}&pageSize=${params.pageSize}&sortColumn=${params.sortColumn}&sortOrder=${params.sortOrder}`,

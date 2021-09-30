@@ -1,91 +1,25 @@
-// /* eslint-disable jsx-a11y/anchor-is-valid */
-// import React, { useState, useEffect } from "react";
-// import { Form, Input, InputNumber, Button } from 'antd';
-
-// const DetailTable = props => {
-//     const dataSource = useState([
-//         { id: 1, bookId: 1, borrowBookCode: "BBD001", quantity: 1, description: "none" },
-//         { id: 2, bookId: 1, borrowBookCode: "BBD001", quantity: 1, description: "none" },
-//     ]);
-//     return (
-//         <table id="borrow-book-detail">
-//             <thead>
-//                 <tr>
-//                     <th>Stt</th>
-//                     <th>Sách</th>
-//                     <th>Mã mượn sách</th>
-//                     <th>Số lượng</th>
-//                     <th>Ghi chú</th>
-//                     <th>Thao tác</th>
-//                 </tr>
-//             </thead>
-//             <tbody>
-//                 {dataSource.length > 0 && dataSource.map((row, index) => (
-//                     <tr key={row.id}>
-//                         <Form>
-//                             <td>{index + 1}</td>
-//                             <td>
-//                                 <Form.Item
-//                                     name="bookId"
-//                                 >
-//                                     <Input />
-//                                 </Form.Item>
-//                             </td>
-//                             <td>
-//                                 <Form.Item
-//                                     name="bookId"
-//                                 >
-//                                     <Input />
-//                                 </Form.Item>
-//                             </td>
-//                             <td>
-//                                 <Form.Item
-//                                     name="bookId"
-//                                 >
-//                                     <InputNumber min={1} max={2} />
-//                                 </Form.Item>
-//                             </td>
-//                             <td>
-//                                 <Form.Item
-//                                     name="bookId"
-//                                 >
-//                                     <Input />
-//                                 </Form.Item>
-//                             </td>
-//                             <td>
-//                                 <Button
-//                                     danger
-//                                     type="link"
-//                                     icon={<DeleteOutlined />}
-//                                 >
-//                                     Xóa
-//                                 </Button>
-//                             </td>
-//                         </Form>
-//                   </tr>
-//                 ))}
-//             </tbody>
-//         </table>
-//     )
-// }
-
-// export default DetailTable;
-
-import React, { useState } from "react";
-import { Table, Input, InputNumber, Popconfirm, Form, Typography } from "antd";
-const originData = [
-    { id: 1, bookId: 1, borrowBookCode: "BBD001", quantity: 1, description: "none" },
-    { id: 2, bookId: 1, borrowBookCode: "BBD002", quantity: 1, description: "none" },
-];
-
-// for (let i = 0; i < 100; i++) {
-// 	originData.push({
-// 		key: i.toString(),
-// 		name: `Edrward ${i}`,
-// 		age: 32,
-// 		address: `London Park no. ${i}`
-// 	});
-// }
+import React, { useState, useEffect } from "react";
+import {
+	FormOutlined,
+	DeleteOutlined,
+	CheckOutlined,
+	PlusCircleOutlined,
+	CloseOutlined
+} from "@ant-design/icons";
+import {
+	Table,
+	Input,
+	InputNumber,
+	Popconfirm,
+	Form,
+	Button,
+	Tooltip,
+	Row,
+	Col
+} from "antd";
+import { connect } from "umi";
+import SelectBook from "../../../shared/select/selectBook";
+import styles from "../../../shared/style/tableStyle.less";
 
 const EditableCell = ({
 	editing,
@@ -97,7 +31,14 @@ const EditableCell = ({
 	children,
 	...restProps
 }) => {
-	const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
+	let inputNode;
+	if (inputType === "number")
+		inputNode = (
+			<InputNumber min={1} max={2} className={styles.fw} disabled={true} />
+		);
+	if (inputType === "text") inputNode = <Input />;
+	if (inputType === "select") inputNode = <SelectBook disabled={true} />;
+
 	return (
 		<td {...restProps}>
 			{editing ? (
@@ -108,8 +49,8 @@ const EditableCell = ({
 					}}
 					rules={[
 						{
-							required: true,
-							message: `Please Input ${title}!`
+							required: dataIndex != "description" ? true : false,
+							message: `Vui lòng nhập ${title}!`
 						}
 					]}
 				>
@@ -122,19 +63,19 @@ const EditableCell = ({
 	);
 };
 
-const DetailTable = () => {
+const DetailTable = props => {
+	const { hashmap, getDataSource, dataSource = [], code } = props;
 	const [form] = Form.useForm();
-	const [data, setData] = useState(originData);
+	const [data, setData] = useState(dataSource);
 	const [editingKey, setEditingKey] = useState("");
 
 	const isEditing = record => record.key === editingKey;
 
 	const edit = record => {
+		const bookId = record.bookIdHide;
 		form.setFieldsValue({
-			name: "",
-			age: "",
-			address: "",
-			...record
+			...record,
+			bookId
 		});
 		setEditingKey(record.key);
 	};
@@ -148,12 +89,20 @@ const DetailTable = () => {
 			const row = await form.validateFields();
 			const newData = [...data];
 			const index = newData.findIndex(item => key === item.key);
-
 			if (index > -1) {
 				const item = newData[index];
-				newData.splice(index, 1, { ...item, ...row });
+				const bookIdHide = row.bookId;
+				const bookId = hashmap[row.bookId].bookName;
+				newData.splice(index, 1, {
+					...item,
+					...row,
+					bookId,
+					bookIdHide
+				});
+				// newData.splice(index, 1, { ...row, ...item });
 				setData(newData);
 				setEditingKey("");
+				getDataSource(newData);
 			} else {
 				newData.push(row);
 				setData(newData);
@@ -164,69 +113,130 @@ const DetailTable = () => {
 		}
 	};
 
+	const handleDeleteRow = async id => {
+		try {
+			setData(data.filter(row => row.id !== id));
+			setEditingKey("");
+		} catch (errInfo) {
+			console.log("Delete Failed:", errInfo);
+		}
+	};
+
+	useEffect(() => {
+		setData(
+			dataSource.length > 0
+				? dataSource.map((row, index) => {
+						if (typeof row.bookId === "number") {
+							const id = row.bookId;
+							row.bookIdHide = id;
+							row.bookId = hashmap[id]?.bookName;
+							row.key = new Date().getMilliseconds() + index;
+							row.returnBookDetailCode = code + "_" + (index + 1);
+						}
+						return row;
+				  })
+				: []
+		);
+	}, [dataSource]);
+
 	const columns = [
-        {
+		{
 			title: "Stt",
 			dataIndex: "stt",
-			width: 50,
-			editable: true,
-            render: (text, record, index) => <div>{index + 1}</div>
+			width: 100,
+			align: "center",
+			render: (text, record, index) => <div>{index + 1}</div>
 		},
 		{
 			title: "Sách",
-			dataIndex: "name",
-			width: 200,
-			editable: true
+			dataIndex: "bookId",
+			editable: true,
+			width: 250
 		},
 		{
 			title: "Mã mượn sách ct",
-			dataIndex: "age",
-			width: 200,
+			dataIndex: "returnBookDetailCode",
 			editable: true
 		},
-        {
+		{
 			title: "Số lượng",
-			dataIndex: "address",
-			width: 200,
-			editable: true
+			dataIndex: "quantity",
+			editable: true,
+			align: "right"
 		},
 		{
 			title: "Ghi chú",
 			dataIndex: "description",
-			width: 200,
 			editable: true
 		},
 		{
-			title: "operation",
+			title: "Thao tác",
 			dataIndex: "operation",
+			align: "center",
 			render: (_, record) => {
 				const editable = isEditing(record);
 				return editable ? (
 					<span>
-						<a
-							href="javascript:;"
-							onClick={() => save(record.key)}
-							style={{
-								marginRight: 8
-							}}
+						<Tooltip title="Lưu">
+							<Button
+								onClick={() => save(record.key)}
+								type="link"
+								icon={<CheckOutlined />}
+								style={{ color: "#57A773" }}
+							/>
+						</Tooltip>
+						<Popconfirm
+							title="Xác nhận xóa hủy thay đổi?"
+							onConfirm={cancel}
 						>
-							Save
-						</a>
-						<Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-							<a>Cancel</a>
+							<Tooltip title="Hủy">
+								<Button
+									danger
+									type="link"
+									icon={<CloseOutlined />}
+									style={{ color: "#FA7921" }}
+								/>
+							</Tooltip>
 						</Popconfirm>
 					</span>
 				) : (
-					<Typography.Link
-						disabled={editingKey !== ""}
-						onClick={() => edit(record)}
-					>
-						Edit
-					</Typography.Link>
+					<span>
+						<Tooltip title="Chỉnh sửa">
+							<Button
+								onClick={() => edit(record)}
+								disabled={editingKey !== ""}
+								type="link"
+								icon={<FormOutlined />}
+							/>
+						</Tooltip>
+						<Popconfirm
+							title="Xác nhận xóa dòng này?"
+							onConfirm={() => {
+								handleDeleteRow(record.id);
+							}}
+						>
+							<Tooltip title="Xóa dòng">
+								<Button
+									danger
+									disabled={editingKey !== ""}
+									type="link"
+									icon={<DeleteOutlined />}
+								/>
+							</Tooltip>
+						</Popconfirm>
+					</span>
 				);
 			}
 		}
 	];
+
+	const mapCol = {
+		bookId: "select",
+		returnBookDetailCode: "text",
+		quantity: "number",
+		description: "text"
+	};
+
 	const mergedColumns = columns.map(col => {
 		if (!col.editable) {
 			return col;
@@ -236,7 +246,8 @@ const DetailTable = () => {
 			...col,
 			onCell: record => ({
 				record,
-				inputType: col.dataIndex === "quantity" ? "number" : "text",
+				// inputType: col.dataIndex === "quantity" ? "number" : "text",
+				inputType: mapCol[col.dataIndex],
 				dataIndex: col.dataIndex,
 				title: col.title,
 				editing: isEditing(record)
@@ -258,9 +269,12 @@ const DetailTable = () => {
 				pagination={{
 					onChange: cancel
 				}}
+				rowKey="id"
 			/>
 		</Form>
 	);
 };
 
-export default DetailTable;
+export default connect(({ bookAll }) => ({
+	hashmap: bookAll.hashmap
+}))(DetailTable);

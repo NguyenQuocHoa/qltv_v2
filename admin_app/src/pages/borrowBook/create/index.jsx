@@ -26,6 +26,7 @@ const CreateBorrowBook = props => {
 	const { createBorrowBookSuccess, dispatch } = props;
 	const [form] = Form.useForm();
 	const [borrowBookDetail, setBorrowBookDetal] = useState([]);
+	const [code, setCode] = useState(null);
 	const history = useHistory();
 	const formLayout = {
 		labelCol: {
@@ -74,7 +75,9 @@ const CreateBorrowBook = props => {
 	}, [createBorrowBookSuccess]);
 
 	useEffect(() => {
-		form.setFieldsValue({ borrowBookCode: generateCode("BB") });
+		const code = generateCode("BB");
+		form.setFieldsValue({ borrowBookCode: code });
+		setCode(code);
 	}, []);
 
 	return (
@@ -209,7 +212,7 @@ const CreateBorrowBook = props => {
 					</Col>
 				</Row>
 				<DetailTable
-					code={form.getFieldValue("borrowBookCode")}
+					code={code}
 					dataSource={borrowBookDetail}
 					getDataSource={dataSourceChange}
 				/>

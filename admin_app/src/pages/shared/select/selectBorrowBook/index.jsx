@@ -10,6 +10,8 @@ const { Option } = Select;
 const SelectBorrowBook = props => {
 	const {
 		borrowBookList,
+		success,
+		hashmap,
 		style,
 		onChange,
 		value,
@@ -22,9 +24,18 @@ const SelectBorrowBook = props => {
 
 	useEffect(() => {
 		dispatch({
-			type: "borrowBookAll/getAllBorrowBookRequest"
+			type: "borrowBookAll/getAllBorrowBookNotReturnRequest"
 		});
 	}, []);
+
+	const handleFilter = (inputValue, option) => {
+		if (success) {
+			let title = hashmap[option.key]?.borrowBookCode || "";
+			if (title.toLowerCase().includes(inputValue.toLowerCase())) {
+				return true;
+			}
+		}
+	};
 
 	const borrowBooks = borrowBookList?.items ? borrowBookList?.items : [];
 
@@ -40,6 +51,7 @@ const SelectBorrowBook = props => {
 			placeholder={placeholder}
 			mode={mode}
 			tagRender={tagRender}
+			filterOption={handleFilter}
 		>
 			{borrowBooks.length > 0 &&
 				borrowBooks.map((borrowBook, index) => (
@@ -55,7 +67,8 @@ const SelectBorrowBook = props => {
 const mapStateToProps = state => {
 	return {
 		borrowBookList: state.borrowBookAll.payload,
-		success: state.borrowBookAll.success
+		success: state.borrowBookAll.success,
+		hashmap: state.borrowBookAll.hashmap
 	};
 };
 

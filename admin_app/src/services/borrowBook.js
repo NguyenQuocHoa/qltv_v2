@@ -4,6 +4,10 @@ export async function getAllBorrowBook() {
 	return request(`/api/BorrowBook/get-all`);
 }
 
+export async function getAllBorrowBookNotReturn() {
+	return request(`/api/BorrowBook/get-all-not-return`);
+}
+
 export async function getBorrowBookPaging({ params, body }) {
 	return request(
 		`/api/BorrowBook/get-all-paging?pageIndex=${params.pageIndex}&pageSize=${params.pageSize}&sortColumn=${params.sortColumn}&sortOrder=${params.sortOrder}`,

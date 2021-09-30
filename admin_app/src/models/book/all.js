@@ -1,5 +1,5 @@
 import { notification } from "antd";
-import { getAllBook } from "../../services/book";
+import { getAllBook, getAllBookEnoughInventory } from "../../services/book";
 
 const generateHashmap = bookArr => {
 	let hashmap = {};
@@ -7,12 +7,11 @@ const generateHashmap = bookArr => {
 		hashmap[b.id] = {
 			id: b.id,
 			bookCode: b.bookCode,
-			bookName: b.bookName,
+			bookName: b.bookName
 		};
 	});
 	return hashmap;
 };
-
 
 const BookAllModel = {
 	namespace: "bookAll",
@@ -39,6 +38,23 @@ const BookAllModel = {
 					payload: response
 				});
 			}
+		},
+		*getAllBookEnoughInventoryRequest({ payload }, { call, put }) {
+			const response = yield call(getAllBookEnoughInventory, payload);
+			if (response.code === 200) {
+				yield put({
+					type: "getAllBookEnoughInventorySuccess",
+					payload: response
+				});
+			} else {
+				notification.error({
+					message: response.message
+				});
+				yield put({
+					type: "getAllBookEnoughInventoryFailure",
+					payload: response
+				});
+			}
 		}
 	},
 	reducers: {
@@ -50,6 +66,28 @@ const BookAllModel = {
 			};
 		},
 		getAllBookSuccess(state, action) {
+			return {
+				...state,
+				payload: action.payload,
+				success: true,
+				failure: false
+			};
+		},
+		getAllBookFailure(state, action) {
+			return {
+				...state,
+				success: false,
+				failure: true
+			};
+		},
+		getAllBookEnoughInventoryRequest(state, action) {
+			return {
+				...state,
+				success: false,
+				failure: false
+			};
+		},
+		getAllBookEnoughInventorySuccess(state, action) {
 			let bookArr = [];
 			if (Array.isArray(action?.payload?.items)) {
 				bookArr = action?.payload?.items;
@@ -63,7 +101,7 @@ const BookAllModel = {
 				failure: false
 			};
 		},
-		getAllBookFailure(state, action) {
+		getAllBookEnoughInventoryFailure(state, action) {
 			return {
 				...state,
 				success: false,

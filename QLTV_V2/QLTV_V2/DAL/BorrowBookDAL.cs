@@ -47,6 +47,32 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public IEnumerable<Object> GetAllNotReturn()
+        {
+            try
+            {
+                var borrowBooks = _context.BorrowBook.Where(borrowBook => borrowBook.IsReturn == false)
+                    .Select(borrowBook =>
+                new
+                {
+                    borrowBook.Id,
+                    borrowBook.BorrowBookCode,
+                    borrowBook.BorrowDate,
+                    borrowBook.NumberOfDayBorrow,
+                    borrowBook.Student_Id,
+                    borrowBook.Description,
+                    borrowBook.IsReturn,
+                    BorrowBookDetails = (_context.BorrowBookDetail.Where(detail => detail.BorrowBook_Id == borrowBook.Id)
+                                                                 ).ToList()
+                }).OrderByDescending(br => br.BorrowDate).ThenBy(d => d.NumberOfDayBorrow);
+                return borrowBooks;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from borrowBookDAL: " + ex.Message.ToString());
+            }
+        }
+
         public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, List<BodyObject> requestBody)
         {
             try
@@ -221,6 +247,6 @@ namespace QLTV_V2.DAL
         public int getCountBorrowBook()
         {
             return _context.BorrowBook.Select(br => br).Count();
-        } 
+        }
     }
 }

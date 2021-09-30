@@ -13,10 +13,10 @@ import {
 import { useHistory } from "react-router";
 import styles from "../../shared/style/detailStyle.less";
 import { connect, FormattedMessage } from "umi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SelectBorrowBook from "../../shared/select/selectBorrowBook";
-// import DetailTable from "../components/detailTable";
 import moment from "moment";
+import DetailTable from "../components/detailTable";
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -25,10 +25,13 @@ const UpdateReturnBook = props => {
 	const {
 		getDetailSuccess,
 		detailPayload,
+		detailBorrowBookPayload,
+		getDetailBorrowBookSuccess,
 		updateReturnBookSuccess,
 		dispatch
 	} = props;
 	const [form] = Form.useForm();
+	const [returnBookDetail, setReturnBookDetail] = useState([]);
 	const history = useHistory();
 	const formLayout = {
 		labelCol: {
@@ -39,6 +42,17 @@ const UpdateReturnBook = props => {
 		}
 	};
 
+	const dataSourceChange = dataSource => {
+		setReturnBookDetail(dataSource);
+	};
+
+	const handleSelectBorrowBook = id => {
+		dispatch({
+			type: "borrowBookDetail/getBorrowBookDetailRequest",
+			id
+		});
+	};
+
 	const handleSubmit = payload => {
 		const convertPayload = {
 			id: +props.match.params.id,
@@ -47,7 +61,16 @@ const UpdateReturnBook = props => {
 				id: +props.match.params.id,
 				borrowBook_Id: payload.borrowBookId
 			},
-			returnBookDetails: []
+			returnBookDetails: [
+				...returnBookDetail.map(row => ({
+					id: row.id,
+					book_Id: row.bookIdHide,
+					returnBook_Id: +props.match.params.id,
+					returnBookDetailCode: row.returnBookDetailCode,
+					quantity: row.quantity,
+					description: row.description,
+				}))
+			]
 		};
 
 		dispatch({
@@ -67,6 +90,9 @@ const UpdateReturnBook = props => {
 
 	useEffect(() => {
 		dispatch({
+			type: "bookAll/getAllBookRequest"
+		});
+		dispatch({
 			type: "returnBookDetail/getReturnBookDetailRequest",
 			id: +props.match.params.id
 		});
@@ -78,10 +104,33 @@ const UpdateReturnBook = props => {
 			if (data) {
 				data.borrowBookId = data.borrowBook_Id;
 				data.returnDate = moment(data.returnDate);
+
+				setReturnBookDetail(data.returnBookDetails.map(item => ({
+					id: item.id,
+					bookId: item.book_Id,
+					returnBookDetailCode: item.returnBookDetailCode,
+					quantity: item.quantity,
+					description: item.description
+				})));
 			}
 			form.setFieldsValue({ ...data });
 		}
 	}, [getDetailSuccess]);
+
+	useEffect(() => {
+		if (getDetailBorrowBookSuccess) {
+			const data = detailBorrowBookPayload?.item?.value;
+			if (data) {
+				setReturnBookDetail(
+					data.borrowBookDetails.map(item => ({
+						bookId: item.book_Id,
+						quantity: item.quantity,
+						description: ""
+					}))
+				);
+			}
+		}
+	}, [getDetailBorrowBookSuccess]);
 
 	return (
 		<div className={styles.container}>
@@ -168,7 +217,9 @@ const UpdateReturnBook = props => {
 								}
 							]}
 						>
-							<SelectBorrowBook />
+							<SelectBorrowBook
+								onSelect={handleSelectBorrowBook}
+							/>
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
@@ -188,7 +239,11 @@ const UpdateReturnBook = props => {
 						</Form.Item>
 					</Col>
 				</Row>
-				{/* <DetailTable /> */}
+				<DetailTable
+					code={form.getFieldValue("returnBookCode")}
+					dataSource={returnBookDetail}
+					getDataSource={dataSourceChange}
+				/>
 				<Divider />
 				<Row justify="end" gutter={8}>
 					<Col>
@@ -234,7 +289,9 @@ const mapStateToProps = state => {
 		updatePayload: state.returnBookUpdate.payload,
 		updateReturnBookSuccess: state.returnBookUpdate.success,
 		detailPayload: state.returnBookDetail.payload,
-		getDetailSuccess: state.returnBookDetail.success
+		getDetailSuccess: state.returnBookDetail.success,
+		detailBorrowBookPayload: state.borrowBookDetail.payload,
+		getDetailBorrowBookSuccess: state.borrowBookDetail.success
 	};
 };
 

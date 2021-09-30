@@ -33,6 +33,18 @@ namespace QLTV_V2.BLL
             }
         }
 
+        public IEnumerable<Object> GetAllEnoughInventory()
+        {
+            try
+            {
+                return _bookDAL.GetAllEnoughInventory();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BookBLL: " + ex.Message.ToString());
+            }
+        }
+
         public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, List<BodyObject> requestBody)
         {
             try

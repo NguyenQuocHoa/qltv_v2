@@ -13,17 +13,23 @@ import {
 import { useHistory } from "react-router";
 import styles from "../../shared/style/detailStyle.less";
 import { connect, FormattedMessage } from "umi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SelectBorrowBook from "../../shared/select/selectBorrowBook";
-// import DetailTable from "../components/detailTable";
+import DetailTable from "../components/detailTable";
 import { generateCode } from "../../../utils/utils";
 
 const { TextArea } = Input;
 const { Title } = Typography;
 
 const CreateReturnBook = props => {
-	const { createReturnBookSuccess, dispatch } = props;
+	const {
+		getDetailSuccess,
+		detailPayload,
+		createReturnBookSuccess,
+		dispatch
+	} = props;
 	const [form] = Form.useForm();
+	const [returnBookDetail, setReturnBookDetail] = useState([]);
 	const history = useHistory();
 	const formLayout = {
 		labelCol: {
@@ -34,13 +40,33 @@ const CreateReturnBook = props => {
 		}
 	};
 
+	const dataSourceChange = dataSource => {
+		setReturnBookDetail(dataSource);
+	};
+
+	const handleSelectBorrowBook = id => {
+		dispatch({
+			type: "borrowBookDetail/getBorrowBookDetailRequest",
+			id
+		});
+	};
+
 	const handleSubmit = payload => {
 		const convertPayload = {
 			returnBook: {
 				...payload,
 				borrowBook_Id: payload.borrowBookId
 			},
-			returnBookDetails: []
+			returnBookDetails: [
+				...returnBookDetail.map(row => ({
+					id: 0,
+					returnBook_Id: 0,
+					book_Id: row.bookIdHide,
+					returnBookDetailCode: row.returnBookDetailCode,
+					quantity: row.quantity,
+					description: row.description
+				}))
+			]
 		};
 
 		dispatch({
@@ -59,8 +85,26 @@ const CreateReturnBook = props => {
 	}, [createReturnBookSuccess]);
 
 	useEffect(() => {
+		dispatch({
+			type: "bookAll/getAllBookRequest"
+		});
 		form.setFieldsValue({ returnBookCode: generateCode("RB") });
 	}, []);
+
+	useEffect(() => {
+		if (getDetailSuccess) {
+			const data = detailPayload?.item?.value;
+			if (data) {
+				setReturnBookDetail(
+					data.borrowBookDetails.map(item => ({
+						bookId: item.book_Id,
+						quantity: item.quantity,
+						description: ""
+					}))
+				);
+			}
+		}
+	}, [getDetailSuccess]);
 
 	return (
 		<div className={styles.container}>
@@ -147,7 +191,9 @@ const CreateReturnBook = props => {
 								}
 							]}
 						>
-							<SelectBorrowBook />
+							<SelectBorrowBook
+								onSelect={handleSelectBorrowBook}
+							/>
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
@@ -167,7 +213,11 @@ const CreateReturnBook = props => {
 						</Form.Item>
 					</Col>
 				</Row>
-				{/* <DetailTable /> */}
+				<DetailTable
+					code={form.getFieldValue("returnBookCode")}
+					dataSource={returnBookDetail}
+					getDataSource={dataSourceChange}
+				/>
 				<Divider />
 				<Row justify="end" gutter={8}>
 					<Col>
@@ -211,7 +261,9 @@ const mapStateToProps = state => {
 				"returnBookCreate/getReturnBookCreateRequest"
 			],
 		createPayload: state.returnBookCreate.payload,
-		createReturnBookSuccess: state.returnBookCreate.success
+		createReturnBookSuccess: state.returnBookCreate.success,
+		detailPayload: state.borrowBookDetail.payload,
+		getDetailSuccess: state.borrowBookDetail.success
 	};
 };
 

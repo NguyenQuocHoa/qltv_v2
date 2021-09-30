@@ -63,6 +63,7 @@ namespace QLTV_V2.DAL
                     ReturnDate = (DateTime)row["returndate"],
                     Description = (string)row["description"],
                     BorrowBook_Id = (int)row["borrowbook_id"],
+                    BorrowBookCode = (string)row["borrowbookcode"],
                     StudentCode = (string)row["studentcode"],
                     StudentName = (string)row["studentname"]
                 }).ToList();

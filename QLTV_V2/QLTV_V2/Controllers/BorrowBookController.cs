@@ -37,6 +37,22 @@ namespace QLTV_V2.Controllers
             return null;
         }
 
+        [HttpGet("get-all-not-return")]
+        public ResultModel GetAllNotReturn()
+        {
+            try
+            {
+                var resultQuery = _borrowBookBLL.GetAllNotReturn();
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return null;
+        }
+
         [HttpPost("get-all-paging")]
         public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, [FromBody] List<BodyObject> requestBody)
         {

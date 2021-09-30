@@ -43,6 +43,31 @@ namespace QLTV_V2.DAL
             }
         }
 
+        public IEnumerable<Object> GetAllEnoughInventory()
+        {
+            try
+            {
+                var books = _context.Book.Where(book => book.Inventory > 0)
+                    .Select(book =>
+                new {
+                    book.Id,
+                    book.BookCode,
+                    book.BookName,
+                    book.Inventory,
+                    book.Author,
+                    book.MainContent,
+                    book.Description,
+                    book.IsActive,
+                    book.BookCategory_Id
+                });
+                return books;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BookDAL: " + ex.Message.ToString());
+            }
+        }
+
         public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, List<BodyObject> requestBody)
         {
             try

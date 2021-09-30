@@ -42,6 +42,20 @@ namespace QLTV_V2.Controllers
             }
         }
 
+        [HttpGet("get-all-enough-inventory")]
+        public ResultModel GetAllEnoughInventory()
+        {
+            try
+            {
+                var resultQuery = _bookBLL.GetAllEnoughInventory();
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
+            }
+            catch (Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
         [HttpPost("get-all-paging")]
         public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, [FromBody] List<BodyObject> requestBody)
         {

@@ -47,11 +47,12 @@ namespace QLTV_V2.DAL
             }
         }
 
-        public IEnumerable<Object> GetAllNotReturn()
+        public IEnumerable<Object> GetAllNotReturn(int borrowBookId)
         {
             try
             {
-                var borrowBooks = _context.BorrowBook.Where(borrowBook => borrowBook.IsReturn == false)
+                var borrowBooks = _context.BorrowBook
+                    .Where(borrowBook => borrowBook.IsReturn == false || borrowBook.Id == borrowBookId)
                     .Select(borrowBook =>
                 new
                 {

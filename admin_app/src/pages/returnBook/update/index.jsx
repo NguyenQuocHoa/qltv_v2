@@ -63,7 +63,7 @@ const UpdateReturnBook = props => {
 			},
 			returnBookDetails: [
 				...returnBookDetail.map(row => ({
-					id: row.id,
+					id: 0,
 					book_Id: row.bookIdHide,
 					returnBook_Id: +props.match.params.id,
 					returnBookDetailCode: row.returnBookDetailCode,
@@ -90,7 +90,7 @@ const UpdateReturnBook = props => {
 
 	useEffect(() => {
 		dispatch({
-			type: "bookAll/getAllBookRequest"
+			type: "bookAll/getAllBookEnoughInventoryRequest"
 		});
 		dispatch({
 			type: "returnBookDetail/getReturnBookDetailRequest",
@@ -218,6 +218,7 @@ const UpdateReturnBook = props => {
 							]}
 						>
 							<SelectBorrowBook
+								borrowBookId={form.getFieldValue("borrowBookId")}
 								onSelect={handleSelectBorrowBook}
 							/>
 						</Form.Item>

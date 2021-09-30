@@ -43,6 +43,7 @@ const BorrowBookAllModel = {
 			}
 		},
 		*getAllBorrowBookNotReturnRequest({ payload }, { call, put }) {
+			console.log("payload", payload);
 			const response = yield call(getAllBorrowBookNotReturn, payload);
 			if (response.code === 200) {
 				yield put({

@@ -123,6 +123,7 @@ const DetailTable = props => {
 	};
 
 	useEffect(() => {
+		console.log("hashmap", hashmap);
 		setData(
 			dataSource.length > 0
 				? dataSource.map((row, index) => {
@@ -269,6 +270,7 @@ const DetailTable = props => {
 				pagination={{
 					onChange: cancel
 				}}
+				size={"small"}
 				rowKey="id"
 			/>
 		</Form>

@@ -304,6 +304,7 @@ const DetailTable = props => {
 				pagination={{
 					onChange: cancel
 				}}
+				size={"small"}
 				rowKey="id"
 			/>
 		</Form>

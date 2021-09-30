@@ -19,14 +19,23 @@ const SelectBorrowBook = props => {
 		onSelect,
 		placeholder = "Chọn phiếu mượn sách",
 		mode = null,
-		tagRender = null
+		tagRender = null,
+		borrowBookId = 0
 	} = props;
 
 	useEffect(() => {
 		dispatch({
-			type: "borrowBookAll/getAllBorrowBookNotReturnRequest"
+			type: "borrowBookAll/getAllBorrowBookNotReturnRequest",
+			payload: { borrowBookId }
 		});
 	}, []);
+
+	useEffect(() => {
+		dispatch({
+			type: "borrowBookAll/getAllBorrowBookNotReturnRequest",
+			payload: { borrowBookId }
+		});
+	}, [borrowBookId]);
 
 	const handleFilter = (inputValue, option) => {
 		if (success) {

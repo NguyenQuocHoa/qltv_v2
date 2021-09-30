@@ -4,8 +4,12 @@ export async function getAllBorrowBook() {
 	return request(`/api/BorrowBook/get-all`);
 }
 
-export async function getAllBorrowBookNotReturn() {
-	return request(`/api/BorrowBook/get-all-not-return`);
+export async function getAllBorrowBookNotReturn({ borrowBookId }) {
+	console.log("id", borrowBookId);
+	return request(`/api/BorrowBook/get-all-not-return`, {
+		method: "POST",
+		params: { borrowBookId }
+	});
 }
 
 export async function getBorrowBookPaging({ params, body }) {

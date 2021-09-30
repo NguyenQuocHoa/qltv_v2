@@ -82,7 +82,7 @@ const UpdateBorrowBook = props => {
 
 	useEffect(() => {
 		dispatch({
-			type: "bookAll/getAllBookRequest"
+			type: "bookAll/getAllBookEnoughInventoryRequest"
 		});
 		dispatch({
 			type: "borrowBookDetail/getBorrowBookDetailRequest",

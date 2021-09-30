@@ -33,11 +33,11 @@ namespace QLTV_V2.BLL
             }
         }
 
-        public IEnumerable<Object> GetAllNotReturn()
+        public IEnumerable<Object> GetAllNotReturn(int borrowBookId)
         {
             try
             {
-                return _borrowBookDAL.GetAllNotReturn();
+                return _borrowBookDAL.GetAllNotReturn(borrowBookId);
             }
             catch (Exception ex)
             {

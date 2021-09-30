@@ -37,12 +37,12 @@ namespace QLTV_V2.Controllers
             return null;
         }
 
-        [HttpGet("get-all-not-return")]
-        public ResultModel GetAllNotReturn()
+        [HttpPost("get-all-not-return")]
+        public ResultModel GetAllNotReturn(int borrowBookId)
         {
             try
             {
-                var resultQuery = _borrowBookBLL.GetAllNotReturn();
+                var resultQuery = _borrowBookBLL.GetAllNotReturn(borrowBookId);
                 return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
 
             }

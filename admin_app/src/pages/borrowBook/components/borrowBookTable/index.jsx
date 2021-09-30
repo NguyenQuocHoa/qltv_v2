@@ -1,5 +1,10 @@
 import React from "react";
-import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
+import {
+	DeleteOutlined,
+	FormOutlined,
+	CheckCircleTwoTone,
+	CloseCircleTwoTone
+} from "@ant-design/icons";
 import { Button, Popconfirm, Space, Table, Tooltip, Tag } from "antd";
 import { Link } from "react-router-dom";
 import { connect } from "umi";
@@ -48,6 +53,22 @@ const BorrowBookTable = props => {
 			filterMultiple: false,
 			render: (text, record, index) => (
 				<div>{moment(text).format("DD/MM/YYYY")}</div>
+			)
+		},
+		{
+			title: "Đã trả sách",
+			dataIndex: "isReturn",
+			key: "isReturn",
+			align: "center",
+			filterMultiple: false,
+			render: data => (
+				<div>
+					{data ? (
+						<CheckCircleTwoTone twoToneColor="#52c41a" />
+					) : (
+						<CloseCircleTwoTone twoToneColor="#eb2f96" />
+					)}
+				</div>
 			)
 		},
 		{

@@ -35,6 +35,22 @@ namespace QLTV_V2.Controllers
             }
         }
 
+        [HttpPost("get-all-paging")]
+        public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, [FromBody] List<BodyObject> requestBody)
+        {
+            try
+            {
+                int total = _returnBookBLL.getCountReturnBook();
+                return new ResultModel(Code.OK,
+                    _returnBookBLL.GetAllPaging(pageIndex, pageSize, sortColumn, sortOrder, requestBody),
+                    total, "thành công");
+            }
+            catch (Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
         [HttpGet("get-by-id/{id}")]
         public ResultModel Get(int id)
         {

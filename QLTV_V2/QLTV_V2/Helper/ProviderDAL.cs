@@ -136,6 +136,46 @@ namespace QLTV_V2.Helper
                 return ds.Tables[0];
             }
         }
+
+        public DataTable GetDataActivePaging(string spName, int pageIndex, int pageSize)
+        {
+            using (SqlConnection con = sqlConnecttion)
+            {
+                DataSet ds = new DataSet();
+                try
+                {
+                    SqlParameter pageIndexParam, pageSizeParam;
+                    SqlDataAdapter adapter;
+
+                    con.Open();
+                    SqlCommand command = new SqlCommand(spName, con);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    pageIndexParam = new SqlParameter("@PageIndex", pageIndex);
+                    pageIndexParam.Direction = ParameterDirection.Input;
+                    pageIndexParam.DbType = DbType.Int32;
+                    command.Parameters.Add(pageIndexParam);
+
+                    pageSizeParam = new SqlParameter("@PageSize", pageSize);
+                    pageSizeParam.Direction = ParameterDirection.Input;
+                    pageSizeParam.DbType = DbType.Int32;
+                    command.Parameters.Add(pageSizeParam);
+
+                    adapter = new SqlDataAdapter(command);
+                    adapter.Fill(ds, spName);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    con.Close();
+                    con.Dispose();
+                }
+                return ds.Tables[0];
+            }
+        }
     }
 
     public static class ConvertToEnumerable

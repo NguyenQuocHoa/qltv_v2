@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QLTV_V2.BLL;
 using QLTV_V2.Data;
@@ -6,6 +8,7 @@ using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static QLTV_V2.Helper.StatusCode;
@@ -18,9 +21,11 @@ namespace QLTV_V2.Controllers
     public class BookController : ControllerBase
     {
         private readonly BookBLL _bookBLL;
-        public BookController(ApplicationDbContext context)
+        private readonly IHostingEnvironment _hostingEnv;
+        public BookController(ApplicationDbContext context, IHostingEnvironment hostingEnv)
         {
             _bookBLL = new BookBLL(context);
+            _hostingEnv = hostingEnv;
         }
 
         [HttpGet("get-all")]
@@ -29,6 +34,20 @@ namespace QLTV_V2.Controllers
             try
             {
                 var resultQuery = _bookBLL.GetAll();
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
+            }
+            catch (Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
+        [HttpGet("get-all-enough-inventory")]
+        public ResultModel GetAllEnoughInventory()
+        {
+            try
+            {
+                var resultQuery = _bookBLL.GetAllEnoughInventory();
                 return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
             }
             catch (Exception)
@@ -71,7 +90,7 @@ namespace QLTV_V2.Controllers
             try
             {
                 int totalActive = _bookBLL.getCountActiveBook();
-                return new ResultModel(Code.OK, _bookBLL.GetBookActive(pageIndex, pageSize), totalActive, "thành công");
+                return new ResultModel(Code.OK, _bookBLL.GetBookActivePaging(pageIndex, pageSize), totalActive, "thành công");
             }
             catch (Exception)
             {

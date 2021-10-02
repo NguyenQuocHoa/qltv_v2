@@ -169,25 +169,25 @@ export default defineConfig({
 						// 		}
 						// 	]
 						// },
-						// {
-						// 	name: "users",
-						// 	path: "/users",
-						// 	icon: "UserAddOutlined",
-						// 	routes: [
-						// 		{
-						// 			path: "/users",
-						// 			component: "./user"
-						// 		},
-						// 		{
-						// 			path: "/users/create",
-						// 			component: "./user/userForm"
-						// 		},
-						// 		{
-						// 			path: "/users/:id",
-						// 			component: "./user/userForm"
-						// 		}
-						// 	]
-						// },
+						{
+							name: "users",
+							path: "/users",
+							icon: "UserAddOutlined",
+							routes: [
+								{
+									path: "/users",
+									component: "./user"
+								},
+								{
+									path: "/users/create",
+									component: "./user/userForm"
+								},
+								{
+									path: "/users/:id",
+									component: "./user/userForm"
+								}
+							]
+						},
 						{
 							name: "bookCategories",
 							path: "/book-category",
@@ -223,6 +223,101 @@ export default defineConfig({
 								{
 									path: "/books/:id",
 									component: "./book/update"
+								}
+							]
+						},
+						{
+							name: "posts",
+							path: "/posts",
+							icon: "ContainerOutlined",
+							routes: [
+								{
+									path: "/posts",
+									component: "./post"
+								},
+								{
+									path: "/posts/create",
+									component: "./post/create"
+								},
+								{
+									path: "/posts/:id",
+									component: "./post/update"
+								}
+							]
+						},
+						{
+							name: "borrowBooks",
+							path: "/borrow-book",
+							icon: "ShoppingOutlined",
+							routes: [
+								{
+									path: "/borrow-book",
+									component: "./borrowBook"
+								},
+								{
+									path: "/borrow-book/create",
+									component: "./borrowBook/create"
+								},
+								{
+									path: "/borrow-book/:id",
+									component: "./borrowBook/update"
+								}
+							]
+						},
+						{
+							name: "returnBooks",
+							path: "/return-book",
+							icon: "SolutionOutlined",
+							routes: [
+								{
+									path: "/return-book",
+									component: "./returnBook"
+								},
+								{
+									path: "/return-book/create",
+									component: "./returnBook/create"
+								},
+								{
+									path: "/return-book/:id",
+									component: "./returnBook/update"
+								}
+							]
+						},
+						{
+							name: "students",
+							path: "/students",
+							icon: "TeamOutlined",
+							routes: [
+								{
+									path: "/students",
+									component: "./student"
+								},
+								{
+									path: "/students/create",
+									component: "./student/create"
+								},
+								{
+									path: "/students/:id",
+									component: "./student/update"
+								}
+							]
+						},
+						{
+							name: "accounts",
+							path: "/accounts",
+							icon: "UserOutlined",
+							routes: [
+								{
+									path: "/accounts",
+									component: "./account"
+								},
+								{
+									path: "/accounts/create",
+									component: "./account/create"
+								},
+								{
+									path: "/accounts/:id",
+									component: "./account/update"
 								}
 							]
 						},

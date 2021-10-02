@@ -35,9 +35,61 @@ namespace QLTV_V2.DAL
                     borrowBook.NumberOfDayBorrow,
                     borrowBook.Student_Id,
                     borrowBook.Description,
+                    borrowBook.IsReturn,
                     BorrowBookDetails = (_context.BorrowBookDetail.Where(detail => detail.BorrowBook_Id == borrowBook.Id)
                                                                  ).ToList()
                 }).OrderByDescending(br => br.BorrowDate).ThenBy(d => d.NumberOfDayBorrow);
+                return borrowBooks;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from borrowBookDAL: " + ex.Message.ToString());
+            }
+        }
+
+        public IEnumerable<Object> GetAllNotReturn(int borrowBookId)
+        {
+            try
+            {
+                var borrowBooks = _context.BorrowBook
+                    .Where(borrowBook => borrowBook.IsReturn == false || borrowBook.Id == borrowBookId)
+                    .Select(borrowBook =>
+                new
+                {
+                    borrowBook.Id,
+                    borrowBook.BorrowBookCode,
+                    borrowBook.BorrowDate,
+                    borrowBook.NumberOfDayBorrow,
+                    borrowBook.Student_Id,
+                    borrowBook.Description,
+                    borrowBook.IsReturn,
+                    BorrowBookDetails = (_context.BorrowBookDetail.Where(detail => detail.BorrowBook_Id == borrowBook.Id)
+                                                                 ).ToList()
+                }).OrderByDescending(br => br.BorrowDate).ThenBy(d => d.NumberOfDayBorrow);
+                return borrowBooks;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from borrowBookDAL: " + ex.Message.ToString());
+            }
+        }
+
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, List<BodyObject> requestBody)
+        {
+            try
+            {
+                ProviderDAL providerDAL = new ProviderDAL();
+                DataTable dt = providerDAL.GetDataPaging("spGetBorrowBookPaging", pageIndex, pageSize, sortColumn, sortOrder);
+                var borrowBooks = dt.AsEnumerable().Select(row => new BorrowBook()
+                {
+                    Id = (int)row["id"],
+                    BorrowBookCode = (string)row["borrowbookcode"],
+                    BorrowDate = (DateTime)row["borrowdate"],
+                    NumberOfDayBorrow = (int)row["numberofdayborrow"],
+                    Description = (string)row["description"],
+                    Student_Id = (int)row["student_id"],
+                    IsReturn = (bool)row["isreturn"]
+                }).ToList();
                 return borrowBooks;
             }
             catch (Exception ex)
@@ -53,7 +105,7 @@ namespace QLTV_V2.DAL
                 var borrowBooks = from bb in _context.BorrowBook
                                   join st in _context.Student
                                   on bb.Student_Id equals st.Id
-                                  where bb.Student_Id == studentId
+                                  where studentId == 0 || bb.Student_Id == studentId
                                   select new
                                   {
                                       bb.Id,
@@ -95,6 +147,7 @@ namespace QLTV_V2.DAL
                     borrowBook.NumberOfDayBorrow,
                     borrowBook.Student_Id,
                     borrowBook.Description,
+                    borrowBook.IsReturn,
                     BorrowBookDetails = (_context.BorrowBookDetail.Where(detail => detail.BorrowBook_Id == borrowBook.Id)
                                                                  ).ToList()
                 }).FirstOrDefault();
@@ -145,6 +198,7 @@ namespace QLTV_V2.DAL
                         oldBorrowBook.NumberOfDayBorrow = newBorrowBook.NumberOfDayBorrow;
                         oldBorrowBook.Description = newBorrowBook.Description;
                         oldBorrowBook.Student_Id = newBorrowBook.Student_Id;
+                        oldBorrowBook.IsReturn = newBorrowBook.IsReturn;
                         _context.SaveChanges();
                     }
                     else
@@ -189,6 +243,11 @@ namespace QLTV_V2.DAL
                     throw new Exception("Error from BorrowBookDAL: " + ex.Message.ToString());
                 }
             }
+        }
+
+        public int getCountBorrowBook()
+        {
+            return _context.BorrowBook.Select(br => br).Count();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLTV_V2.DAL;
 using QLTV_V2.Data;
+using QLTV_V2.Helper;
 using QLTV_V2.Models;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,18 @@ namespace QLTV_V2.BLL
             catch (Exception ex)
             {
                 throw new Exception("Error from ReturnBookBLL: " + ex.Message.ToString());
+            }
+        }
+
+        public IEnumerable<Object> GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, List<BodyObject> requestBody)
+        {
+            try
+            {
+                return _returnBookDAL.GetAllPaging(pageIndex, pageSize, sortColumn, sortOrder, requestBody);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error from BorrowBookBLL: " + ex.Message.ToString());
             }
         }
 
@@ -78,6 +91,11 @@ namespace QLTV_V2.BLL
             {
                 throw new Exception("Error from ReturnBookBLL: " + ex.Message.ToString());
             }
+        }
+
+        public int getCountReturnBook()
+        {
+            return _returnBookDAL.getCountReturnBook();
         }
     }
 }

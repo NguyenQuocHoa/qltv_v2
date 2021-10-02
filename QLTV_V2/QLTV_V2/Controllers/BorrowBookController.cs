@@ -21,7 +21,7 @@ namespace QLTV_V2.Controllers
             _borrowBookBLL = new BorrowBookBLL(context);
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public ResultModel Get()
         {
             try
@@ -37,14 +37,46 @@ namespace QLTV_V2.Controllers
             return null;
         }
 
-        [HttpGet("get-all-paging-wit-student")]
+        [HttpPost("get-all-not-return")]
+        public ResultModel GetAllNotReturn(int borrowBookId)
+        {
+            try
+            {
+                var resultQuery = _borrowBookBLL.GetAllNotReturn(borrowBookId);
+                return new ResultModel(Code.OK, resultQuery, resultQuery.Count(), "thành công");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return null;
+        }
+
+        [HttpPost("get-all-paging")]
+        public ResultModel GetAllPaging(int pageIndex, int pageSize, string sortColumn, int sortOrder, [FromBody] List<BodyObject> requestBody)
+        {
+            try
+            {
+                int total = _borrowBookBLL.getCountBorrowBook();
+                return new ResultModel(Code.OK,
+                    _borrowBookBLL.GetAllPaging(pageIndex, pageSize, sortColumn, sortOrder, requestBody),
+                    total, "thành công");
+            }
+            catch (Exception)
+            {
+                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
+            }
+        }
+
+        [HttpPost("get-all-paging-with-student")]
         public ResultModel GetAllWithStudent(int pageIndex, int pageSize, string sortColumn, int sortOrder, int studentId)
         {
             try
             {
                 int total = _borrowBookBLL.getCountBorrowBookWithStudent(studentId);
                 return new ResultModel(Code.OK, 
-                    _borrowBookBLL.GetAllPagingWithStudent(pageSize, pageSize, sortColumn, sortOrder, studentId), 
+                    _borrowBookBLL.GetAllPagingWithStudent(pageIndex, pageSize, sortColumn, sortOrder, studentId), 
                     total, "thành công");
             }
             catch (Exception)

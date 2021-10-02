@@ -12,5 +12,6 @@ namespace QLTV_V2.Models
         public int? NumberOfDayBorrow { get; set; }
         public string Description { get; set; }
         public int? Student_Id { get; set; }
+        public bool IsReturn { get; set; }
     }
 }

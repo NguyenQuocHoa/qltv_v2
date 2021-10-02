@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[25],{UqUe:function(r,n,a){"use strict";a.r(n);var t=a("q1tI"),o=a.n(t),d=function(u){return o.a.createElement("div",null,"Dashboard")};n.default=d}}]);

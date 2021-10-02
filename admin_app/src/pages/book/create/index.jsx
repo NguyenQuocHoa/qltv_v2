@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { LeftOutlined, SaveOutlined } from "@ant-design/icons";
+import { LeftOutlined, SaveOutlined, InboxOutlined } from "@ant-design/icons";
 import {
 	Col,
 	Form,
@@ -9,20 +9,23 @@ import {
 	Checkbox,
 	Button,
 	Divider,
-	Typography
+	Typography,
+	Upload
 } from "antd";
 import { useHistory } from "react-router";
 import styles from "../../shared/style/detailStyle.less";
 import { connect, FormattedMessage } from "umi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { numberWithComas } from "../../../utils/utils";
 import SelectCategory from "../../shared/select/selectCategory";
+import UploadImage from "../../shared/uploadImage";
 
 const { TextArea } = Input;
 const { Title } = Typography;
 
 const CreateBook = props => {
 	const { createBookSuccess, dispatch } = props;
+	const [imgUrl, setImgUrl] = useState("");
 	const [form] = Form.useForm();
 	const history = useHistory();
 	const formLayout = {
@@ -34,9 +37,15 @@ const CreateBook = props => {
 		}
 	};
 
+	const getImgUrl = value => {
+		console.log("value", value);
+		setImgUrl(value);
+	};
+
 	const handleSubmit = payload => {
 		const converPayload = {
 			...payload,
+			image: imgUrl,
 			bookCategory_Id: payload.bookCategoryId
 		};
 
@@ -55,7 +64,12 @@ const CreateBook = props => {
 	}, []);
 
 	useEffect(() => {
-		if (createBookSuccess) history.goBack();
+		if (createBookSuccess) {
+			dispatch({
+				type: "bookCreate/clearState"
+			});
+			history.goBack();
+		}
 	}, [createBookSuccess]);
 
 	return (
@@ -141,6 +155,7 @@ const CreateBook = props => {
 							]}
 						>
 							<InputNumber
+								min={1}
 								className={styles.fw}
 								formatter={numberWithComas}
 							/>
@@ -214,29 +229,9 @@ const CreateBook = props => {
 					<Col xs={24}>
 						<Row gutter={16}>
 							<Col xs={8}>
-								{/* <Form.Item
-									name="bookCategoryId"
-									label={
-										<Title
-											className={styles.title}
-											level={5}
-										>
-											<FormattedMessage
-												id="pages.book.bookCategory"
-												defaultMessage="Loại sách"
-											/>
-										</Title>
-									}
-									hasFeedback
-									rules={[
-										{
-											required: true,
-											message: "Vui lòng chọn loại sách!"
-										}
-									]}
-								>
-									<SelectCategory />
-								</Form.Item> */}
+								<Form.Item label="Ảnh sách">
+									<UploadImage getImgUrl={getImgUrl} />
+								</Form.Item>
 							</Col>
 							<Col xs={16}>
 								<Row>

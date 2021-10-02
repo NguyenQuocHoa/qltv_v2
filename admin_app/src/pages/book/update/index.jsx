@@ -176,6 +176,7 @@ const UpdateBook = props => {
 							]}
 						>
 							<InputNumber
+								min={1}
 								className={styles.fw}
 								formatter={numberWithComas}
 							/>

@@ -39,7 +39,10 @@ const BookDetailModel = {
 		getBookDetailSuccess(state, action) {
 			return {
 				...state,
-				payload: action.payload,
+				payload: [
+					{ ...state.payload },
+					{ ...action.payload }
+				],
 				success: true,
 				failure: false
 			};

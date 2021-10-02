@@ -1,7 +1,7 @@
 import request from "../utils/request";
 
-export async function getAllBook() {
-	return request(`/api/Book/get-all`);
+export async function getAllBookActivePaging({ params }) {
+	return request(`/api/Book/get-all-active-paging?pageIndex=${params.pageIndex}&pageSize=${params.pageSize}`);
 }
 
 export async function getAllBookEnoughInventory() {

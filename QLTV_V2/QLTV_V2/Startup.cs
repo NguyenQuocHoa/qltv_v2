@@ -39,7 +39,7 @@ namespace QLTV_V2
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:3000",
+                                      builder.WithOrigins("http://localhost:8001",
                                                           "http://localhost:8000",
                                                           "http://www.contoso.com")
                                                             .AllowAnyHeader()

@@ -33,6 +33,10 @@ export default defineConfig({
 			component: "../layouts/BlankLayout",
 			routes: [
 				{
+					path: "/",
+					redirect: "/home"
+				},
+				{
 					path: "/home",
 					component: "../layouts/BlankLayout",
 					routes: [
@@ -40,6 +44,28 @@ export default defineConfig({
 							path: "/home",
 							name: "home",
 							component: "./home"
+						}
+					],
+				},
+				{
+					path: "/book",
+					component: "../layouts/BlankLayout",
+					routes: [
+						{
+							path: "/book",
+							name: "book",
+							component: "./book"
+						}
+					],
+				},
+				{
+					path: "/cart",
+					component: "../layouts/BlankLayout",
+					routes: [
+						{
+							path: "/cart",
+							name: "cart",
+							component: "./cart"
 						}
 					],
 				},

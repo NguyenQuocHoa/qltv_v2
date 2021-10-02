@@ -110,7 +110,8 @@ namespace QLTV_V2.DAL
                     book.MainContent,
                     book.Description,
                     book.IsActive,
-                    book.BookCategory_Id
+                    book.BookCategory_Id,
+                    book.Image
                 });
                 return books;
             }
@@ -124,20 +125,21 @@ namespace QLTV_V2.DAL
         {
             try
             {
-                var books = _context.Book.Skip((pageIndex - 1) * pageSize).Take(pageSize)
-                    .Where(book => book.IsActive == true).Select(book =>
-                    new
-                    {
-                        book.Id,
-                        book.BookCode,
-                        book.BookName,
-                        book.Inventory,
-                        book.Author,
-                        book.MainContent,
-                        book.Description,
-                        book.IsActive,
-                        book.BookCategory_Id
-                    }).ToList();
+                ProviderDAL providerDAL = new ProviderDAL();
+                DataTable dt = providerDAL.GetDataActivePaging("spGetBookActivePaging", pageIndex, pageSize);
+                var books = dt.AsEnumerable().Select(row => new Book()
+                {
+                    Id = (int)row["id"],
+                    BookCode = (string)row["bookcode"],
+                    BookName = (string)row["bookname"],
+                    Inventory = (int)row["inventory"],
+                    Author = (string)row["author"],
+                    MainContent = (string)row["maincontent"],
+                    Description = (string)row["description"],
+                    BookCategory_Id = (int)row["bookcategory_id"],
+                    IsActive = (bool)row["isactive"],
+                    Image = (string)row["image"]
+                }).ToList();
                 return books;
             }
             catch (Exception ex)

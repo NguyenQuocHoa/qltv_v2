@@ -69,7 +69,7 @@ namespace QLTV_V2.BLL
             }
         }
 
-        public IEnumerable<Object> GetBookActive(int pageIndex, int pageSize)
+        public IEnumerable<Object> GetBookActivePaging(int pageIndex, int pageSize)
         {
             try
             {

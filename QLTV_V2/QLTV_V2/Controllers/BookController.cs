@@ -90,7 +90,7 @@ namespace QLTV_V2.Controllers
             try
             {
                 int totalActive = _bookBLL.getCountActiveBook();
-                return new ResultModel(Code.OK, _bookBLL.GetBookActive(pageIndex, pageSize), totalActive, "thành công");
+                return new ResultModel(Code.OK, _bookBLL.GetBookActivePaging(pageIndex, pageSize), totalActive, "thành công");
             }
             catch (Exception)
             {

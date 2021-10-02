@@ -1,5 +1,5 @@
 import { notification } from "antd";
-import { getBookPaging, getAllBook } from "../../services/book";
+import { getBookPaging, getAllBookActivePaging } from "../../services/book";
 
 const AllBookModel = {
 	namespace: "bookList",
@@ -13,11 +13,11 @@ const AllBookModel = {
 		allBookFailure: false
 	},
 	effects: {
-		*getAllBookRequest({ payload }, { call, put }) {
-			const response = yield call(getAllBook, payload);
+		*getAllBookActivePagingRequest({ payload }, { call, put }) {
+			const response = yield call(getAllBookActivePaging, payload);
 			if (response.code === 200) {
 				yield put({
-					type: "getAllBookSuccess",
+					type: "getAllBookActivePagingSuccess",
 					payload: response
 				});
 			} else {
@@ -25,7 +25,7 @@ const AllBookModel = {
 					message: response.message
 				});
 				yield put({
-					type: "getAllBookFailure",
+					type: "getAllBookActivePagingFailure",
 					payload: response
 				});
 			}
@@ -49,14 +49,14 @@ const AllBookModel = {
 		}
 	},
 	reducers: {
-		getAllBookRequest(state, action) {
+		getAllBookActivePagingRequest(state, action) {
 			return {
 				...state,
 				allBookSuccess: false,
 				allBookFailure: false
 			};
 		},
-		getAllBookSuccess(state, action) {
+		getAllBookActivePagingSuccess(state, action) {
 			return {
 				...state,
 				payload: action.payload,
@@ -64,7 +64,7 @@ const AllBookModel = {
 				allBookFailure: false
 			};
 		},
-		getAllBookFailure(state, action) {
+		getAllBookActivePagingFailure(state, action) {
 			return {
 				...state,
 				allBookSuccess: false,

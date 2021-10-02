@@ -34,7 +34,7 @@ const EditableCell = ({
 }) => {
 	let inputNode;
 	if (inputType === "number")
-		inputNode = <InputNumber min={1} max={2} className={styles.fw} />;
+		inputNode = <InputNumber min={1} max={1} className={styles.fw} />;
 	if (inputType === "text") inputNode = <Input />;
 	if (inputType === "select") inputNode = <SelectBook />;
 

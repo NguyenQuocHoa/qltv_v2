@@ -14,9 +14,10 @@ import {
 import { useHistory } from "react-router";
 import styles from "../../shared/style/detailStyle.less";
 import { connect, FormattedMessage } from "umi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { numberWithComas } from "../../../utils/utils";
 import SelectCategory from "../../shared/select/selectCategory";
+import UploadImage from "../../shared/uploadImage";
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -28,6 +29,7 @@ const UpdateBook = props => {
 		updateBookSuccess,
 		dispatch
 	} = props;
+	const [imgUrl, setImgUrl] = useState("");
 	const [form] = Form.useForm();
 	const history = useHistory();
 	const formLayout = {
@@ -39,10 +41,16 @@ const UpdateBook = props => {
 		}
 	};
 
+	const getImgUrl = value => {
+		console.log("value", value);
+		setImgUrl(value);
+	};
+
 	const handleSubmit = payload => {
 		const converPayload = {
 			...payload,
 			id: +props.match.params.id,
+			image: imgUrl,
 			bookCategory_Id: payload.bookCategoryId
 		};
 
@@ -81,6 +89,7 @@ const UpdateBook = props => {
 			const data = detailPayload?.item?.value;
 			if (data) data.bookCategoryId = data.bookCategory_Id;
 			form.setFieldsValue({ ...data });
+			setImgUrl(data.image);
 		}
 	}, [getDetailSuccess]);
 
@@ -240,29 +249,11 @@ const UpdateBook = props => {
 					<Col xs={24}>
 						<Row gutter={16}>
 							<Col xs={8}>
-								{/* <Form.Item
-									name="bookCategoryId"
-									label={
-										<Title
-											className={styles.title}
-											level={5}
-										>
-											<FormattedMessage
-												id="pages.book.bookCategory"
-												defaultMessage="Loại sách"
-											/>
-										</Title>
-									}
-									hasFeedback
-									rules={[
-										{
-											required: true,
-											message: "Vui lòng chọn loại sách!"
-										}
-									]}
-								>
-									<SelectCategory />
-								</Form.Item> */}
+								<UploadImage
+									getImgUrl={getImgUrl}
+									imgUrl={imgUrl}
+									isEdit={true}
+								/>
 							</Col>
 							<Col xs={16}>
 								<Row>

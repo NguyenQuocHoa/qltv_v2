@@ -9,6 +9,6 @@ namespace QLTV_V2.Models
     public class ImageModel
     {
         public string ImageName { get; set; }
-        public IFormFile ImageFile { get; set; }
+        public List<IFormFile> ImageFiles { get; set; }
     }
 }

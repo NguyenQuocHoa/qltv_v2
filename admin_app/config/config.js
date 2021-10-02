@@ -169,25 +169,25 @@ export default defineConfig({
 						// 		}
 						// 	]
 						// },
-						// {
-						// 	name: "users",
-						// 	path: "/users",
-						// 	icon: "UserAddOutlined",
-						// 	routes: [
-						// 		{
-						// 			path: "/users",
-						// 			component: "./user"
-						// 		},
-						// 		{
-						// 			path: "/users/create",
-						// 			component: "./user/userForm"
-						// 		},
-						// 		{
-						// 			path: "/users/:id",
-						// 			component: "./user/userForm"
-						// 		}
-						// 	]
-						// },
+						{
+							name: "users",
+							path: "/users",
+							icon: "UserAddOutlined",
+							routes: [
+								{
+									path: "/users",
+									component: "./user"
+								},
+								{
+									path: "/users/create",
+									component: "./user/userForm"
+								},
+								{
+									path: "/users/:id",
+									component: "./user/userForm"
+								}
+							]
+						},
 						{
 							name: "bookCategories",
 							path: "/book-category",

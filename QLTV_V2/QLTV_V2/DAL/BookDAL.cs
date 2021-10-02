@@ -160,7 +160,8 @@ namespace QLTV_V2.DAL
                     book.MainContent,
                     book.Description,
                     book.IsActive,
-                    book.BookCategory_Id
+                    book.BookCategory_Id,
+                    book.Image
                 }).FirstOrDefault();
                 return book_data;
             }
@@ -195,6 +196,7 @@ namespace QLTV_V2.DAL
                 oldBook.Description = newBook.Description;
                 oldBook.IsActive = newBook.IsActive;
                 oldBook.BookCategory_Id = newBook.BookCategory_Id;
+                oldBook.Image = newBook.Image;
                 _context.SaveChanges();
             }
             catch (Exception ex)

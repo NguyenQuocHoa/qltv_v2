@@ -33,10 +33,17 @@ namespace QLTV_V2.Helper
             this.message = message;
             this.item = item;
         }
+
+        public ResultModel(StatusCode.Code code, string message, string imgUrl)
+        {
+            this.message = message;
+            this.ImgUrl = imgUrl;
+        }
         public StatusCode.Code code { get; set; }
         public IEnumerable items { get; set; }
         public ActionResult<Object> item { get; set; }
         public int total { get; set; }
         public string message { get; set; }
+        public string ImgUrl { get; set; }
     }
 }

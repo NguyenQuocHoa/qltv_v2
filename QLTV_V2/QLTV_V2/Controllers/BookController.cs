@@ -160,32 +160,5 @@ namespace QLTV_V2.Controllers
                 return new ResultModel(Code.SVERROR, "lỗi hệ thống");
             }
         }
-
-        [HttpPost("upload-image")]
-        public async Task<ResultModel> Post([FromForm] ImageModel imageModel)
-        {
-            try
-            {
-                imageModel.ImageName = await SaveImage(imageModel.ImageFile);
-                return new ResultModel(Code.OK, "thành công");
-            }
-            catch (Exception)
-            {
-                return new ResultModel(Code.SVERROR, "lỗi hệ thống");
-            } 
-        }
-
-        [NonAction]
-        public async Task<string> SaveImage(IFormFile imageFile)
-        {
-            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName)).Replace(' ', '-');
-            imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
-            var imagePath = Path.Combine(_hostingEnv.ContentRootPath, "wwwroot/Images", imageName);
-            using (var fileStream = new FileStream(imagePath, FileMode.Create) )
-            {
-                await imageFile.CopyToAsync(fileStream);
-            }
-            return imageName;
-        }
     }
 }

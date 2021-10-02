@@ -317,7 +317,7 @@ const UserForm = props => {
 										}
 									]}
 								>
-									<Select placeholder="Vui lòng chọn nhóm người dùng">
+									{/* <Select placeholder="Vui lòng chọn nhóm người dùng">
 										{allUserGroupResponse?.map(item => (
 											<Option
 												key={item.id}
@@ -326,7 +326,7 @@ const UserForm = props => {
 												{item.tenNhomNhanVien}
 											</Option>
 										))}
-									</Select>
+									</Select> */}
 								</Form.Item>
 								<Form.Item
 									name="ghichu"
